@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="Dark portfolio website inspired by the provided reference layout and rebuilt with HTML, CSS, and vanilla JavaScript."
+  >
+  
+  <title>MAQHAWE | Full-Stack Developer</title>
+  <script>
+    (() => {
+      try {
+        const savedTheme = localStorage.getItem("portfolio-theme");
+        document.documentElement.dataset.theme = savedTheme || "dark";
+      } catch (_error) {
+        document.documentElement.dataset.theme = "dark";
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <div class="portfolio-intro" id="portfolio-intro" aria-label="Portfolio intro">
+    <video
+      id="intro-video"
+      class="portfolio-intro-video"
+      autoplay
+      muted
+      playsinline
+      webkit-playsinline
+      preload="auto"
+    >
+      <source src="blueeyesanime.mp4" type="video/mp4">
+      Your browser does not support the intro video.
+    </video>
+    <div class="portfolio-intro-overlay"></div>
+    <button class="portfolio-intro-skip" id="intro-skip" type="button">Skip Intro</button>
+  </div>
+
+  <div class="background-video-shell" aria-hidden="true">
+    <video id="background-video" class="background-video" autoplay muted loop playsinline webkit-playsinline preload="auto">
+      <source src="portfoliobackgroundwallpaper.mp4" type="video/mp4">
+      Your browser does not support the background video.
+    </video>
+    <div class="background-video-overlay"></div>
+  </div>
+
+  <div class="site-frame">
+    <header class="site-header" id="home">
+      <div class="container nav-bar">
+        <a class="brand" href="#home">MAQHAWE THABISO NGWENYA</a>
+
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Open navigation"
+        >
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#experience">Experience</a>
+          <a href="#contact">Contact</a>
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false">
+            <span class="theme-toggle-label theme-toggle-label-light">Light</span>
+            <span class="theme-toggle-track" aria-hidden="true">
+              <span class="theme-toggle-thumb"></span>
+              <span class="theme-toggle-dot theme-toggle-dot-one"></span>
+              <span class="theme-toggle-dot theme-toggle-dot-two"></span>
+            </span>
+            <span class="theme-toggle-label theme-toggle-label-dark">Dark</span>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero section" aria-labelledby="hero-title">
+        <div class="container hero-layout">
+          <div class="hero-copy reveal">
+            <p class="hero-kicker">creative developer portfolio</p>
+            <h2 class="hero-title-top">
+              <span class="hero-title-muted">Hey!,</span>
+              <span class="hero-title-accent">I am</span>
+            </h2>
+            <h1 id="hero-title" class="hero-main-title">MAQHAWE</h1>
+            <p class="hero-role">Full-Stack Developer</p>
+            <p class="hero-description">
+              I craft beautiful, functional digital experiences that bring ideas to life. Specializing in modern web
+              development with clean code, strong UI decisions, and a polished presentation style.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#contact">Hire Me Today</a>
+              <a class="btn btn-secondary" href="#contact">Get In Touch</a>
+              <a class="btn btn-cv" href="cv">Download CV</a>
+            </div>
+          </div>
+
+          <div class="hero-visual hero-ufo-visual reveal" aria-hidden="true">
+            <div class="hero-ufo-stage" id="hero-ufo-stage">
+              <canvas class="hero-ufo-canvas" id="hero-ufo-canvas"></canvas>
+              <img class="hero-ufo-fallback" src="ufo-tractor-beam.png" alt="">
+              <div class="hero-ufo-aura hero-ufo-aura-one"></div>
+              <div class="hero-ufo-aura hero-ufo-aura-two"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-glow hero-glow-left" aria-hidden="true"></div>
+        <div class="hero-glow hero-glow-right" aria-hidden="true"></div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="container section-header reveal">
+          <h2>About Me</h2>
+        </div>
+
+        <div class="container about-grid">
+          <div class="about-copy reveal">
+            <p>
+            I am a student developer focused on building websites and applications that feel 
+            modern, clean, and reliable.I enjoy turning ideas into practical projects that balance clear structure 
+            with thoughtful design and continuous improvement.
+
+            </p>
+            <p>
+             From building interfaces to developing core logic, I focus on clarity, usability, and the small 
+             details that make a project feel intentional. I aim to create work that looks clean and 
+             performs reliably across different devices and environments.
+            </p>
+          </div>
+
+          <div class="about-visual reveal" aria-hidden="true">
+            <div class="about-blob"></div>
+            <span class="about-spark spark-one"></span>
+            <span class="about-spark spark-two"></span>
+            <span class="about-spark spark-three"></span>
+            <span class="about-spark spark-four"></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="skills">
+        <div class="container section-header reveal">
+          <h2>Skills &amp; Technologies</h2>
+        </div>
+
+        <div class="container skills-grid">
+          <article class="skill-card reveal">
+            <h3>Frontend</h3>
+            <ul class="skill-list">
+              <li>HTML5</li>
+              <li>CSS3</li>
+              <li>JavaScript</li>
+              <li>Responsive UI</li>
+            </ul>
+          </article>
+
+          <article class="skill-card reveal">
+            <h3>Backend</h3>
+            <ul class="skill-list">
+              <li>Node.js</li>
+              <li>Express</li>
+              <li>REST APIs</li>
+              <li>Database Design</li>
+            </ul>
+          </article>
+
+          <article class="skill-card reveal">
+            <h3>Developer</h3>
+            <ul class="skill-list">
+              <li>Git &amp; GitHub</li>
+              <li>Deployment</li>
+              <li>Debugging</li>
+              <li>Problem Solving</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="experience">
+        <div class="container section-header reveal">
+          <h2>Experience</h2>
+        </div>
+
+        <div class="container timeline">
+          <article class="timeline-item reveal">
+            <div class="timeline-badge">2026</div>
+            <div class="timeline-card">
+              <h3>Designer & Developer</h3>
+              <p>
+               Designed and built portfolio websites, landing pages, and user interfaces, focusing on both visual clarity and functionality. Applied front-end development 
+               practices while making design decisions around layout, color, and user experience to create clean, responsive digital products.
+              </p>
+            </div>
+          </article>
+
+          <article class="timeline-item reveal">
+            <div class="timeline-badge">2026</div>
+            <div class="timeline-card">
+              <h3>Designer & Developer</h3>
+              <p>
+                Worked on personal and collaborative projects, developing skills in UI design and front-end development. Explored styling, layout structure, 
+                and component thinking while turning rough ideas into visually clear and usable interfaces.
+              </p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section projects-section" id="projects">
+        <div class="container section-header section-header-center reveal">
+          <h2>My Projects</h2>
+          <p>
+            A collection of projects that showcase clean structure, thoughtful UI, and hands-on experience across
+            modern web technologies.
+          </p>
+        </div>
+
+        <div class="container projects-grid">
+          <article class="project-card reveal">
+            <div class="project-media project-media-image">
+              <img src="images/firstwebsite.png" alt="Preview of My First Website project">
+            </div>
+            <div class="project-body">
+              <h3>My First Website</h3>
+              <p>A clean early website project focused on simple structure, clear navigation, and a strong landing-page presentation.</p>
+              <ul class="project-tags">
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>JS</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-my-first-website" aria-haspopup="dialog" aria-controls="modal-my-first-website">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-media project-media-image">
+              <img src="images/brainwave.png" alt="Preview of Brainwave.io project">
+            </div>
+            <div class="project-body">
+              <h3>Brainwave.io</h3>
+              <p>A polished business landing page with a bright layout, confident typography, and a strong conversion-focused hero section.</p>
+              <ul class="project-tags">
+                <li>Landing Page</li>
+                <li>HTML</li>
+                <li>JavaScript</li>
+                <li>CSS</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-brainwave-io" aria-haspopup="dialog" aria-controls="modal-brainwave-io">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-media project-media-image">
+              <img src="images/shark.web.png" alt="Preview of Shark.web project">
+            </div>
+            <div class="project-body">
+              <h3>Shark.web</h3>
+              <p>An ocean-themed website with bold underwater visuals, clear navigation, and a focused educational landing page experience.</p>
+              <ul class="project-tags">
+                <li>Landing Page</li>
+                <li>HTML</li>
+                <li>JS</li>
+                <li>CSS</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-shark-web" aria-haspopup="dialog" aria-controls="modal-shark-web">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-media media-four" aria-hidden="true"></div>
+            <div class="project-body">
+              <h3>AI App</h3>
+              <p>Concept dashboard with polished cards, bold spacing, and a dark interface system.</p>
+              <ul class="project-tags">
+                <li>Dashboard</li>
+                <li>Frontend</li>
+                <li>UI</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-ai-app" aria-haspopup="dialog" aria-controls="modal-ai-app">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-media media-five" aria-hidden="true"></div>
+            <div class="project-body">
+              <h3>Admin Panel</h3>
+              <p>Structured admin layout designed for data visibility, actions, and clean navigation flow.</p>
+              <ul class="project-tags">
+                <li>Admin</li>
+                <li>Tables</li>
+                <li>UX</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-admin-panel" aria-haspopup="dialog" aria-controls="modal-admin-panel">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal">
+            <div class="project-media media-six" aria-hidden="true"></div>
+            <div class="project-body">
+              <h3>Web App</h3>
+              <p>Modern app shell focused on content hierarchy, consistency, and device-friendly layouts.</p>
+              <ul class="project-tags">
+                <li>Web App</li>
+                <li>Layout</li>
+                <li>Design</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-web-app" aria-haspopup="dialog" aria-controls="modal-web-app">View Project</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section testimonials-section" id="testimonials">
+        <div class="container section-header section-header-center reveal">
+          <h2>Testimonials</h2>
+          <p>
+            Feedback from people who value clean presentation, dependable execution, and a thoughtful working process.
+          </p>
+        </div>
+
+        <div class="container testimonials-grid">
+          <article class="testimonial-card reveal">
+            <p class="testimonial-quote">
+              “Maqhawe brings strong attention to detail and always delivers interfaces that feel polished, structured,
+              and easy to use.”
+            </p>
+            <div class="testimonial-meta">
+              <strong>Creative Collaborator</strong>
+              <span>UI Project Partner</span>
+            </div>
+          </article>
+
+          <article class="testimonial-card reveal">
+            <p class="testimonial-quote">
+              “Working together was smooth from start to finish. The layout decisions were clear, the styling was
+              consistent, and the final result felt professional.”
+            </p>
+            <div class="testimonial-meta">
+              <strong>Client Feedback</strong>
+              <span>Portfolio Project</span>
+            </div>
+          </article>
+
+          <article class="testimonial-card reveal">
+            <p class="testimonial-quote">
+              “A reliable developer with a growing eye for both design and implementation. The work shows care,
+              balance, and steady improvement.”
+            </p>
+            <div class="testimonial-meta">
+              <strong>Peer Review</strong>
+              <span>Development Team</span>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section contact-section" id="contact">
+        <div class="container section-header section-header-center reveal">
+          <h2>Let's Work Together</h2>
+        </div>
+
+        <div class="container contact-panel reveal">
+          <form class="contact-form" action="https://formsubmit.co/thabisomaqhawengwenya@gmail.com" method="post">
+            <input type="hidden" name="_subject" value="New portfolio message from Maqhawe">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_url" value="">
+            <label class="sr-only" for="contact-honey">Leave this field empty</label>
+            <input class="sr-only" id="contact-honey" name="_honey" type="text" tabindex="-1" autocomplete="off">
+
+            <label class="sr-only" for="name">Name</label>
+            <input id="name" name="name" type="text" placeholder="Your name" required>
+
+            <label class="sr-only" for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="Your email" required>
+
+            <label class="sr-only" for="subject">Subject</label>
+            <input id="subject" name="subject" type="text" placeholder="Subject" required>
+
+            <label class="sr-only" for="message">Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="Message" required></textarea>
+
+            <button class="btn btn-primary form-submit" type="submit">Send Message</button>
+            <p class="form-status" role="status" aria-live="polite"></p>
+          </form>
+
+          <aside class="contact-copy">
+            <p>
+              I create responsive, visually polished interfaces for personal brands, products, and modern businesses.
+              If you want a site that feels clean, confident, and memorable, I'd love to hear about it.
+            </p>
+
+            <ul class="contact-points">
+              <li>Website Development</li>
+              <li>Portfolio Design</li>
+              <li>Landing Page Design</li>
+              <li>Full-Stack Development</li>
+              <li>Debugging &amp; Maintenance</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-shell reveal">
+        <p class="footer-note">@ 2026 Maqhawe, all rights are preserved</p>
+
+        <div class="footer-links" aria-label="Footer links">
+          <a href="https://wa.me/263787755074" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <a href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="mailto:thabisomaqhawengwenya@gmail.com">Email</a>
+          <a href="https://www.linkedin.com/in/maqhawe-ngwenya" target="_blank" rel="noreferrer">LinkedIn</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <div class="project-modal" id="modal-my-first-website" role="dialog" aria-modal="true" aria-labelledby="modal-my-first-website-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image">
+        <img src="images/firstwebsite.png" alt="Screenshot of My First Website project">
+      </div>
+      <h3 id="modal-my-first-website-title">My First Website</h3>
+      <p>
+        My First Website is an early web project that explores a classic landing-page layout with a strong hero section,
+        clear menu structure, and simple visual storytelling using HTML, CSS, and JavaScript.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/myfirstwebsite/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/myfirstwebsite.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-brainwave-io" role="dialog" aria-modal="true" aria-labelledby="modal-brainwave-io-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image">
+        <img src="images/brainwave.png" alt="Screenshot of Brainwave.io project">
+      </div>
+      <h3 id="modal-brainwave-io-title">Brainwave.io</h3>
+      <p>
+        Brainwave.io is a clean marketing website built around a bold hero section, simple navigation, and a modern
+        business-focused layout designed to present services clearly and guide visitors toward action.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/brainwave.io/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/brainwave.io.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-shark-web" role="dialog" aria-modal="true" aria-labelledby="modal-shark-web-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image">
+        <img src="images/shark.web.png" alt="Screenshot of Shark.web project">
+      </div>
+      <h3 id="modal-shark-web-title">Shark.web</h3>
+      <p>
+        Shark.web is a visually immersive website built around shark-themed content, strong hero imagery, and a clean
+        structure that introduces visitors to the site through an engaging marine-inspired design.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/sharks.web/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/sharks.web.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-ai-app" role="dialog" aria-modal="true" aria-labelledby="modal-ai-app-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <h3 id="modal-ai-app-title">AI App</h3>
+      <p>
+        A concept dashboard exploring dark interface styling, glowing visual cues, and modular content blocks for a
+        modern AI-inspired product experience.
+      </p>
+      <ul class="modal-list">
+        <li>Modern dashboard composition</li>
+        <li>Card-based interface elements</li>
+        <li>Consistent visual rhythm and spacing</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-admin-panel" role="dialog" aria-modal="true" aria-labelledby="modal-admin-panel-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <h3 id="modal-admin-panel-title">Admin Panel</h3>
+      <p>
+        An admin interface concept designed for visibility, structure, and practical navigation patterns across dense
+        content areas and control panels.
+      </p>
+      <ul class="modal-list">
+        <li>Information-rich layout</li>
+        <li>Balanced table and panel structure</li>
+        <li>Clear navigation and action states</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-web-app" role="dialog" aria-modal="true" aria-labelledby="modal-web-app-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <h3 id="modal-web-app-title">Web App</h3>
+      <p>
+        A web application shell focused on responsive structure, reusable content blocks, and a strong dark-mode
+        presentation across multiple sections.
+      </p>
+      <ul class="modal-list">
+        <li>Scalable page structure</li>
+        <li>Responsive component layout</li>
+        <li>Consistent visual language</li>
+      </ul>
+    </div>
+  </div>
+
+  <button class="back-to-top" type="button" aria-label="Back to top">Top</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
