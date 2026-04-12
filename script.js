@@ -2,6 +2,8 @@ const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
 const navLinks = document.querySelectorAll(".site-nav a");
 const themeToggle = document.querySelector("#theme-toggle");
+const projectFilters = document.querySelectorAll(".project-filter");
+const projectCards = document.querySelectorAll(".project-card[data-project-category]");
 const sections = document.querySelectorAll("main section[id], header[id]");
 const revealItems = document.querySelectorAll(".reveal");
 const backToTopButton = document.querySelector(".back-to-top");
@@ -53,6 +55,39 @@ if (themeToggle) {
   themeToggle.addEventListener("click", () => {
     const nextTheme = getCurrentTheme() === "light" ? "dark" : "light";
     setTheme(nextTheme);
+  });
+}
+
+const applyProjectFilter = (filterValue) => {
+  if (!projectFilters.length || !projectCards.length) {
+    return;
+  }
+
+  projectFilters.forEach((button) => {
+    const isActive = button.dataset.projectFilter === filterValue;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+
+  projectCards.forEach((card) => {
+    const matches = card.dataset.projectCategory === filterValue;
+    card.classList.toggle("is-filter-hidden", !matches);
+  });
+};
+
+if (projectFilters.length && projectCards.length) {
+  const initialFilter = document.querySelector(".project-filter.is-active")?.dataset.projectFilter || "personal";
+  applyProjectFilter(initialFilter);
+
+  projectFilters.forEach((button) => {
+    button.addEventListener("click", () => {
+      const filterValue = button.dataset.projectFilter;
+      if (!filterValue) {
+        return;
+      }
+
+      applyProjectFilter(filterValue);
+    });
   });
 }
 

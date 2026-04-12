@@ -226,16 +226,39 @@
       </section>
 
       <section class="section projects-section" id="projects">
-        <div class="container section-header section-header-center reveal">
-          <h2>My Projects</h2>
+        <div class="container section-header section-header-center projects-header reveal">
+          <h2>Work &amp; Projects</h2>
           <p>
-            A collection of projects that showcase clean structure, thoughtful UI, and hands-on experience across
-            modern web technologies.
+            Exploring creativity through code, personal experiments, business ideas, education-focused experiences,
+            and practical tools.
           </p>
         </div>
 
+        <div class="container projects-filter-bar reveal" aria-label="Project categories">
+          <button class="project-filter is-active" type="button" data-project-filter="personal" aria-pressed="true">
+            <span>Personal</span>
+            <span class="project-filter-count">2</span>
+          </button>
+          <button class="project-filter" type="button" data-project-filter="business" aria-pressed="false">
+            <span>Business</span>
+            <span class="project-filter-count">2</span>
+          </button>
+          <button class="project-filter" type="button" data-project-filter="education" aria-pressed="false">
+            <span>Education</span>
+            <span class="project-filter-count">1</span>
+          </button>
+          <button class="project-filter" type="button" data-project-filter="utility" aria-pressed="false">
+            <span>Utility</span>
+            <span class="project-filter-count">1</span>
+          </button>
+          <button class="project-filter" type="button" data-project-filter="gift" aria-pressed="false">
+            <span>Gift</span>
+            <span class="project-filter-count">1</span>
+          </button>
+        </div>
+
         <div class="container projects-grid">
-          <article class="project-card reveal">
+          <article class="project-card reveal" data-project-category="personal">
             <div class="project-media project-media-image">
               <img src="images/firstwebsite.png" alt="Preview of My First Website project">
             </div>
@@ -251,7 +274,7 @@
             </div>
           </article>
 
-          <article class="project-card reveal">
+          <article class="project-card reveal" data-project-category="business">
             <div class="project-media project-media-image">
               <img src="images/brainwave.png" alt="Preview of Brainwave.io project">
             </div>
@@ -268,7 +291,7 @@
             </div>
           </article>
 
-          <article class="project-card reveal">
+          <article class="project-card reveal" data-project-category="personal">
             <div class="project-media project-media-image">
               <img src="images/shark.web.png" alt="Preview of Shark.web project">
             </div>
@@ -285,45 +308,67 @@
             </div>
           </article>
 
-          <article class="project-card reveal">
-            <div class="project-media media-four" aria-hidden="true"></div>
+          <article class="project-card reveal" data-project-category="education">
+            <div class="project-media project-media-image">
+              <img src="images/tutorme.png" alt="Preview of tutorMe project">
+            </div>
             <div class="project-body">
-              <h3>AI App</h3>
-              <p>Concept dashboard with polished cards, bold spacing, and a dark interface system.</p>
+              <h3>tutorMe</h3>
+              <p>A tutoring platform concept presented as a polished Figma site with a clean layout and clear learning-focused structure.</p>
               <ul class="project-tags">
-                <li>Dashboard</li>
-                <li>Frontend</li>
-                <li>UI</li>
+                <li>Figma</li>
+                <li>UI Design</li>
+                <li>Education</li>
               </ul>
-              <button class="project-link modal-trigger" type="button" data-modal-target="modal-ai-app" aria-haspopup="dialog" aria-controls="modal-ai-app">View Project</button>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-tutorme" aria-haspopup="dialog" aria-controls="modal-tutorme">View Project</button>
             </div>
           </article>
 
-          <article class="project-card reveal">
-            <div class="project-media media-five" aria-hidden="true"></div>
+          <article class="project-card reveal" data-project-category="utility">
+            <div class="project-media project-media-image">
+              <img src="images/weatherapp.png" alt="Preview of Weather app project">
+            </div>
             <div class="project-body">
-              <h3>Admin Panel</h3>
-              <p>Structured admin layout designed for data visibility, actions, and clean navigation flow.</p>
+              <h3>Weather app</h3>
+              <p>A clean weather dashboard experience built around search, forecast display, and a simple user-friendly interface.</p>
               <ul class="project-tags">
-                <li>Admin</li>
-                <li>Tables</li>
-                <li>UX</li>
+                <li>Weather</li>
+                <li>API</li>
+                <li>JavaScript</li>
               </ul>
-              <button class="project-link modal-trigger" type="button" data-modal-target="modal-admin-panel" aria-haspopup="dialog" aria-controls="modal-admin-panel">View Project</button>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-weather-dashboard" aria-haspopup="dialog" aria-controls="modal-weather-dashboard">View Project</button>
             </div>
           </article>
 
-          <article class="project-card reveal">
-            <div class="project-media media-six" aria-hidden="true"></div>
+          <article class="project-card reveal" data-project-category="gift">
+            <div class="project-media project-media-image">
+              <img src="images/student-register.jpeg" alt="Preview of Student Register project">
+            </div>
             <div class="project-body">
-              <h3>Web App</h3>
-              <p>Modern app shell focused on content hierarchy, consistency, and device-friendly layouts.</p>
+              <h3>Student Register</h3>
+              <p>A student-focused registration tool designed to make student information access simple, direct, and easy to use.</p>
               <ul class="project-tags">
-                <li>Web App</li>
-                <li>Layout</li>
-                <li>Design</li>
+                <li>Students</li>
+                <li>Register</li>
+                <li>JavaScript</li>
               </ul>
-              <button class="project-link modal-trigger" type="button" data-modal-target="modal-web-app" aria-haspopup="dialog" aria-controls="modal-web-app">View Project</button>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-student-register" aria-haspopup="dialog" aria-controls="modal-student-register">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="business">
+            <div class="project-media project-media-image">
+              <img src="images/modrino.png" alt="Preview of car Website(Modrino) project">
+            </div>
+            <div class="project-body">
+              <h3>car Website(Modrino)</h3>
+              <p>A polished car website concept built to showcase vehicles with a clean structure, bold presentation, and a business-ready feel.</p>
+              <ul class="project-tags">
+                <li>Cars</li>
+                <li>Business</li>
+                <li>JavaScript</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-car-website-modrino" aria-haspopup="dialog" aria-controls="modal-car-website-modrino">View Project</button>
             </div>
           </article>
         </div>
@@ -494,57 +539,82 @@
     </div>
   </div>
 
-  <div class="project-modal" id="modal-ai-app" role="dialog" aria-modal="true" aria-labelledby="modal-ai-app-title" hidden>
+  <div class="project-modal" id="modal-tutorme" role="dialog" aria-modal="true" aria-labelledby="modal-tutorme-title" hidden>
     <div class="modal-backdrop" data-close-modal></div>
     <div class="modal-panel">
       <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
       <p class="modal-kicker">Project Details</p>
-      <h3 id="modal-ai-app-title">AI App</h3>
+      <div class="modal-project-image">
+        <img src="images/tutorme.png" alt="Screenshot of tutorMe project">
+      </div>
+      <h3 id="modal-tutorme-title">tutorMe</h3>
       <p>
-        A concept dashboard exploring dark interface styling, glowing visual cues, and modular content blocks for a
-        modern AI-inspired product experience.
+        tutorMe is a Figma-built education platform concept focused on helping users discover tutoring support through
+        a clean interface, simple navigation, and an approachable learning-centered presentation.
       </p>
-      <ul class="modal-list">
-        <li>Modern dashboard composition</li>
-        <li>Card-based interface elements</li>
-        <li>Consistent visual rhythm and spacing</li>
-      </ul>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://static-real-57469152.figma.site" target="_blank" rel="noopener noreferrer">Live Demo</a>
+      </div>
     </div>
   </div>
 
-  <div class="project-modal" id="modal-admin-panel" role="dialog" aria-modal="true" aria-labelledby="modal-admin-panel-title" hidden>
+  <div class="project-modal" id="modal-weather-dashboard" role="dialog" aria-modal="true" aria-labelledby="modal-weather-dashboard-title" hidden>
     <div class="modal-backdrop" data-close-modal></div>
     <div class="modal-panel">
       <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
       <p class="modal-kicker">Project Details</p>
-      <h3 id="modal-admin-panel-title">Admin Panel</h3>
+      <div class="modal-project-image">
+        <img src="images/weatherapp.png" alt="Screenshot of Weather app project">
+      </div>
+      <h3 id="modal-weather-dashboard-title">Weather app</h3>
       <p>
-        An admin interface concept designed for visibility, structure, and practical navigation patterns across dense
-        content areas and control panels.
+        Weather app is a weather dashboard project built to help users search cities quickly, view forecast details,
+        and interact with a clean interface designed for clarity and ease of use.
       </p>
-      <ul class="modal-list">
-        <li>Information-rich layout</li>
-        <li>Balanced table and panel structure</li>
-        <li>Clear navigation and action states</li>
-      </ul>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/Weather-Dashboard-App-/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/Weather-Dashboard-App-.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
     </div>
   </div>
 
-  <div class="project-modal" id="modal-web-app" role="dialog" aria-modal="true" aria-labelledby="modal-web-app-title" hidden>
+  <div class="project-modal" id="modal-student-register" role="dialog" aria-modal="true" aria-labelledby="modal-student-register-title" hidden>
     <div class="modal-backdrop" data-close-modal></div>
     <div class="modal-panel">
       <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
       <p class="modal-kicker">Project Details</p>
-      <h3 id="modal-web-app-title">Web App</h3>
+      <div class="modal-project-image">
+        <img src="images/student-register.jpeg" alt="Screenshot of Student Register project">
+      </div>
+      <h3 id="modal-student-register-title">Student Register</h3>
       <p>
-        A web application shell focused on responsive structure, reusable content blocks, and a strong dark-mode
-        presentation across multiple sections.
+        Student Register is a student-support web project built to help users access and review student-related list
+        information through a straightforward layout with a clear, practical structure.
       </p>
-      <ul class="modal-list">
-        <li>Scalable page structure</li>
-        <li>Responsive component layout</li>
-        <li>Consistent visual language</li>
-      </ul>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/students_register/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/students_register.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-car-website-modrino" role="dialog" aria-modal="true" aria-labelledby="modal-car-website-modrino-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image">
+        <img src="images/modrino.png" alt="Screenshot of car Website(Modrino) project">
+      </div>
+      <h3 id="modal-car-website-modrino-title">car Website(Modrino)</h3>
+      <p>
+        car Website(Modrino) is a polished car landing page with bold presentation, clear navigation, and a confident
+        business-focused layout built to showcase vehicles beautifully.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/Car.website-Modrino-/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/Car.website-Modrino-.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
     </div>
   </div>
 
