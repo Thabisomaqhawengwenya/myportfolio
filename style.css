@@ -1653,6 +1653,24 @@ textarea {
   margin-top: 1rem;
 }
 
+#modal-student-register .modal-project-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.7rem;
+}
+
+#modal-student-register .modal-project-image img {
+  width: auto;
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: calc(var(--radius-md) - 6px);
+}
+
+#modal-student-register .modal-actions {
+  margin-top: 1rem;
+}
+
 .modal-list {
   margin: 1rem 0 0;
   padding-left: 1.15rem;
