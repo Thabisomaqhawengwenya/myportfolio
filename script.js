@@ -1,5 +1,7 @@
 const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
+const siteHeader = document.querySelector(".site-header");
+const heroSection = document.querySelector(".hero");
 const navLinks = document.querySelectorAll(".site-nav a");
 const themeToggle = document.querySelector("#theme-toggle");
 const projectFilters = document.querySelectorAll(".project-filter");
@@ -202,6 +204,19 @@ if (introSkipButton) {
   });
 };
 
+const updateHeaderTransparency = () => {
+  if (!siteHeader || !heroSection) {
+    return;
+  }
+
+  const mobileMenuOpen = Boolean(siteNav?.classList.contains("is-open"));
+  const headerHeight = siteHeader.offsetHeight;
+  const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+  const shouldBeTransparent = window.scrollY + headerHeight < heroBottom - 24;
+
+  siteHeader.classList.toggle("is-hero-transparent", shouldBeTransparent && !mobileMenuOpen);
+};
+
 const closeMobileMenu = () => {
   if (!navToggle || !siteNav) {
     return;
@@ -210,6 +225,7 @@ const closeMobileMenu = () => {
   navToggle.setAttribute("aria-expanded", "false");
   navToggle.setAttribute("aria-label", "Open navigation");
   siteNav.classList.remove("is-open");
+  updateHeaderTransparency();
 };
 
 if (navToggle && siteNav) {
@@ -218,6 +234,7 @@ if (navToggle && siteNav) {
     navToggle.setAttribute("aria-expanded", String(!isOpen));
     navToggle.setAttribute("aria-label", isOpen ? "Open navigation" : "Close navigation");
     siteNav.classList.toggle("is-open", !isOpen);
+    updateHeaderTransparency();
   });
 
   navLinks.forEach((link) => {
@@ -230,6 +247,8 @@ if (navToggle && siteNav) {
     if (window.innerWidth > 760) {
       closeMobileMenu();
     }
+
+    updateHeaderTransparency();
   });
 }
 
@@ -287,6 +306,8 @@ const toggleBackToTop = () => {
   backToTopButton.classList.toggle("is-visible", window.scrollY > 420);
 };
 
+updateHeaderTransparency();
+window.addEventListener("scroll", updateHeaderTransparency, { passive: true });
 toggleBackToTop();
 window.addEventListener("scroll", toggleBackToTop, { passive: true });
 
