@@ -10,11 +10,6 @@ const sections = document.querySelectorAll("main section[id], header[id]");
 const revealItems = document.querySelectorAll(".reveal");
 const backToTopButton = document.querySelector(".back-to-top");
 const contactForm = document.querySelector(".contact-form");
-const portfolioIntro = document.querySelector("#portfolio-intro");
-const introVideo = document.querySelector("#intro-video");
-const introSkipButton = document.querySelector("#intro-skip");
-const heroCopy = document.querySelector(".hero-copy");
-const heroVisual = document.querySelector(".hero-ufo-visual");
 const backgroundVideo = document.querySelector("#background-video");
 const heroUfoStage = document.querySelector("#hero-ufo-stage");
 const heroUfoCanvas = document.querySelector("#hero-ufo-canvas");
@@ -22,10 +17,7 @@ const modalTriggers = document.querySelectorAll(".modal-trigger");
 const projectModals = document.querySelectorAll(".project-modal");
 let activeModal = null;
 let lastFocusedTrigger = null;
-const INTRO_START_TIME = 0.5;
-const INTRO_END_TIME = 3.9;
 const rootElement = document.documentElement;
-let introSafetyTimer = null;
 
 const getCurrentTheme = () => (rootElement.dataset.theme === "light" ? "light" : "dark");
 
@@ -92,117 +84,6 @@ if (projectFilters.length && projectCards.length) {
     });
   });
 }
-
-const isIntroVisible = () =>
-  Boolean(portfolioIntro) && !portfolioIntro.hidden && !portfolioIntro.classList.contains("is-hidden");
-
-const dismissIntro = () => {
-  if (introSafetyTimer) {
-    window.clearTimeout(introSafetyTimer);
-    introSafetyTimer = null;
-  }
-
-  if (!portfolioIntro || portfolioIntro.classList.contains("is-hidden")) {
-    document.body.classList.remove("intro-open");
-    return;
-  }
-
-  portfolioIntro.classList.add("is-hidden");
-  document.body.classList.remove("intro-open");
-  document.body.classList.add("intro-complete");
-  heroCopy?.classList.add("hero-pan-in");
-  heroVisual?.classList.add("hero-pan-in");
-
-  window.setTimeout(() => {
-    portfolioIntro.hidden = true;
-  }, 560);
-};
-
-if (portfolioIntro && introVideo) {
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  if (prefersReducedMotion) {
-    portfolioIntro.hidden = true;
-    document.body.classList.remove("intro-open");
-  } else {
-    document.body.classList.add("intro-open");
-    introSafetyTimer = window.setTimeout(() => {
-      if (isIntroVisible()) {
-        introVideo.pause();
-        dismissIntro();
-      }
-    }, 6000);
-
-    const getIntroStopTime = () => {
-      if (!Number.isFinite(introVideo.duration) || introVideo.duration <= 0) {
-        return INTRO_END_TIME;
-      }
-
-      return Math.min(INTRO_END_TIME, Math.max(INTRO_START_TIME, introVideo.duration));
-    };
-
-    const seekIntroStart = () => {
-      if (introVideo.currentTime < INTRO_START_TIME || introVideo.currentTime >= getIntroStopTime()) {
-        try {
-          introVideo.currentTime = INTRO_START_TIME;
-        } catch (_error) {
-          // Some browsers can briefly block seeking until metadata is fully ready.
-        }
-      }
-    };
-
-    const playIntroVideo = () => {
-      introVideo.muted = true;
-      introVideo.defaultMuted = true;
-      seekIntroStart();
-
-      const playPromise = introVideo.play();
-      if (playPromise && typeof playPromise.catch === "function") {
-        playPromise.catch(() => {
-          // The skip button remains available if autoplay is blocked.
-        });
-      }
-    };
-
-    if (introVideo.readyState >= 1) {
-      seekIntroStart();
-    } else {
-      introVideo.addEventListener("loadedmetadata", seekIntroStart, { once: true });
-    }
-
-    if (introVideo.readyState >= 2) {
-      playIntroVideo();
-    } else {
-      introVideo.addEventListener("canplay", playIntroVideo, { once: true });
-    }
-
-    introVideo.addEventListener("timeupdate", () => {
-      if (introVideo.currentTime >= getIntroStopTime()) {
-        introVideo.pause();
-        dismissIntro();
-      }
-    });
-
-    introVideo.addEventListener("ended", dismissIntro, { once: true });
-    introVideo.addEventListener("error", dismissIntro, { once: true });
-
-    document.addEventListener("visibilitychange", () => {
-      if (!document.hidden && isIntroVisible() && introVideo.paused) {
-        playIntroVideo();
-      }
-    });
-  }
-}
-
-if (introSkipButton) {
-  introSkipButton.addEventListener("click", () => {
-    if (introVideo) {
-      introVideo.pause();
-    }
-
-    dismissIntro();
-  });
-};
 
 const updateHeaderTransparency = () => {
   if (!siteHeader || !heroSection) {
@@ -836,15 +717,6 @@ projectModals.forEach((modal) => {
 
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape") {
-    if (isIntroVisible()) {
-      if (introVideo) {
-        introVideo.pause();
-      }
-
-      dismissIntro();
-      return;
-    }
-
     if (activeModal) {
       closeModal(activeModal);
       return;

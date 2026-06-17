@@ -31,23 +31,6 @@
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
 
-  <div class="portfolio-intro" id="portfolio-intro" aria-label="Portfolio intro">
-    <video
-      id="intro-video"
-      class="portfolio-intro-video"
-      autoplay
-      muted
-      playsinline
-      webkit-playsinline
-      preload="auto"
-    >
-      <source src="blueeyesanime.mp4" type="video/mp4">
-      Your browser does not support the intro video.
-    </video>
-    <div class="portfolio-intro-overlay"></div>
-    <button class="portfolio-intro-skip" id="intro-skip" type="button">Skip Intro</button>
-  </div>
-
   <div class="background-video-shell" aria-hidden="true">
     <video id="background-video" class="background-video" autoplay muted loop playsinline webkit-playsinline preload="auto">
       <source src="portfoliobackgroundwallpaper.mp4" type="video/mp4">
@@ -76,7 +59,6 @@
           <a href="#home">Home</a>
           <a href="#about">About</a>
           <a href="#projects">Projects</a>
-          <a href="#experience">Experience</a>
           <a href="#contact">Contact</a>
           <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false">
             <span class="theme-toggle-label theme-toggle-label-light">Light</span>
@@ -108,9 +90,8 @@
             </p>
 
             <div class="hero-actions">
-              <a class="btn btn-primary" href="#contact">Hire Me Today</a>
-              <a class="btn btn-secondary" href="#contact">Get In Touch</a>
-              <a class="btn btn-cv" href="cv">Download CV</a>
+              <a class="btn btn-primary" href="#contact">Get In Touch</a>
+              <a class="btn btn-secondary" href="./Maqhawe_CV.pdf" target="_blank">Download CV</a>
             </div>
           </div>
 
@@ -136,24 +117,21 @@
         <div class="container about-grid">
           <div class="about-copy reveal">
             <p>
-            I am a student developer focused on building websites and applications that feel 
-            modern, clean, and reliable.I enjoy turning ideas into practical projects that balance clear structure 
-            with thoughtful design and continuous improvement.
-
+              I am a student developer focused on building websites and applications that feel modern, clean, and
+              reliable. I enjoy turning ideas into practical projects that balance clear structure with thoughtful
+              design and continuous improvement.
             </p>
             <p>
-             From building interfaces to developing core logic, I focus on clarity, usability, and the small 
-             details that make a project feel intentional. I aim to create work that looks clean and 
-             performs reliably across different devices and environments.
+              From building interfaces to developing core logic, I focus on clarity, usability, and the small
+              details that make a project feel intentional. I aim to create work that looks clean and performs
+              reliably across different devices and environments.
             </p>
           </div>
 
           <div class="about-visual reveal" aria-hidden="true">
-            <div class="about-blob"></div>
-            <span class="about-spark spark-one"></span>
-            <span class="about-spark spark-two"></span>
-            <span class="about-spark spark-three"></span>
-            <span class="about-spark spark-four"></span>
+            <div class="about-artwork">
+              <img class="about-image about-image-coder" src="images/about-coder.png" alt="">
+            </div>
           </div>
         </div>
       </section>
@@ -196,36 +174,6 @@
         </div>
       </section>
 
-      <section class="section" id="experience">
-        <div class="container section-header reveal">
-          <h2>Experience</h2>
-        </div>
-
-        <div class="container timeline">
-          <article class="timeline-item reveal">
-            <div class="timeline-badge">2026</div>
-            <div class="timeline-card">
-              <h3>Designer & Developer</h3>
-              <p>
-               Designed and built portfolio websites, landing pages, and user interfaces, focusing on both visual clarity and functionality. Applied front-end development 
-               practices while making design decisions around layout, color, and user experience to create clean, responsive digital products.
-              </p>
-            </div>
-          </article>
-
-          <article class="timeline-item reveal">
-            <div class="timeline-badge">2026</div>
-            <div class="timeline-card">
-              <h3>Designer & Developer</h3>
-              <p>
-                Worked on personal and collaborative projects, developing skills in UI design and front-end development. Explored styling, layout structure, 
-                and component thinking while turning rough ideas into visually clear and usable interfaces.
-              </p>
-            </div>
-          </article>
-        </div>
-      </section>
-
       <section class="section projects-section" id="projects">
         <div class="container section-header section-header-center projects-header reveal">
           <h2>Work &amp; Projects</h2>
@@ -250,7 +198,7 @@
           </button>
           <button class="project-filter" type="button" data-project-filter="utility" aria-pressed="false">
             <span>Utility</span>
-            <span class="project-filter-count">1</span>
+            <span class="project-filter-count">4</span>
           </button>
           <button class="project-filter" type="button" data-project-filter="gift" aria-pressed="false">
             <span>Gift</span>
@@ -341,6 +289,60 @@
             </div>
           </article>
 
+          <article class="project-card reveal" data-project-category="utility">
+            <div class="project-media project-media-placeholder media-six" aria-hidden="true">
+              <span class="project-media-badge">Utility</span>
+              <span class="project-media-title">Age</span>
+              <span class="project-media-copy">Calculator</span>
+            </div>
+            <div class="project-body">
+              <h3>Age calculator</h3>
+              <p>A simple utility project focused on calculating age quickly through a clean layout and straightforward user interaction.</p>
+              <ul class="project-tags">
+                <li>Utility</li>
+                <li>JavaScript</li>
+                <li>Calculator</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-age-calculator" aria-haspopup="dialog" aria-controls="modal-age-calculator">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="utility">
+            <div class="project-media project-media-placeholder media-five" aria-hidden="true">
+              <span class="project-media-badge">Utility</span>
+              <span class="project-media-title">Pop Up</span>
+              <span class="project-media-copy">Notification</span>
+            </div>
+            <div class="project-body">
+              <h3>pop up notification</h3>
+              <p>A lightweight Python project focused on showing notifications through a simple utility experience with clear behavior.</p>
+              <ul class="project-tags">
+                <li>Utility</li>
+                <li>Python</li>
+                <li>Notification</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-pop-up-notification" aria-haspopup="dialog" aria-controls="modal-pop-up-notification">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="utility">
+            <div class="project-media project-media-placeholder media-six" aria-hidden="true">
+              <span class="project-media-badge">Utility</span>
+              <span class="project-media-title">Python</span>
+              <span class="project-media-copy">Calculator</span>
+            </div>
+            <div class="project-body">
+              <h3>calculator</h3>
+              <p>A Python calculator project built to handle simple calculations through a clear interface and practical utility-focused flow.</p>
+              <ul class="project-tags">
+                <li>Utility</li>
+                <li>Python</li>
+                <li>Calculator</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-calculator" aria-haspopup="dialog" aria-controls="modal-calculator">View Project</button>
+            </div>
+          </article>
+
           <article class="project-card reveal" data-project-category="gift">
             <div class="project-media project-media-image">
               <img src="images/student-register.jpeg" alt="Preview of Student Register project">
@@ -390,51 +392,6 @@
           </article>
         </div>
       </section>
-
-      <section class="section testimonials-section" id="testimonials">
-        <div class="container section-header section-header-center reveal">
-          <h2>Testimonials</h2>
-          <p>
-            Feedback from people who value clean presentation, dependable execution, and a thoughtful working process.
-          </p>
-        </div>
-
-        <div class="container testimonials-grid">
-          <article class="testimonial-card reveal">
-            <p class="testimonial-quote">
-              “Maqhawe brings strong attention to detail and always delivers interfaces that feel polished, structured,
-              and easy to use.”
-            </p>
-            <div class="testimonial-meta">
-              <strong>Creative Collaborator</strong>
-              <span>UI Project Partner</span>
-            </div>
-          </article>
-
-          <article class="testimonial-card reveal">
-            <p class="testimonial-quote">
-              “Working together was smooth from start to finish. The layout decisions were clear, the styling was
-              consistent, and the final result felt professional.”
-            </p>
-            <div class="testimonial-meta">
-              <strong>Client Feedback</strong>
-              <span>Portfolio Project</span>
-            </div>
-          </article>
-
-          <article class="testimonial-card reveal">
-            <p class="testimonial-quote">
-              “A reliable developer with a growing eye for both design and implementation. The work shows care,
-              balance, and steady improvement.”
-            </p>
-            <div class="testimonial-meta">
-              <strong>Peer Review</strong>
-              <span>Development Team</span>
-            </div>
-          </article>
-        </div>
-      </section>
-
       <section class="section contact-section" id="contact">
         <div class="container section-header section-header-center reveal">
           <h2>Let's Work Together</h2>
@@ -591,6 +548,69 @@
       <div class="modal-actions">
         <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/Weather-Dashboard-App-/" target="_blank" rel="noopener noreferrer">Live Demo</a>
         <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/Weather-Dashboard-App-.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-age-calculator" role="dialog" aria-modal="true" aria-labelledby="modal-age-calculator-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image modal-project-image-placeholder" aria-hidden="true">
+        <span class="project-media-badge">Utility</span>
+        <span class="project-media-title">Age</span>
+        <span class="project-media-copy">Calculator</span>
+      </div>
+      <h3 id="modal-age-calculator-title">Age calculator</h3>
+      <p>
+        Age calculator is a utility project created to help users quickly calculate age through a clean interface,
+        simple inputs, and a clear result-focused experience.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/age_calculator.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-pop-up-notification" role="dialog" aria-modal="true" aria-labelledby="modal-pop-up-notification-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image modal-project-image-placeholder" aria-hidden="true">
+        <span class="project-media-badge">Utility</span>
+        <span class="project-media-title">Pop Up</span>
+        <span class="project-media-copy">Notification</span>
+      </div>
+      <h3 id="modal-pop-up-notification-title">pop up notification</h3>
+      <p>
+        pop up notification is a Python utility project built to trigger simple notifications through a clear,
+        lightweight setup focused on quick feedback and practical use.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/project_4-website.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-calculator" role="dialog" aria-modal="true" aria-labelledby="modal-calculator-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image modal-project-image-placeholder" aria-hidden="true">
+        <span class="project-media-badge">Utility</span>
+        <span class="project-media-title">Python</span>
+        <span class="project-media-copy">Calculator</span>
+      </div>
+      <h3 id="modal-calculator-title">calculator</h3>
+      <p>
+        calculator is a Python utility project created to perform everyday calculations through a simple,
+        direct, and easy-to-use setup focused on fast results.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/calculator.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
       </div>
     </div>
   </div>
