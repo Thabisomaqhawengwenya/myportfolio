@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="Dark portfolio website inspired by the provided reference layout and rebuilt with HTML, CSS, and vanilla JavaScript."
+  >
+  
+  <title>MAQHAWE | Full-Stack Developer</title>
+  <script>
+    (() => {
+      try {
+        const savedTheme = localStorage.getItem("portfolio-theme");
+        document.documentElement.dataset.theme = savedTheme || "dark";
+      } catch (_error) {
+        document.documentElement.dataset.theme = "dark";
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="images/logo light.png">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <div class="background-video-shell" aria-hidden="true">
+    <video id="background-video" class="background-video" autoplay muted loop playsinline webkit-playsinline preload="auto">
+      <source src="portfoliobackgroundwallpaper.mp4" type="video/mp4">
+      Your browser does not support the background video.
+    </video>
+    <div class="background-video-overlay"></div>
+  </div>
+
+  <div class="site-frame">
+    <header class="site-header" id="home">
+      <div class="container nav-bar">
+        <a class="brand" href="#home">M.T.N</a>
+
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          aria-label="Open navigation"
+        >
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#contact">Contact</a>
+          <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false">
+            <span class="theme-toggle-label theme-toggle-label-light">Light</span>
+            <span class="theme-toggle-track" aria-hidden="true">
+              <span class="theme-toggle-thumb"></span>
+              <span class="theme-toggle-dot theme-toggle-dot-one"></span>
+              <span class="theme-toggle-dot theme-toggle-dot-two"></span>
+            </span>
+            <span class="theme-toggle-label theme-toggle-label-dark">Dark</span>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <section class="hero section" aria-labelledby="hero-title">
+        <div class="container hero-layout">
+          <div class="hero-copy reveal">
+            <p class="hero-kicker">creative developer portfolio</p>
+            <h2 class="hero-title-top">
+              <span class="hero-title-muted">Hey!,</span>
+              <span class="hero-title-accent">I am</span>
+            </h2>
+            <h1 id="hero-title" class="hero-main-title">MAQHAWE</h1>
+            <p class="hero-role">Full-Stack Developer</p>
+            <p class="hero-description">
+              I craft beautiful, functional digital experiences that bring ideas to life. Specializing in modern web
+              development with clean code, strong UI decisions, and a polished presentation style.
+            </p>
+
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#contact">Get In Touch</a>
+              <a class="btn btn-secondary" href="./Maqhawe_CV.pdf" download="Maqhawe_CV.pdf">Download CV</a>
+            </div>
+          </div>
+
+          <div class="hero-visual hero-ufo-visual reveal" aria-hidden="true">
+            <div class="hero-ufo-stage" id="hero-ufo-stage">
+              <canvas class="hero-ufo-canvas" id="hero-ufo-canvas"></canvas>
+              <img class="hero-ufo-fallback" src="ufo-tractor-beam.png" alt="">
+              <div class="hero-ufo-aura hero-ufo-aura-one"></div>
+              <div class="hero-ufo-aura hero-ufo-aura-two"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-glow hero-glow-left" aria-hidden="true"></div>
+        <div class="hero-glow hero-glow-right" aria-hidden="true"></div>
+      </section>
+
+      <section class="section" id="about">
+        <div class="container section-header reveal">
+          <h2>About Me</h2>
+        </div>
+
+        <div class="container about-grid">
+          <div class="about-copy reveal">
+            <p>
+              I am a student developer focused on building websites and applications that feel modern, clean, and
+              reliable. I enjoy turning ideas into practical projects that balance clear structure with thoughtful
+              design and continuous improvement.
+            </p>
+            <p>
+              From building interfaces to developing core logic, I focus on clarity, usability, and the small
+              details that make a project feel intentional. I aim to create work that looks clean and performs
+              reliably across different devices and environments.
+            </p>
+          </div>
+
+          <div class="about-visual reveal" aria-hidden="true">
+            <div class="about-artwork">
+              <img class="about-image about-image-coder" src="images/about-coder.png" alt="">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="skills">
+        <div class="container section-header reveal">
+          <h2>Skills &amp; Technologies</h2>
+        </div>
+
+        <div class="container skills-grid">
+          <article class="skill-card reveal">
+            <h3>Frontend</h3>
+            <ul class="skill-list">
+              <li>HTML5</li>
+              <li>CSS3</li>
+              <li>JavaScript</li>
+              <li>Responsive UI</li>
+            </ul>
+          </article>
+
+          <article class="skill-card reveal">
+            <h3>Backend</h3>
+            <ul class="skill-list">
+              <li>Node.js</li>
+              <li>Express</li>
+              <li>REST APIs</li>
+              <li>Database Design</li>
+            </ul>
+          </article>
+
+          <article class="skill-card reveal">
+            <h3>Developer</h3>
+            <ul class="skill-list">
+              <li>Git &amp; GitHub</li>
+              <li>Deployment</li>
+              <li>Debugging</li>
+              <li>Problem Solving</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section projects-section" id="projects">
+        <div class="container section-header section-header-center projects-header reveal">
+          <h2>Work &amp; Projects</h2>
+          <p>
+            Exploring creativity through code, personal experiments, business ideas, education-focused experiences,
+            and practical tools.
+          </p>
+        </div>
+
+        <div class="container projects-filter-bar reveal" aria-label="Project categories">
+          <button class="project-filter is-active" type="button" data-project-filter="personal" aria-pressed="true">
+            <span>Personal</span>
+            <span class="project-filter-count">2</span>
+          </button>
+          <button class="project-filter" type="button" data-project-filter="business" aria-pressed="false">
+            <span>Business</span>
+            <span class="project-filter-count">2</span>
+          </button>
+          <button class="project-filter" type="button" data-project-filter="education" aria-pressed="false">
+            <span>Education</span>
+            <span class="project-filter-count">1</span>
+          </button>
+          <button class="project-filter" type="button" data-project-filter="utility" aria-pressed="false">
+            <span>Utility</span>
+            <span class="project-filter-count">4</span>
+          </button>
+          <button class="project-filter" type="button" data-project-filter="gift" aria-pressed="false">
+            <span>Gift</span>
+            <span class="project-filter-count">2</span>
+          </button>
+        </div>
+
+        <div class="container projects-grid">
+          <article class="project-card reveal" data-project-category="personal">
+            <div class="project-media project-media-image">
+              <img src="images/firstwebsite.png" alt="Preview of My First Website project">
+            </div>
+            <div class="project-body">
+              <h3>My First Website</h3>
+              <p>A clean early website project focused on simple structure, clear navigation, and a strong landing-page presentation.</p>
+              <ul class="project-tags">
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>JS</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-my-first-website" aria-haspopup="dialog" aria-controls="modal-my-first-website">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="business">
+            <div class="project-media project-media-image">
+              <img src="images/brainwave.png" alt="Preview of Brainwave.io project">
+            </div>
+            <div class="project-body">
+              <h3>Brainwave.io</h3>
+              <p>A polished business landing page with a bright layout, confident typography, and a strong conversion-focused hero section.</p>
+              <ul class="project-tags">
+                <li>Landing Page</li>
+                <li>HTML</li>
+                <li>JavaScript</li>
+                <li>CSS</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-brainwave-io" aria-haspopup="dialog" aria-controls="modal-brainwave-io">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="personal">
+            <div class="project-media project-media-image">
+              <img src="images/shark.web.png" alt="Preview of Shark.web project">
+            </div>
+            <div class="project-body">
+              <h3>Shark.web</h3>
+              <p>An ocean-themed website with bold underwater visuals, clear navigation, and a focused educational landing page experience.</p>
+              <ul class="project-tags">
+                <li>Landing Page</li>
+                <li>HTML</li>
+                <li>JS</li>
+                <li>CSS</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-shark-web" aria-haspopup="dialog" aria-controls="modal-shark-web">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="education">
+            <div class="project-media project-media-image">
+              <img src="images/tutorme.png" alt="Preview of tutorMe project">
+            </div>
+            <div class="project-body">
+              <h3>tutorMe</h3>
+              <p>A tutoring platform concept presented as a polished Figma site with a clean layout and clear learning-focused structure.</p>
+              <ul class="project-tags">
+                <li>Figma</li>
+                <li>UI Design</li>
+                <li>Education</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-tutorme" aria-haspopup="dialog" aria-controls="modal-tutorme">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="utility">
+            <div class="project-media project-media-image">
+              <img src="images/weatherapp.png" alt="Preview of Weather app project">
+            </div>
+            <div class="project-body">
+              <h3>Weather app</h3>
+              <p>A clean weather dashboard experience built around search, forecast display, and a simple user-friendly interface.</p>
+              <ul class="project-tags">
+                <li>Weather</li>
+                <li>API</li>
+                <li>JavaScript</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-weather-dashboard" aria-haspopup="dialog" aria-controls="modal-weather-dashboard">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="utility">
+            <div class="project-media project-media-placeholder media-six" aria-hidden="true">
+              <span class="project-media-badge">Utility</span>
+              <span class="project-media-title">Age</span>
+              <span class="project-media-copy">Calculator</span>
+            </div>
+            <div class="project-body">
+              <h3>Age calculator</h3>
+              <p>A simple utility project focused on calculating age quickly through a clean layout and straightforward user interaction.</p>
+              <ul class="project-tags">
+                <li>Utility</li>
+                <li>JavaScript</li>
+                <li>Calculator</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-age-calculator" aria-haspopup="dialog" aria-controls="modal-age-calculator">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="utility">
+            <div class="project-media project-media-placeholder media-five" aria-hidden="true">
+              <span class="project-media-badge">Utility</span>
+              <span class="project-media-title">Pop Up</span>
+              <span class="project-media-copy">Notification</span>
+            </div>
+            <div class="project-body">
+              <h3>pop up notification</h3>
+              <p>A lightweight Python project focused on showing notifications through a simple utility experience with clear behavior.</p>
+              <ul class="project-tags">
+                <li>Utility</li>
+                <li>Python</li>
+                <li>Notification</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-pop-up-notification" aria-haspopup="dialog" aria-controls="modal-pop-up-notification">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="utility">
+            <div class="project-media project-media-placeholder media-six" aria-hidden="true">
+              <span class="project-media-badge">Utility</span>
+              <span class="project-media-title">Python</span>
+              <span class="project-media-copy">Calculator</span>
+            </div>
+            <div class="project-body">
+              <h3>calculator</h3>
+              <p>A Python calculator project built to handle simple calculations through a clear interface and practical utility-focused flow.</p>
+              <ul class="project-tags">
+                <li>Utility</li>
+                <li>Python</li>
+                <li>Calculator</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-calculator" aria-haspopup="dialog" aria-controls="modal-calculator">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="gift">
+            <div class="project-media project-media-image">
+              <img src="images/student-register.jpeg" alt="Preview of Student Register project">
+            </div>
+            <div class="project-body">
+              <h3>Student Register</h3>
+              <p>A student-focused registration tool designed to make student information access simple, direct, and easy to use.</p>
+              <ul class="project-tags">
+                <li>Students</li>
+                <li>Register</li>
+                <li>JavaScript</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-student-register" aria-haspopup="dialog" aria-controls="modal-student-register">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="gift">
+            <div class="project-media project-media-image project-media-image-emganwini">
+              <img src="images/emganwini-main-sda-church.png" alt="Preview of Emganwini Main SDA church project">
+            </div>
+            <div class="project-body">
+              <h3>Emganwini Main SDA church</h3>
+              <p>A church website gift project designed to give the congregation a welcoming online presence with clear and simple navigation.</p>
+              <ul class="project-tags">
+                <li>Church</li>
+                <li>Gift</li>
+                <li>Website</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-emganwini-main-sda-church" aria-haspopup="dialog" aria-controls="modal-emganwini-main-sda-church">View Project</button>
+            </div>
+          </article>
+
+          <article class="project-card reveal" data-project-category="business">
+            <div class="project-media project-media-image">
+              <img src="images/modrino.png" alt="Preview of car Website(Modrino) project">
+            </div>
+            <div class="project-body">
+              <h3>car Website(Modrino)</h3>
+              <p>A polished car website concept built to showcase vehicles with a clean structure, bold presentation, and a business-ready feel.</p>
+              <ul class="project-tags">
+                <li>Cars</li>
+                <li>Business</li>
+                <li>JavaScript</li>
+              </ul>
+              <button class="project-link modal-trigger" type="button" data-modal-target="modal-car-website-modrino" aria-haspopup="dialog" aria-controls="modal-car-website-modrino">View Project</button>
+            </div>
+          </article>
+        </div>
+      </section>
+      <section class="section contact-section" id="contact">
+        <div class="container section-header section-header-center reveal">
+          <h2>Let's Work Together</h2>
+        </div>
+
+        <div class="container contact-panel reveal">
+          <form class="contact-form" action="https://formsubmit.co/thabisomaqhawengwenya@gmail.com" method="post">
+            <input type="hidden" name="_subject" value="New portfolio message from Maqhawe">
+            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_url" value="">
+            <label class="sr-only" for="contact-honey">Leave this field empty</label>
+            <input class="sr-only" id="contact-honey" name="_honey" type="text" tabindex="-1" autocomplete="off">
+
+            <label class="sr-only" for="name">Name</label>
+            <input id="name" name="name" type="text" placeholder="Your name" required>
+
+            <label class="sr-only" for="email">Email</label>
+            <input id="email" name="email" type="email" placeholder="Your email" required>
+
+            <label class="sr-only" for="subject">Subject</label>
+            <input id="subject" name="subject" type="text" placeholder="Subject" required>
+
+            <label class="sr-only" for="message">Message</label>
+            <textarea id="message" name="message" rows="5" placeholder="Message" required></textarea>
+
+            <button class="btn btn-primary form-submit" type="submit">Send Message</button>
+            <p class="form-status" role="status" aria-live="polite"></p>
+          </form>
+
+          <aside class="contact-copy">
+            <p>
+              I create responsive, visually polished interfaces for personal brands, products, and modern businesses.
+              If you want a site that feels clean, confident, and memorable, I'd love to hear about it.
+            </p>
+
+            <ul class="contact-points">
+              <li>Website Development</li>
+              <li>Portfolio Design</li>
+              <li>Landing Page Design</li>
+              <li>Full-Stack Development</li>
+              <li>Debugging &amp; Maintenance</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-shell reveal">
+        <p class="footer-note">@ 2026 Maqhawe, all rights are preserved</p>
+
+        <div class="footer-links" aria-label="Footer links">
+          <a href="https://wa.me/263787755074" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <a href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="mailto:thabisomaqhawengwenya@gmail.com">Email</a>
+          <a href="https://www.linkedin.com/in/maqhawe-ngwenya" target="_blank" rel="noreferrer">LinkedIn</a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <div class="project-modal" id="modal-my-first-website" role="dialog" aria-modal="true" aria-labelledby="modal-my-first-website-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image">
+        <img src="images/firstwebsite.png" alt="Screenshot of My First Website project">
+      </div>
+      <h3 id="modal-my-first-website-title">My First Website</h3>
+      <p>
+        My First Website is an early web project that explores a classic landing-page layout with a strong hero section,
+        clear menu structure, and simple visual storytelling using HTML, CSS, and JavaScript.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/myfirstwebsite/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/myfirstwebsite.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-brainwave-io" role="dialog" aria-modal="true" aria-labelledby="modal-brainwave-io-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image">
+        <img src="images/brainwave.png" alt="Screenshot of Brainwave.io project">
+      </div>
+      <h3 id="modal-brainwave-io-title">Brainwave.io</h3>
+      <p>
+        Brainwave.io is a clean marketing website built around a bold hero section, simple navigation, and a modern
+        business-focused layout designed to present services clearly and guide visitors toward action.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/brainwave.io/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/brainwave.io.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-shark-web" role="dialog" aria-modal="true" aria-labelledby="modal-shark-web-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image">
+        <img src="images/shark.web.png" alt="Screenshot of Shark.web project">
+      </div>
+      <h3 id="modal-shark-web-title">Shark.web</h3>
+      <p>
+        Shark.web is a visually immersive website built around shark-themed content, strong hero imagery, and a clean
+        structure that introduces visitors to the site through an engaging marine-inspired design.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/sharks.web/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/sharks.web.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-tutorme" role="dialog" aria-modal="true" aria-labelledby="modal-tutorme-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image">
+        <img src="images/tutorme.png" alt="Screenshot of tutorMe project">
+      </div>
+      <h3 id="modal-tutorme-title">tutorMe</h3>
+      <p>
+        tutorMe is a Figma-built education platform concept focused on helping users discover tutoring support through
+        a clean interface, simple navigation, and an approachable learning-centered presentation.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://static-real-57469152.figma.site" target="_blank" rel="noopener noreferrer">Live Demo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-weather-dashboard" role="dialog" aria-modal="true" aria-labelledby="modal-weather-dashboard-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image">
+        <img src="images/weatherapp.png" alt="Screenshot of Weather app project">
+      </div>
+      <h3 id="modal-weather-dashboard-title">Weather app</h3>
+      <p>
+        Weather app is a weather dashboard project built to help users search cities quickly, view forecast details,
+        and interact with a clean interface designed for clarity and ease of use.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/Weather-Dashboard-App-/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/Weather-Dashboard-App-.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-age-calculator" role="dialog" aria-modal="true" aria-labelledby="modal-age-calculator-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image modal-project-image-placeholder" aria-hidden="true">
+        <span class="project-media-badge">Utility</span>
+        <span class="project-media-title">Age</span>
+        <span class="project-media-copy">Calculator</span>
+      </div>
+      <h3 id="modal-age-calculator-title">Age calculator</h3>
+      <p>
+        Age calculator is a utility project created to help users quickly calculate age through a clean interface,
+        simple inputs, and a clear result-focused experience.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/age_calculator.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-pop-up-notification" role="dialog" aria-modal="true" aria-labelledby="modal-pop-up-notification-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image modal-project-image-placeholder" aria-hidden="true">
+        <span class="project-media-badge">Utility</span>
+        <span class="project-media-title">Pop Up</span>
+        <span class="project-media-copy">Notification</span>
+      </div>
+      <h3 id="modal-pop-up-notification-title">pop up notification</h3>
+      <p>
+        pop up notification is a Python utility project built to trigger simple notifications through a clear,
+        lightweight setup focused on quick feedback and practical use.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/project_4-website.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-calculator" role="dialog" aria-modal="true" aria-labelledby="modal-calculator-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image modal-project-image-placeholder" aria-hidden="true">
+        <span class="project-media-badge">Utility</span>
+        <span class="project-media-title">Python</span>
+        <span class="project-media-copy">Calculator</span>
+      </div>
+      <h3 id="modal-calculator-title">calculator</h3>
+      <p>
+        calculator is a Python utility project created to perform everyday calculations through a simple,
+        direct, and easy-to-use setup focused on fast results.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/calculator.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-student-register" role="dialog" aria-modal="true" aria-labelledby="modal-student-register-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image">
+        <img src="images/student-register.jpeg" alt="Screenshot of Student Register project">
+      </div>
+      <h3 id="modal-student-register-title">Student Register</h3>
+      <p>
+        Student Register is a student-focused tool built to present registration information clearly through a simple,
+        practical, and easy-to-use interface.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/students_register/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/students_register.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-car-website-modrino" role="dialog" aria-modal="true" aria-labelledby="modal-car-website-modrino-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image">
+        <img src="images/modrino.png" alt="Screenshot of car Website(Modrino) project">
+      </div>
+      <h3 id="modal-car-website-modrino-title">car Website(Modrino)</h3>
+      <p>
+        car Website(Modrino) is a polished car landing page with bold presentation, clear navigation, and a confident
+        business-focused layout built to showcase vehicles beautifully.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/Car.website-Modrino-/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+        <a class="modal-action-btn modal-action-btn-secondary" href="https://github.com/thabisomaqhawengwenya-netizen/Car.website-Modrino-.git" target="_blank" rel="noopener noreferrer">GitHub Repo</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="project-modal" id="modal-emganwini-main-sda-church" role="dialog" aria-modal="true" aria-labelledby="modal-emganwini-main-sda-church-title" hidden>
+    <div class="modal-backdrop" data-close-modal></div>
+    <div class="modal-panel">
+      <button class="modal-close" type="button" aria-label="Close project details" data-close-modal>&times;</button>
+      <p class="modal-kicker">Project Details</p>
+      <div class="modal-project-image modal-project-image-emganwini">
+        <img src="images/emganwini-main-sda-church.png" alt="Screenshot of Emganwini Main SDA church project">
+      </div>
+      <h3 id="modal-emganwini-main-sda-church-title">Emganwini Main SDA church</h3>
+      <p>
+        Emganwini Main SDA church is a gift website project created to give the church a welcoming digital presence
+        with simple navigation, clear structure, and an accessible community-facing layout.
+      </p>
+      <div class="modal-actions">
+        <a class="modal-action-btn" href="https://thabisomaqhawengwenya-netizen.github.io/emganwinimain-website/" target="_blank" rel="noopener noreferrer">Live Demo</a>
+      </div>
+    </div>
+  </div>
+
+  <button class="back-to-top" type="button" aria-label="Back to top">Top</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
