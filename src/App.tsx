@@ -21,6 +21,8 @@ const App: React.FC = () => {
     }
   });
 
+  // Delay video mount until after first paint — prevents it blocking LCP
+  const [videoReady, setVideoReady] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const setTheme = (newTheme: 'dark' | 'light') => {
@@ -36,40 +38,30 @@ const App: React.FC = () => {
     document.documentElement.dataset.theme = theme;
   }, [theme]);
 
-  // Ensure background video plays correctly across devices and visibility state changes
+  // Mount video after first paint so it doesn't compete with LCP resources
+  useEffect(() => {
+    const id = typeof requestIdleCallback !== 'undefined'
+      ? requestIdleCallback(() => setVideoReady(true), { timeout: 2000 })
+      : window.setTimeout(() => setVideoReady(true), 1000) as unknown as number;
+    return () => {
+      if (typeof cancelIdleCallback !== 'undefined') cancelIdleCallback(id as number);
+      else clearTimeout(id as unknown as ReturnType<typeof setTimeout>);
+    };
+  }, []);
+
+  // Play video once it mounts
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
-    const tryPlayVideo = () => {
-      video.muted = true;
-      const playPromise = video.play();
-      if (playPromise && typeof playPromise.catch === 'function') {
-        playPromise.catch(() => {
-          // Fallback gracefully if blocked by browser policy
-        });
-      }
-    };
-
-    if (video.readyState >= 2) {
-      tryPlayVideo();
-    } else {
-      video.addEventListener('canplay', tryPlayVideo, { once: true });
-    }
+    video.muted = true;
+    video.play().catch(() => {});
 
     const handleVisibilityChange = () => {
-      if (!document.hidden && video.paused) {
-        tryPlayVideo();
-      }
+      if (!document.hidden && video.paused) video.play().catch(() => {});
     };
-
     document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      video.removeEventListener('canplay', tryPlayVideo);
-    };
-  }, []);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [videoReady]);
 
   const muiTheme = getMuiTheme(theme);
 
@@ -82,19 +74,20 @@ const App: React.FC = () => {
       </a>
 
       <div className="background-video-shell" aria-hidden="true">
-        <video
-          ref={videoRef}
-          id="background-video"
-          className="background-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-        >
-          <source src="/portfoliobackgroundwallpaper.mp4" type="video/mp4" />
-          Your browser does not support the background video.
-        </video>
+        {videoReady && (
+          <video
+            ref={videoRef}
+            id="background-video"
+            className="background-video"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="none"
+          >
+            <source src="/portfoliobackgroundwallpaper.mp4" type="video/mp4" />
+          </video>
+        )}
         <div className="background-video-overlay" />
       </div>
 

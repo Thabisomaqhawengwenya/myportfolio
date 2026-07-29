@@ -1,22 +1,43 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Icon } from '@iconify/react';
 
 export const Footer: React.FC = () => {
   return (
     <StyledFooter className="site-footer">
       <div className="container footer-shell reveal is-visible">
-        <p className="footer-note">@ 2026 Maqhawe, all rights are preserved</p>
+        <p className="footer-note">© 2026 Maqhawe. All rights reserved.</p>
 
-        <div className="footer-links" aria-label="Footer links">
-          <a href="https://wa.me/263787755074" target="_blank" rel="noopener noreferrer">
-            WhatsApp
+        <div className="footer-links" aria-label="Social links">
+          <a
+            href="https://wa.me/263787755074"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="WhatsApp"
+          >
+            <Icon icon="logos:whatsapp-icon" width={36} height={36} />
           </a>
-          <a href="https://github.com/" target="_blank" rel="noreferrer">
-            GitHub
+          <a
+            href="https://github.com/Thabisomaqhawengwenya"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="GitHub"
+          >
+            <Icon icon="skill-icons:github-dark" width={36} height={36} />
           </a>
-          <a href="mailto:thabisomaqhawengwenya@gmail.com">Email</a>
-          <a href="https://www.linkedin.com/in/maqhawe-ngwenya" target="_blank" rel="noreferrer">
-            LinkedIn
+          <a
+            href="mailto:thabisomaqhawengwenya@gmail.com"
+            aria-label="Email"
+          >
+            <Icon icon="logos:google-gmail" width={36} height={36} />
+          </a>
+          <a
+            href="https://www.linkedin.com/in/maqhawe-ngwenya"
+            target="_blank"
+            rel="noreferrer"
+            aria-label="LinkedIn"
+          >
+            <Icon icon="logos:linkedin-icon" width={36} height={36} />
           </a>
         </div>
       </div>
@@ -39,52 +60,39 @@ const StyledFooter = styled.footer`
   .footer-note {
     margin: 0;
     color: var(--muted);
-    font-size: 0.92rem;
+    font-size: 0.88rem;
   }
 
   .footer-links {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
+    gap: 0.5rem;
 
     a {
-      padding: 0.6rem 0.95rem;
-      border: 1px solid rgba(0, 0, 244, 0.42);
-      border-radius: 999px;
-      background: rgba(0, 0, 244, 0.12);
-      color: var(--footer-link-text);
-      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.2rem;
+      height: 2.2rem;
+      border: none;
+      border-radius: 50%;
+      background: transparent;
       transition:
         transform var(--transition),
-        background-color var(--transition),
-        box-shadow var(--transition);
+        opacity var(--transition);
 
       &:hover,
       &:focus-visible {
         transform: translateY(-2px);
-        background: rgba(0, 0, 244, 0.24);
-        box-shadow:
-          0 0 18px rgba(0, 0, 244, 0.26),
-          0 0 32px rgba(0, 0, 244, 0.12);
+        opacity: 0.8;
       }
-    }
-  }
-
-  @media (max-width: 960px) {
-    .footer-shell {
-      flex-direction: column;
-      align-items: flex-start;
     }
   }
 
   @media (max-width: 560px) {
-    .footer-links {
-      width: 100%;
-
-      a {
-        flex: 1 1 calc(50% - 0.75rem);
-        text-align: center;
-      }
+    .footer-shell {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
     }
   }
 `;

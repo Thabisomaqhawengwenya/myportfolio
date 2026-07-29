@@ -28,8 +28,8 @@ const projectsData: Project[] = [
     title: 'My First Website',
     description: 'My First Website is an early web project that explores a classic landing-page layout with a strong hero section, clear menu structure, and simple visual storytelling using HTML, CSS, and JavaScript.',
     tags: ['HTML', 'CSS', 'JS'],
-    image: '/images/firstwebsite.png',
-    liveDemoUrl: 'https://thabisomaqhawengwenya-netizen.github.io/myfirstwebsite/',
+    image: '/images/firstwebsite.webp',
+    liveDemoUrl: 'https://myfirstwebsite-five-theta.vercel.app/',
     githubUrl: 'https://github.com/thabisomaqhawengwenya-netizen/myfirstwebsite.git',
   },
   {
@@ -38,8 +38,8 @@ const projectsData: Project[] = [
     title: 'Brainwave.io',
     description: 'Brainwave.io is a clean marketing website built around a bold hero section, simple navigation, and a modern business-focused layout designed to present services clearly and guide visitors toward action.',
     tags: ['Landing Page', 'HTML', 'JavaScript', 'CSS'],
-    image: '/images/brainwave.png',
-    liveDemoUrl: 'https://thabisomaqhawengwenya-netizen.github.io/brainwave.io/',
+    image: '/images/brainwave.webp',
+    liveDemoUrl: 'https://brainwave-io-six.vercel.app/',
     githubUrl: 'https://github.com/thabisomaqhawengwenya-netizen/brainwave.io.git',
   },
   {
@@ -48,8 +48,8 @@ const projectsData: Project[] = [
     title: 'Shark.web',
     description: 'Shark.web is a visually immersive website built around shark-themed content, strong hero imagery, and a clean structure that introduces visitors to the site through an engaging marine-inspired design.',
     tags: ['Landing Page', 'HTML', 'JS', 'CSS'],
-    image: '/images/shark.web.png',
-    liveDemoUrl: 'https://thabisomaqhawengwenya-netizen.github.io/sharks.web/',
+    image: '/images/shark.web.webp',
+    liveDemoUrl: 'https://sharks-web.vercel.app/',
     githubUrl: 'https://github.com/thabisomaqhawengwenya-netizen/sharks.web.git',
   },
   {
@@ -58,7 +58,7 @@ const projectsData: Project[] = [
     title: 'tutorMe',
     description: 'tutorMe is a Figma-built education platform concept focused on helping users discover tutoring support through a clean interface, simple navigation, and an approachable learning-centered presentation.',
     tags: ['Figma', 'UI Design', 'Education'],
-    image: '/images/tutorme.png',
+    image: '/images/tutorme.webp',
     liveDemoUrl: 'https://static-real-57469152.figma.site',
   },
   {
@@ -67,7 +67,7 @@ const projectsData: Project[] = [
     title: 'Weather app',
     description: 'Weather app is a weather dashboard project built to help users search cities quickly, view forecast details, and interact with a clean interface designed for clarity and ease of use.',
     tags: ['Weather', 'API', 'JavaScript'],
-    image: '/images/weatherapp.png',
+    image: '/images/weatherapp.webp',
     liveDemoUrl: 'https://thabisomaqhawengwenya-netizen.github.io/Weather-Dashboard-App-/',
     githubUrl: 'https://github.com/thabisomaqhawengwenya-netizen/Weather-Dashboard-App-.git',
   },
@@ -119,7 +119,7 @@ const projectsData: Project[] = [
     title: 'Student Register',
     description: 'Student Register is a student-focused tool built to present registration information clearly through a simple, practical, and easy-to-use interface.',
     tags: ['Students', 'Register', 'JavaScript'],
-    image: '/images/student-register.jpeg',
+    image: '/images/student-register.webp',
     liveDemoUrl: 'https://thabisomaqhawengwenya-netizen.github.io/students_register/',
     githubUrl: 'https://github.com/thabisomaqhawengwenya-netizen/students_register.git',
   },
@@ -129,32 +129,32 @@ const projectsData: Project[] = [
     title: 'Emganwini Main SDA church',
     description: 'Emganwini Main SDA church is a gift website project created to give the church a welcoming digital presence with simple navigation, clear structure, and an accessible community-facing layout.',
     tags: ['Church', 'Gift', 'Website'],
-    image: '/images/emganwini-main-sda-church.png',
+    image: '/images/emganwini-main-sda-church.webp',
     isEmganwiniImage: true,
-    liveDemoUrl: 'https://thabisomaqhawengwenya-netizen.github.io/emganwinimain-website/',
+    liveDemoUrl: 'https://emg-main.vercel.app/',
   },
   {
-    id: 'car-website-modrino',
+    id: 'toyota-zw',
     category: 'business',
-    title: 'car Website(Modrino)',
-    description: 'car Website(Modrino) is a polished car landing page with bold presentation, clear navigation, and a confident business-focused layout built to showcase vehicles beautifully.',
-    tags: ['Cars', 'Business', 'JavaScript'],
-    image: '/images/modrino.png',
-    liveDemoUrl: 'https://thabisomaqhawengwenya-netizen.github.io/Car.website-Modrino-/',
-    githubUrl: 'https://github.com/thabisomaqhawengwenya-netizen/Car.website-Modrino-.git',
+    title: 'Toyota Zimbabwe Website',
+    description: 'A pixel-perfect recreation of the Toyota Zimbabwe website featuring vehicle listings, model pages, services, and a professional automotive layout built to match a real production site.',
+    tags: ['React.js', 'Vite', 'styled-components'],
+    image: '/images/Toyota-zw.webp',
+    liveDemoUrl: 'https://toyota-zw.vercel.app/',
+    githubUrl: 'https://github.com/Thabisomaqhawengwenya/Toyota-zw.git',
   },
 ];
 
 type Category = 'personal' | 'business' | 'education' | 'utility' | 'gift';
 
 export const Projects: React.FC = () => {
-  const [activeCategory, setActiveCategory] = useState<Category>('personal');
+  const [activeCategory, setActiveCategory] = useState<Category>('business');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
   const categories: { key: Category; label: string }[] = [
-    { key: 'personal', label: 'Personal' },
     { key: 'business', label: 'Business' },
+    { key: 'personal', label: 'Personal' },
     { key: 'education', label: 'Education' },
     { key: 'utility', label: 'Utility' },
     { key: 'gift', label: 'Gift' },

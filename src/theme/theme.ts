@@ -11,7 +11,7 @@ export const getMuiTheme = (theme: 'dark' | 'light') => {
         main: theme === 'dark' ? '#57dcff' : '#5f8eff', // --hero-accent / --hero-accent (light)
       },
       background: {
-        default: theme === 'dark' ? '#020409' : '#eef3ff',
+        default: theme === 'dark' ? '#0B0F19' : '#FEFCFF',
         paper: theme === 'dark' ? '#0b1018' : '#ffffff',
       },
       text: {

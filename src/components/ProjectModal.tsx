@@ -54,7 +54,14 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({ project, open, onClo
               project.isEmganwiniImage ? 'modal-project-image-emganwini' : ''
             } ${project.id === 'car-website-modrino' || project.id === 'student-register' ? 'modal-project-image-contained' : ''}`}
           >
-            <img src={project.image} alt={`Screenshot of ${project.title} project`} />
+            <img
+              src={project.image}
+              alt={`Screenshot of ${project.title} project`}
+              width="600"
+              height="340"
+              loading="lazy"
+              decoding="async"
+            />
           </div>
         ) : (
           project.placeholder && (

@@ -31,7 +31,14 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onOpenDetails
         <div
           className={`project-media ${project.isEmganwiniImage ? 'project-media-image-emganwini' : 'project-media-image'}`}
         >
-          <img src={project.image} alt={`Preview of ${project.title} project`} />
+          <img
+            src={project.image}
+            alt={`Preview of ${project.title} project`}
+            width="600"
+            height="340"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
       ) : (
         project.placeholder && (

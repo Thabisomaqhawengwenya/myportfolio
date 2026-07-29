@@ -8,29 +8,19 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ theme, setTheme }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isTransparent, setIsTransparent] = useState(true);
+  const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
-    const handleScrollAndTransparency = () => {
-      const heroSection = document.getElementById('home');
-      const header = document.querySelector('.site-header') as HTMLElement;
-      if (!heroSection || !header) return;
-
-      const headerHeight = header.offsetHeight;
-      const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
-      const shouldBeTransparent = window.scrollY + headerHeight < heroBottom - 24;
-
-      setIsTransparent(shouldBeTransparent && !mobileMenuOpen);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 24);
     };
 
-    window.addEventListener('scroll', handleScrollAndTransparency, { passive: true });
-    handleScrollAndTransparency();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
 
-    return () => {
-      window.removeEventListener('scroll', handleScrollAndTransparency);
-    };
-  }, [mobileMenuOpen]);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const sections = document.querySelectorAll('main section[id], header[id]');
@@ -70,7 +60,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, setTheme }) => {
   };
 
   return (
-    <StyledHeader className={`site-header ${isTransparent ? 'is-hero-transparent' : ''}`}>
+    <StyledHeader className={`site-header ${scrolled || mobileMenuOpen ? 'is-scrolled' : ''}`}>
       <div className="container nav-bar">
         <a className="brand" href="#home" onClick={(e) => handleLinkClick(e, 'home')}>
           M.T.N
@@ -148,17 +138,21 @@ const StyledHeader = styled.header`
   position: sticky;
   top: 0;
   z-index: 20;
-  background: var(--header-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom: 1px solid transparent;
   transition:
-    background-color var(--transition),
-    box-shadow var(--transition);
+    background-color 300ms ease,
+    border-color 300ms ease,
+    box-shadow 300ms ease;
 
-  &.is-hero-transparent {
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
+  &.is-scrolled {
+    background: var(--header-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line);
+    box-shadow: 0 1px 24px rgba(0,0,0,0.18);
   }
 
   .nav-bar {

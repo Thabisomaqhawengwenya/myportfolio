@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import styled from 'styled-components';
-import { UfoCanvas } from './UfoCanvas';
+
+// Lazy-load Three.js — it's ~700KB and not needed for first paint
+const UfoCanvas = lazy(() =>
+  import('./UfoCanvas').then((m) => ({ default: m.UfoCanvas }))
+);
 
 export const Hero: React.FC = () => {
   const handleGetInTouch = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -12,7 +16,7 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <StyledHero className="hero section" id="hero" aria-labelledby="hero-title">
+    <StyledHero className="hero section" id="home" aria-labelledby="hero-title">
       <div className="container hero-layout">
         <div className="hero-copy reveal is-visible">
           <p className="hero-kicker">creative developer portfolio</p>
@@ -31,14 +35,13 @@ export const Hero: React.FC = () => {
             <a className="btn btn-primary" href="#contact" onClick={handleGetInTouch}>
               Get In Touch
             </a>
-            <a className="btn btn-secondary" href="/Maqhawe_CV.pdf" download="Maqhawe_CV.pdf">
-              Download CV
-            </a>
           </div>
         </div>
 
         <div className="hero-visual hero-ufo-visual reveal is-visible" aria-hidden="true">
-          <UfoCanvas />
+          <Suspense fallback={<div className="ufo-placeholder" aria-hidden="true" />}>
+            <UfoCanvas />
+          </Suspense>
         </div>
       </div>
 
@@ -50,7 +53,7 @@ export const Hero: React.FC = () => {
 
 const StyledHero = styled.section`
   position: relative;
-  padding: 5.6rem 0 1.75rem;
+  padding: 2rem 0 1.75rem;
   overflow: hidden;
 
   .hero-layout {
@@ -162,32 +165,27 @@ const StyledHero = styled.section`
   .btn-primary {
     background: var(--accent);
     color: #fff;
-    box-shadow:
-      0 0 0 1px rgba(96, 96, 255, 0.35),
-      0 0 18px rgba(0, 0, 244, 0.52),
-      0 0 34px rgba(0, 0, 244, 0.32);
+    box-shadow: none;
   }
 
   .btn-secondary {
-    border-color: rgba(0, 0, 244, 0.9);
+    border-color: var(--border-strong);
     background: transparent;
     color: var(--button-secondary-text);
-    box-shadow: 0 0 20px rgba(0, 0, 244, 0.14);
+    box-shadow: none;
   }
 
   .btn-primary:hover,
   .btn-primary:focus-visible {
-    box-shadow:
-      0 0 0 1px rgba(124, 124, 255, 0.52),
-      0 0 24px rgba(0, 0, 244, 0.72),
-      0 0 46px rgba(0, 0, 244, 0.42);
+    background: var(--accent-hover);
+    box-shadow: 0 4px 18px rgba(26, 115, 232, 0.40);
   }
 
   .btn-secondary:hover,
   .btn-secondary:focus-visible {
-    box-shadow:
-      0 0 0 1px rgba(70, 70, 255, 0.42),
-      0 0 20px rgba(0, 0, 244, 0.3);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: none;
   }
 
   .hero-glow {
@@ -217,6 +215,13 @@ const StyledHero = styled.section`
     place-items: center;
     min-height: clamp(380px, 42vw, 620px);
     align-self: stretch;
+  }
+
+  /* Shown while Three.js chunk is loading */
+  .ufo-placeholder {
+    width: 100%;
+    height: 100%;
+    min-height: clamp(380px, 42vw, 620px);
   }
 
   @media (max-width: 960px) {

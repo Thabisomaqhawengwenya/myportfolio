@@ -1,121 +1,232 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { Icon } from '@iconify/react';
+
+interface TechItem {
+  name: string;
+  icon: string;
+  color: string;
+}
+
+// Row 1 — core languages & frontend
+const row1: TechItem[] = [
+  { name: 'HTML5',       icon: 'vscode-icons:file-type-html',       color: '#E34F26' },
+  { name: 'CSS3',        icon: 'vscode-icons:file-type-css',        color: '#1572B6' },
+  { name: 'JavaScript',  icon: 'vscode-icons:file-type-js-official',color: '#F7DF1E' },
+  { name: 'React',       icon: 'vscode-icons:file-type-reactjs',    color: '#61DAFB' },
+  { name: 'Vite',        icon: 'vscode-icons:file-type-vite',       color: '#646CFF' },
+  { name: 'TypeScript',  icon: 'vscode-icons:file-type-typescript-official', color: '#3178C6' },
+  { name: 'HTML5',       icon: 'vscode-icons:file-type-html',       color: '#E34F26' },
+  { name: 'CSS3',        icon: 'vscode-icons:file-type-css',        color: '#1572B6' },
+  { name: 'JavaScript',  icon: 'vscode-icons:file-type-js-official',color: '#F7DF1E' },
+  { name: 'React',       icon: 'vscode-icons:file-type-reactjs',    color: '#61DAFB' },
+  { name: 'Vite',        icon: 'vscode-icons:file-type-vite',       color: '#646CFF' },
+  { name: 'TypeScript',  icon: 'vscode-icons:file-type-typescript-official', color: '#3178C6' },
+];
+
+// Row 2 — design & tools (scrolls opposite direction)
+const row2: TechItem[] = [
+  { name: 'Figma',       icon: 'vscode-icons:file-type-figma',      color: '#F24E1E' },
+  { name: 'Git',         icon: 'vscode-icons:file-type-git',        color: '#F05032' },
+  { name: 'GitHub',      icon: 'skill-icons:github-dark',           color: '#ffffff' },
+  { name: 'VS Code',     icon: 'vscode-icons:file-type-vscode',     color: '#007ACC' },
+  { name: 'Node.js',     icon: 'vscode-icons:file-type-node',       color: '#339933' },
+  { name: 'Firebase',    icon: 'vscode-icons:file-type-firebase',   color: '#FFCA28' },
+  { name: 'Figma',       icon: 'vscode-icons:file-type-figma',      color: '#F24E1E' },
+  { name: 'Git',         icon: 'vscode-icons:file-type-git',        color: '#F05032' },
+  { name: 'GitHub',      icon: 'skill-icons:github-dark',           color: '#ffffff' },
+  { name: 'VS Code',     icon: 'vscode-icons:file-type-vscode',     color: '#007ACC' },
+  { name: 'Node.js',     icon: 'vscode-icons:file-type-node',       color: '#339933' },
+  { name: 'Firebase',    icon: 'vscode-icons:file-type-firebase',   color: '#FFCA28' },
+];
+
+// Row 3 — currently learning
+const row3: TechItem[] = [
+  { name: 'Supabase',    icon: 'skill-icons:supabase-dark',         color: '#3ECF8E' },
+  { name: 'Python',      icon: 'vscode-icons:file-type-python',     color: '#3776AB' },
+  { name: 'REST APIs',   icon: 'carbon:api',                        color: '#1A73E8' },
+  { name: 'UI/UX',       icon: 'carbon:pen-fountain',               color: '#FF7262' },
+  { name: 'Responsive',  icon: 'carbon:devices',                    color: '#10B981' },
+  { name: 'Supabase',    icon: 'skill-icons:supabase-dark',         color: '#3ECF8E' },
+  { name: 'Python',      icon: 'vscode-icons:file-type-python',     color: '#3776AB' },
+  { name: 'REST APIs',   icon: 'carbon:api',                        color: '#1A73E8' },
+  { name: 'UI/UX',       icon: 'carbon:pen-fountain',               color: '#FF7262' },
+  { name: 'Responsive',  icon: 'carbon:devices',                    color: '#10B981' },
+];
 
 export const Skills: React.FC = () => {
   return (
-    <StyledSkills className="section" id="skills">
-      <div className="container section-header reveal is-visible">
-        <h2>Skills &amp; Technologies</h2>
+    <StyledSkills id="skills">
+      <div className="container skills-header reveal is-visible">
+        <p className="skills-kicker">What I work with</p>
+        <h2>My <span className="accent">Tech Stack</span></h2>
       </div>
 
-      <div className="container skills-grid">
-        <article className="skill-card reveal is-visible">
-          <h3>Frontend</h3>
-          <ul className="skill-list">
-            <li>HTML5</li>
-            <li>CSS3</li>
-            <li>JavaScript</li>
-            <li>Responsive UI</li>
-          </ul>
-        </article>
+      {/* ── Marquee rows ── */}
+      <div className="marquee-wrapper">
+        {/* Row 1 — left to right */}
+        <div className="marquee-track">
+          <div className="marquee-inner marquee-ltr" aria-hidden="true">
+            {[...row1, ...row1].map((item, i) => (
+              <TechPill key={i} item={item} />
+            ))}
+          </div>
+        </div>
 
-        <article className="skill-card reveal is-visible">
-          <h3>Backend</h3>
-          <ul className="skill-list">
-            <li>Node.js</li>
-            <li>Express</li>
-            <li>REST APIs</li>
-            <li>Database Design</li>
-          </ul>
-        </article>
+        {/* Row 2 — right to left */}
+        <div className="marquee-track">
+          <div className="marquee-inner marquee-rtl" aria-hidden="true">
+            {[...row2, ...row2].map((item, i) => (
+              <TechPill key={i} item={item} />
+            ))}
+          </div>
+        </div>
 
-        <article className="skill-card reveal is-visible">
-          <h3>Developer</h3>
-          <ul className="skill-list">
-            <li>Git &amp; GitHub</li>
-            <li>Deployment</li>
-            <li>Debugging</li>
-            <li>Problem Solving</li>
-          </ul>
-        </article>
+        {/* Row 3 — left to right, slower */}
+        <div className="marquee-track">
+          <div className="marquee-inner marquee-ltr marquee-slow" aria-hidden="true">
+            {[...row3, ...row3].map((item, i) => (
+              <TechPill key={i} item={item} />
+            ))}
+          </div>
+        </div>
       </div>
     </StyledSkills>
   );
 };
 
-const StyledSkills = styled.section`
-  .section-header {
-    margin-bottom: 1.35rem;
+const TechPill: React.FC<{ item: TechItem }> = ({ item }) => (
+  <span className="tech-pill">
+    <Icon icon={item.icon} width={22} height={22} style={{ color: item.color, flexShrink: 0 }} />
+    <span className="tech-name" style={{ color: item.color }}>{item.name}</span>
+  </span>
+);
 
-    h2 {
-      margin: 0;
-      font-size: clamp(1.5rem, 3vw, 2rem);
-      font-weight: 700;
-      text-shadow: 0 0 18px rgba(0, 0, 244, 0.18);
-    }
+/* ── Animations ──────────────────────────────────────────────────── */
+const scrollLTR = keyframes`
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+`;
+
+const scrollRTL = keyframes`
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+`;
+
+const StyledSkills = styled.section`
+  padding: 40px 0;
+  overflow: hidden;
+
+  /* ── Header ─────────────────────────────────────── */
+  .skills-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
   }
 
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .skills-kicker {
+    margin: 0 0 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  h2 {
+    margin: 0;
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 700;
+    color: var(--heading);
+  }
+
+  .accent {
+    color: var(--accent);
+  }
+
+  /* ── Marquee ─────────────────────────────────────── */
+  .marquee-wrapper {
+    display: flex;
+    flex-direction: column;
     gap: 1rem;
   }
 
-  .skill-card {
-    background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    padding: 1rem;
-    box-shadow: var(--shadow);
+  .marquee-track {
+    overflow: hidden;
+    /* Fade edges */
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%
+    );
+  }
+
+  .marquee-inner {
+    display: flex;
+    gap: 0.75rem;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .marquee-ltr {
+    animation: ${scrollLTR} 28s linear infinite;
+  }
+
+  .marquee-rtl {
+    animation: ${scrollRTL} 32s linear infinite;
+  }
+
+  .marquee-slow {
+    animation-duration: 40s;
+  }
+
+  .marquee-track:hover .marquee-inner {
+    animation-play-state: paused;
+  }
+
+  /* ── Pills ───────────────────────────────────────── */
+  .tech-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--surface-raised);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+    cursor: default;
     transition:
-      transform var(--transition),
       border-color var(--transition),
-      box-shadow var(--transition);
+      background-color var(--transition);
 
-    &:hover,
-    &:focus-within {
-      transform: translateY(-4px);
-      border-color: rgba(0, 0, 244, 0.55);
-      box-shadow:
-        var(--shadow),
-        0 0 26px rgba(0, 0, 244, 0.18);
-    }
-
-    h3 {
-      margin: 0 0 0.85rem;
-      color: var(--card-heading);
-      font-size: 1rem;
+    &:hover {
+      background: var(--surface);
+      border-color: var(--border-strong);
     }
   }
 
-  .skill-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.55rem;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-
-    li {
-      padding: 0.5rem 0.65rem;
-      border: 1px solid rgba(0, 0, 244, 0.6);
-      border-radius: 999px;
-      background: rgba(0, 0, 244, 0.16);
-      color: var(--pill-text);
-      font-size: 0.84rem;
-      text-align: center;
-    }
+  .tech-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: var(--font-body);
   }
 
-  @media (max-width: 960px) {
-    .skills-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* ── Reduced motion ──────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-inner {
+      animation: none !important;
     }
-  }
 
-  @media (max-width: 760px) {
-    .skills-grid {
-      grid-template-columns: 1fr;
+    .marquee-track {
+      overflow-x: auto;
     }
   }
 `;

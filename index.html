@@ -3,19 +3,59 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Dark portfolio website inspired by the provided reference layout and rebuilt with HTML, CSS, and vanilla JavaScript."
-    />
-    <title>MAQHAWE | Full-Stack Developer</title>
-    
+
+    <!-- Primary meta -->
+    <title>Maqhawe Ngwenya | Software Developer</title>
+    <meta name="description" content="Software developer specialising in modern web applications — React, JavaScript, HTML, CSS, and UI/UX design. Based in Zimbabwe." />
+    <meta name="author" content="Maqhawe T Ngwenya" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://maqhawe-portfolio.vercel.app/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://maqhawe-portfolio.vercel.app/" />
+    <meta property="og:title" content="Maqhawe Ngwenya | Software Developer" />
+    <meta property="og:description" content="Software developer specialising in modern web applications — React, JavaScript, HTML, CSS, and UI/UX design." />
+    <meta property="og:image" content="https://maqhawe-portfolio.vercel.app/images/portfolio%20profile.png" />
+
+    <!-- Twitter card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Maqhawe Ngwenya | Software Developer" />
+    <meta name="twitter:description" content="Software developer specialising in modern web applications — React, JavaScript, HTML, CSS, and UI/UX design." />
+    <meta name="twitter:image" content="https://maqhawe-portfolio.vercel.app/images/portfolio%20profile.png" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/images/logo light.png" />
+
+    <!-- Preconnect to Google Fonts CDN -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!--
+      Load Space Grotesk (headings) + Inter (body).
+      font-display=swap prevents invisible text during load.
+      Only load the weights actually used.
+    -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
-    <link rel="icon" type="image/png" href="/images/logo light.png" />
+
+    <!-- Structured data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Maqhawe T Ngwenya",
+      "jobTitle": "Software Developer",
+      "url": "https://maqhawe-portfolio.vercel.app/",
+      "email": "thabisomaqhawengwenya@gmail.com",
+      "sameAs": [
+        "https://github.com/Thabisomaqhawengwenya",
+        "https://www.linkedin.com/in/maqhawe-ngwenya"
+      ]
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
