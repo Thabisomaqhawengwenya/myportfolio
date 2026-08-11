@@ -34,7 +34,7 @@ const projectsData: Project[] = [
   },
   {
     id: 'brainwave-io',
-    category: 'business',
+    category: 'personal',
     title: 'Brainwave.io',
     description: 'Brainwave.io is a clean marketing website built around a bold hero section, simple navigation, and a modern business-focused layout designed to present services clearly and guide visitors toward action.',
     tags: ['Landing Page', 'HTML', 'JavaScript', 'CSS'],
@@ -142,6 +142,16 @@ const projectsData: Project[] = [
     image: '/images/Toyota-zw.webp',
     liveDemoUrl: 'https://toyota-zw.vercel.app/',
     githubUrl: 'https://github.com/Thabisomaqhawengwenya/Toyota-zw.git',
+  },
+  {
+    id: 'elohims-legacy',
+    category: 'business',
+    title: "Elohim's Legacy Website",
+    description: "A minimalist clothing e-commerce website designed for an intentional wardrobe. Features a curated rotation of essential wear, smooth navigation, shop filters, and a modern minimalist aesthetic.",
+    tags: ['React.js', 'Vite', 'styled-components', 'Iconify'],
+    image: '/images/elohims-legacy.webp',
+    liveDemoUrl: 'https://el-topaz.vercel.app/',
+    githubUrl: 'https://github.com/Thabisomaqhawengwenya/el.git',
   },
 ];
 

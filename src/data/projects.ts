@@ -153,4 +153,25 @@ export const projectsData: Project[] = [
     liveDemoUrl: 'https://thabisomaqhawengwenya-netizen.github.io/Car.website-Modrino-/',
     githubUrl: 'https://github.com/thabisomaqhawengwenya-netizen/Car.website-Modrino-.git',
   },
+  {
+    id: 'elohims-legacy',
+    title: "Elohim's Legacy Website",
+    shortDescription: "A minimalist clothing e-commerce website designed for an intentional wardrobe.",
+    description:
+      "A curated rotation of tees, hoodies, and layers designed to sit quietly and stay relevant. Built with a minimal clothing store aesthetic, featuring collections, shop filter features, and smooth user flow.",
+    problem:
+      "E-commerce websites often compromise aesthetics for utility, creating cluttered experiences that distract from the products themselves.",
+    solution:
+      "Built a highly aesthetic, minimal clothing website using styled-components, custom layouts, and a curated product catalog to present an editorial uniform brand.",
+    challenges:
+      "Achieving a balanced editorial layout with high readability, smooth transitions, and responsive grid layouts.",
+    lessons:
+      "Gained deep knowledge on combining styled-components theme variables, minimalist UI layouts, and asset optimizations for e-commerce design.",
+    tags: ['React.js', 'Vite', 'styled-components', 'Iconify'],
+    category: 'frontend',
+    status: 'completed',
+    image: '/images/elohims-legacy.webp',
+    liveDemoUrl: 'https://el-topaz.vercel.app/',
+    githubUrl: 'https://github.com/Thabisomaqhawengwenya/el.git',
+  },
 ];
