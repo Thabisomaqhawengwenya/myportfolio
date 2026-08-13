@@ -23,6 +23,50 @@ const App: React.FC = () => {
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
 
+  // Track page visits dynamically
+  useEffect(() => {
+    // Only track public portfolio views (don't count dashboard actions)
+    if (currentPath === '/dashboard' || currentPath === '/admin') return;
+
+    try {
+      const hasVisited = localStorage.getItem('has_visited');
+      const isNewUnique = !hasVisited;
+      if (isNewUnique) {
+        localStorage.setItem('has_visited', 'true');
+      }
+
+      let device = 'desktop';
+      if (/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+        device = 'mobile';
+      } else if (/Tablet|iPad/i.test(navigator.userAgent)) {
+        device = 'tablet';
+      }
+
+      let browser = 'other';
+      const ua = navigator.userAgent.toLowerCase();
+      if (ua.includes('chrome') && !ua.includes('chromium')) browser = 'chrome';
+      else if (ua.includes('safari') && !ua.includes('chrome')) browser = 'safari';
+      else if (ua.includes('firefox')) browser = 'firefox';
+      else if (ua.includes('edge')) browser = 'edge';
+
+      fetch('/api/track-visit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          isNewUnique,
+          referrer: document.referrer || 'direct',
+          device,
+          browser,
+          path: currentPath,
+        }),
+      }).catch(() => {});
+    } catch (e) {
+      // LocalStorage or Fetch exceptions handled gracefully
+    }
+  }, [currentPath]);
+
   const [theme, setThemeState] = useState<'dark' | 'light'>(() => {
     try {
       const savedTheme = localStorage.getItem('portfolio-theme');

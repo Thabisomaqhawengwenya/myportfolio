@@ -14,10 +14,9 @@ interface Project {
 
 interface OverviewPageProps {
   projects: Project[];
-  onNavigateToProjects: () => void;
 }
 
-export const OverviewPage: React.FC<OverviewPageProps> = ({ projects, onNavigateToProjects }) => {
+export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
   // Time Tracker state
   const [time, setTime] = useState(5048); // Start at 01:24:08 (5048 seconds)
   const [isRunning, setIsRunning] = useState(true);
@@ -160,37 +159,6 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects, onNavigate
                 <div className="bar striped" style={{ height: '55%' }}></div>
                 <span className="bar-label">S</span>
               </div>
-            </div>
-          </div>
-
-          {/* Team Collaboration List */}
-          <div className="dashboard-panel">
-            <div className="panel-header">
-              <h3>Collaborators & Clients</h3>
-              <button className="panel-btn">+ Add Member</button>
-            </div>
-            <div className="collaborators-list">
-              <div className="collab-item">
-                <div className="avatar">AD</div>
-                <div className="collab-info">
-                  <h4>Alexandra Deff</h4>
-                  <p>Working on <span>Github Project Repository</span></p>
-                </div>
-                <span className="status-tag status-completed">Completed</span>
-              </div>
-
-              <div className="collab-item">
-                <div className="avatar">EA</div>
-                <div className="collab-info">
-                  <h4>Edwin Adenike</h4>
-                  <p>Working on <span>Integrate User Authentication System</span></p>
-                </div>
-                <span className="status-tag status-progress">In Progress</span>
-              </div>
-
-              <span className="view-all-collabs" onClick={onNavigateToProjects}>
-                Manage portfolio projects →
-              </span>
             </div>
           </div>
         </div>

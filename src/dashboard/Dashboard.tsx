@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { OverviewPage } from './pages/OverviewPage';
 import { ProjectsPage } from './pages/ProjectsPage';
+import { CalendarPage } from './pages/CalendarPage';
+import { AnalyticsPage } from './pages/AnalyticsPage';
 
 interface Project {
   id: string;
@@ -24,7 +26,7 @@ interface Project {
 export const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'calendar' | 'analytics'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
@@ -132,7 +134,10 @@ export const Dashboard: React.FC = () => {
             Projects
             <span className="count-badge">{projects.length}</span>
           </button>
-          <button className="menu-item disabled">
+          <button
+            className={`menu-item ${activeTab === 'calendar' ? 'active' : ''}`}
+            onClick={() => setActiveTab('calendar')}
+          >
             <span className="item-icon">
               <lord-icon
                 src="https://cdn.lordicon.com/wmltstbg.json"
@@ -143,7 +148,10 @@ export const Dashboard: React.FC = () => {
             </span>{' '}
             Calendar
           </button>
-          <button className="menu-item disabled">
+          <button
+            className={`menu-item ${activeTab === 'analytics' ? 'active' : ''}`}
+            onClick={() => setActiveTab('analytics')}
+          >
             <span className="item-icon">
               <lord-icon
                 src="https://cdn.lordicon.com/qhviklyq.json"
@@ -153,17 +161,6 @@ export const Dashboard: React.FC = () => {
               ></lord-icon>
             </span>{' '}
             Analytics
-          </button>
-          <button className="menu-item disabled">
-            <span className="item-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/ljvnaqwh.json"
-                trigger="hover"
-                colors="primary:#555555,secondary:#1A73E8"
-                style={{ width: '20px', height: '20px' }}
-              ></lord-icon>
-            </span>{' '}
-            Team
           </button>
         </div>
 
@@ -275,22 +272,46 @@ export const Dashboard: React.FC = () => {
         {/* Dashboard Pages */}
         <main className="dashboard-body">
           <div className="dashboard-header-text">
-            <h1>Dashboard</h1>
-            <p>Plan, prioritize, and accomplish your tasks with ease.</p>
+            {activeTab === 'dashboard' && (
+              <>
+                <h1>Dashboard Overview</h1>
+                <p>Plan, prioritize, and accomplish your tasks with ease.</p>
+              </>
+            )}
+            {activeTab === 'projects' && (
+              <>
+                <h1>Manage Projects</h1>
+                <p>Add, edit, or delete items in your portfolio.</p>
+              </>
+            )}
+            {activeTab === 'calendar' && (
+              <>
+                <h1>Milestones Calendar</h1>
+                <p>Track project deadlines and schedule task notes.</p>
+              </>
+            )}
+            {activeTab === 'analytics' && (
+              <>
+                <h1>Visitor Analytics</h1>
+                <p>Monitor visitor traffic and portfolio engagement stats.</p>
+              </>
+            )}
           </div>
 
-          {activeTab === 'dashboard' ? (
+          {activeTab === 'dashboard' && (
             <OverviewPage
               projects={projects}
-              onNavigateToProjects={() => setActiveTab('projects')}
             />
-          ) : (
+          )}
+          {activeTab === 'projects' && (
             <ProjectsPage
               projects={projects}
               onSaveProjects={handleSaveProjects}
               searchQuery={searchQuery}
             />
           )}
+          {activeTab === 'calendar' && <CalendarPage />}
+          {activeTab === 'analytics' && <AnalyticsPage />}
         </main>
       </div>
     </StyledDashboard>
