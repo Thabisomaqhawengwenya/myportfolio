@@ -90,7 +90,14 @@ export const Dashboard: React.FC = () => {
       {/* Sidebar Panel */}
       <aside className="sidebar">
         <div className="logo-section">
-          <div className="logo-icon">🌿</div>
+          <div className="logo-icon">
+            <lord-icon
+              src="https://cdn.lordicon.com/lupuorrc.json"
+              trigger="loop"
+              colors="primary:#0d4626,secondary:#50b075"
+              style={{ width: '30px', height: '30px' }}
+            ></lord-icon>
+          </div>
           <span className="logo-text">Donezo</span>
         </div>
 
@@ -100,41 +107,112 @@ export const Dashboard: React.FC = () => {
             className={`menu-item ${activeTab === 'dashboard' ? 'active' : ''}`}
             onClick={() => setActiveTab('dashboard')}
           >
-            <span className="item-icon">📊</span> Dashboard
+            <span className="item-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/gqdnbnwt.json"
+                trigger="hover"
+                colors="primary:#555555,secondary:#0d4626"
+                style={{ width: '20px', height: '20px' }}
+              ></lord-icon>
+            </span>{' '}
+            Dashboard
           </button>
           <button
             className={`menu-item ${activeTab === 'projects' ? 'active' : ''}`}
             onClick={() => setActiveTab('projects')}
           >
-            <span className="item-icon">📁</span> Projects
+            <span className="item-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/fkdzyuuo.json"
+                trigger="hover"
+                colors="primary:#555555,secondary:#0d4626"
+                style={{ width: '20px', height: '20px' }}
+              ></lord-icon>
+            </span>{' '}
+            Projects
             <span className="count-badge">{projects.length}</span>
           </button>
           <button className="menu-item disabled">
-            <span className="item-icon">📅</span> Calendar
+            <span className="item-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/wmltstbg.json"
+                trigger="hover"
+                colors="primary:#555555,secondary:#0d4626"
+                style={{ width: '20px', height: '20px' }}
+              ></lord-icon>
+            </span>{' '}
+            Calendar
           </button>
           <button className="menu-item disabled">
-            <span className="item-icon">📈</span> Analytics
+            <span className="item-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/qhviklyq.json"
+                trigger="hover"
+                colors="primary:#555555,secondary:#0d4626"
+                style={{ width: '20px', height: '20px' }}
+              ></lord-icon>
+            </span>{' '}
+            Analytics
           </button>
           <button className="menu-item disabled">
-            <span className="item-icon">👥</span> Team
+            <span className="item-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/ljvnaqwh.json"
+                trigger="hover"
+                colors="primary:#555555,secondary:#0d4626"
+                style={{ width: '20px', height: '20px' }}
+              ></lord-icon>
+            </span>{' '}
+            Team
           </button>
         </div>
 
         <div className="menu-group">
           <p className="menu-title">General</p>
           <button className="menu-item disabled">
-            <span className="item-icon">⚙️</span> Settings
+            <span className="item-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/lecpriep.json"
+                trigger="hover"
+                colors="primary:#555555,secondary:#0d4626"
+                style={{ width: '20px', height: '20px' }}
+              ></lord-icon>
+            </span>{' '}
+            Settings
           </button>
           <button className="menu-item disabled">
-            <span className="item-icon">❓</span> Help
+            <span className="item-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/cnyeuzcu.json"
+                trigger="hover"
+                colors="primary:#555555,secondary:#0d4626"
+                style={{ width: '20px', height: '20px' }}
+              ></lord-icon>
+            </span>{' '}
+            Help
           </button>
           <button className="menu-item logout-btn" onClick={handleBackToPortfolio}>
-            <span className="item-icon">🚪</span> Back to Portfolio
+            <span className="item-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/hcuxorce.json"
+                trigger="hover"
+                colors="primary:#cf2c2c,secondary:#cf2c2c"
+                style={{ width: '20px', height: '20px' }}
+              ></lord-icon>
+            </span>{' '}
+            Back to Portfolio
           </button>
         </div>
 
         <div className="sidebar-app-promo">
-          <div className="promo-icon">📱</div>
+          <div className="promo-icon">
+            <lord-icon
+              src="https://cdn.lordicon.com/kxhnpvqy.json"
+              trigger="loop"
+              colors="primary:#ffffff,secondary:#50b075"
+              style={{ width: '38px', height: '38px' }}
+            ></lord-icon>
+          </div>
           <h4>Download our App</h4>
           <p>Get easy in another way</p>
           <button className="download-btn">Download</button>
@@ -146,7 +224,14 @@ export const Dashboard: React.FC = () => {
         {/* Top Header */}
         <header className="main-header">
           <div className="search-bar">
-            <span className="search-icon">🔍</span>
+            <span className="search-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/msoeawqm.json"
+                trigger="hover"
+                colors="primary:#888888,secondary:#0d4626"
+                style={{ width: '18px', height: '18px' }}
+              ></lord-icon>
+            </span>
             <input
               type="text"
               placeholder="Search project, tags or category..."
@@ -161,8 +246,22 @@ export const Dashboard: React.FC = () => {
             {saveStatus === 'saved' && <span className="status-indicator saved">Changes saved on disk!</span>}
             {saveStatus === 'error' && <span className="status-indicator error">Save failed!</span>}
             
-            <button className="icon-action-btn" aria-label="Mail notification">✉️</button>
-            <button className="icon-action-btn" aria-label="Alert notification">🔔</button>
+            <button className="icon-action-btn" aria-label="Mail notification">
+              <lord-icon
+                src="https://cdn.lordicon.com/nzxtwhfd.json"
+                trigger="hover"
+                colors="primary:#111111,secondary:#0d4626"
+                style={{ width: '20px', height: '20px' }}
+              ></lord-icon>
+            </button>
+            <button className="icon-action-btn" aria-label="Alert notification">
+              <lord-icon
+                src="https://cdn.lordicon.com/vspoxosx.json"
+                trigger="hover"
+                colors="primary:#111111,secondary:#0d4626"
+                style={{ width: '20px', height: '20px' }}
+              ></lord-icon>
+            </button>
             <div className="user-profile">
               <div className="profile-pic">MT</div>
               <div className="profile-info">

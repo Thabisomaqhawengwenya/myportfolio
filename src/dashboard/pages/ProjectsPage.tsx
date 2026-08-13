@@ -343,7 +343,19 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                       onClick={() => fileInputRef.current?.click()}
                       disabled={uploading}
                     >
-                      {uploading ? 'Uploading...' : '📁 Upload Local'}
+                      {uploading ? (
+                        'Uploading...'
+                      ) : (
+                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                          <lord-icon
+                            src="https://cdn.lordicon.com/smwmetot.json"
+                            trigger="hover"
+                            colors="primary:#0d4626"
+                            style={{ width: '16px', height: '16px' }}
+                          ></lord-icon>
+                          Upload Local
+                        </span>
+                      )}
                     </button>
                   </div>
                   {imageUrl && (
@@ -409,13 +421,25 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                   <p>{project.description.slice(0, 100)}...</p>
                   <div className="links">
                     {project.liveDemoUrl && (
-                      <a href={project.liveDemoUrl} target="_blank" rel="noopener noreferrer">
-                        Demo 🔗
+                      <a href={project.liveDemoUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        Demo
+                        <lord-icon
+                          src="https://cdn.lordicon.com/gzkudoal.json"
+                          trigger="hover"
+                          colors="primary:#0d4626"
+                          style={{ width: '14px', height: '14px' }}
+                        ></lord-icon>
                       </a>
                     )}
                     {project.githubUrl && (
-                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">
-                        GitHub 🛠
+                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        GitHub
+                        <lord-icon
+                          src="https://cdn.lordicon.com/ftndunxo.json"
+                          trigger="hover"
+                          colors="primary:#0d4626"
+                          style={{ width: '14px', height: '14px' }}
+                        ></lord-icon>
                       </a>
                     )}
                   </div>

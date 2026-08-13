@@ -64,7 +64,14 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects, onNavigate
         <div className="stat-card stat-card-featured">
           <div className="stat-header">
             <span>Total Projects</span>
-            <span className="arrow-icon">↗</span>
+            <span className="arrow-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/zmzvclqh.json"
+                trigger="hover"
+                colors="primary:#ffffff"
+                style={{ width: '16px', height: '16px' }}
+              ></lord-icon>
+            </span>
           </div>
           <div className="stat-value">{total}</div>
           <div className="stat-subtext">5+ Increased from last month</div>
@@ -73,7 +80,14 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects, onNavigate
         <div className="stat-card">
           <div className="stat-header">
             <span>Business Projects</span>
-            <span className="arrow-icon">↗</span>
+            <span className="arrow-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/zmzvclqh.json"
+                trigger="hover"
+                colors="primary:#111111"
+                style={{ width: '16px', height: '16px' }}
+              ></lord-icon>
+            </span>
           </div>
           <div className="stat-value">{business}</div>
           <div className="stat-subtext">Premium retail & brand sites</div>
@@ -82,7 +96,14 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects, onNavigate
         <div className="stat-card">
           <div className="stat-header">
             <span>Personal Brand</span>
-            <span className="arrow-icon">↗</span>
+            <span className="arrow-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/zmzvclqh.json"
+                trigger="hover"
+                colors="primary:#111111"
+                style={{ width: '16px', height: '16px' }}
+              ></lord-icon>
+            </span>
           </div>
           <div className="stat-value">{personal}</div>
           <div className="stat-subtext">Demos, portfolios, sandboxes</div>
@@ -91,7 +112,14 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects, onNavigate
         <div className="stat-card">
           <div className="stat-header">
             <span>Utility & Others</span>
-            <span className="arrow-icon">↗</span>
+            <span className="arrow-icon">
+              <lord-icon
+                src="https://cdn.lordicon.com/zmzvclqh.json"
+                trigger="hover"
+                colors="primary:#111111"
+                style={{ width: '16px', height: '16px' }}
+              ></lord-icon>
+            </span>
           </div>
           <div className="stat-value">{otherCount}</div>
           <div className="stat-subtext">Gifts, tools, CLI scripts</div>
@@ -173,7 +201,15 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects, onNavigate
             <div className="panel-tag">Reminders</div>
             <h3>Deploy Portfolio V2</h3>
             <p className="reminder-time">Time : 02.00 pm - 04.00 pm</p>
-            <button className="reminder-action">Start Action</button>
+            <button className="reminder-action">
+              <lord-icon
+                src="https://cdn.lordicon.com/xcrjfuzb.json"
+                trigger="hover"
+                colors="primary:#0d4626"
+                style={{ width: '18px', height: '18px', marginRight: '6px' }}
+              ></lord-icon>
+              Start Action
+            </button>
           </div>
 
           {/* Project Progress Gauge */}
@@ -573,10 +609,6 @@ const StyledOverview = styled.div`
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-
-      &::before {
-        content: '🎦';
-      }
 
       &:hover {
         background: #f5f5f5;
