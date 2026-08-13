@@ -10,8 +10,19 @@ import { Projects } from './components/Projects';
 import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { BackToTop } from './components/BackToTop';
+import { Dashboard } from './dashboard/Dashboard';
 
 const App: React.FC = () => {
+  const [currentPath, setCurrentPath] = useState(window.location.pathname);
+
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname);
+    };
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
+
   const [theme, setThemeState] = useState<'dark' | 'light'>(() => {
     try {
       const savedTheme = localStorage.getItem('portfolio-theme');
@@ -64,48 +75,55 @@ const App: React.FC = () => {
   }, [videoReady]);
 
   const muiTheme = getMuiTheme(theme);
+  const isDashboard = currentPath === '/dashboard' || currentPath === '/admin';
 
   return (
     <MuiThemeProvider theme={muiTheme}>
       <GlobalStyles />
 
-      <a className="skip-link" href="#main-content">
-        Skip to content
-      </a>
+      {isDashboard ? (
+        <Dashboard />
+      ) : (
+        <>
+          <a className="skip-link" href="#main-content">
+            Skip to content
+          </a>
 
-      <div className="background-video-shell" aria-hidden="true">
-        {videoReady && (
-          <video
-            ref={videoRef}
-            id="background-video"
-            className="background-video"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="none"
-          >
-            <source src="/portfoliobackgroundwallpaper.mp4" type="video/mp4" />
-          </video>
-        )}
-        <div className="background-video-overlay" />
-      </div>
+          <div className="background-video-shell" aria-hidden="true">
+            {videoReady && (
+              <video
+                ref={videoRef}
+                id="background-video"
+                className="background-video"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="none"
+              >
+                <source src="/portfoliobackgroundwallpaper.mp4" type="video/mp4" />
+              </video>
+            )}
+            <div className="background-video-overlay" />
+          </div>
 
-      <div className="site-frame">
-        <Header theme={theme} setTheme={setTheme} />
+          <div className="site-frame">
+            <Header theme={theme} setTheme={setTheme} />
 
-        <main id="main-content">
-          <Hero />
-          <About />
-          <Skills />
-          <Projects />
-          <Contact />
-        </main>
+            <main id="main-content">
+              <Hero />
+              <About />
+              <Skills />
+              <Projects />
+              <Contact />
+            </main>
 
-        <Footer />
-      </div>
+            <Footer />
+          </div>
 
-      <BackToTop />
+          <BackToTop />
+        </>
+      )}
     </MuiThemeProvider>
   );
 };

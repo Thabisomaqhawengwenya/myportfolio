@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useState, useRef } from 'react';
 import styled from 'styled-components';
 
 // Lazy-load Three.js — it's ~700KB and not needed for first paint
@@ -7,6 +7,27 @@ const UfoCanvas = lazy(() =>
 );
 
 export const Hero: React.FC = () => {
+  const [clickCount, setClickCount] = useState(0);
+  const clickTimeoutRef = useRef<number | null>(null);
+
+  const handleTitleClick = () => {
+    if (clickTimeoutRef.current) {
+      clearTimeout(clickTimeoutRef.current);
+    }
+
+    const newCount = clickCount + 1;
+    if (newCount >= 3) {
+      setClickCount(0);
+      window.history.pushState({}, '', '/dashboard');
+      window.dispatchEvent(new Event('popstate'));
+    } else {
+      setClickCount(newCount);
+      clickTimeoutRef.current = window.setTimeout(() => {
+        setClickCount(0);
+      }, 1000);
+    }
+  };
+
   const handleGetInTouch = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
     const contactSection = document.getElementById('contact');
@@ -24,7 +45,15 @@ export const Hero: React.FC = () => {
             <span className="hero-title-muted">Hey!,</span>
             <span className="hero-title-accent">I am</span>
           </h2>
-          <h1 id="hero-title" className="hero-main-title">MAQHAWE</h1>
+          <h1
+            id="hero-title"
+            className="hero-main-title"
+            onClick={handleTitleClick}
+            style={{ cursor: 'pointer', userSelect: 'none' }}
+            title="Secret Admin Access"
+          >
+            MAQHAWE
+          </h1>
           <p className="hero-role">Full-Stack Developer</p>
           <p className="hero-description">
             I craft beautiful, functional digital experiences that bring ideas to life. Specializing in modern web
