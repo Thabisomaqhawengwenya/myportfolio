@@ -153,6 +153,15 @@ const projectsData: Project[] = [
     liveDemoUrl: 'https://el-topaz.vercel.app/',
     githubUrl: 'https://github.com/Thabisomaqhawengwenya/el.git',
   },
+  {
+    id: 'island-child-apparel',
+    category: 'business',
+    title: 'Island Child Apparel',
+    description: "A minimalist, gender-neutral children's clothing store. Built with React, Vite, and styled-components, it features a curated catalog, elegant layout, and a smooth e-commerce shopping experience.",
+    tags: ['React.js', 'Vite', 'styled-components'],
+    image: '/images/island-child-apparel.webp',
+    liveDemoUrl: 'https://islandchildapparela.vercel.app/',
+  },
 ];
 
 type Category = 'personal' | 'business' | 'education' | 'utility' | 'gift';

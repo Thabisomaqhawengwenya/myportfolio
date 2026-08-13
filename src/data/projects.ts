@@ -174,4 +174,24 @@ export const projectsData: Project[] = [
     liveDemoUrl: 'https://el-topaz.vercel.app/',
     githubUrl: 'https://github.com/Thabisomaqhawengwenya/el.git',
   },
+  {
+    id: 'island-child-apparel',
+    title: 'Island Child Apparel',
+    shortDescription: "A minimalist, gender-neutral children's clothing e-commerce website.",
+    description:
+      "A boutique online store for gender-neutral kids' apparel, designed with a focus on minimalist aesthetics and smooth user interactions. Built using React, Vite, and styled-components, featuring curated collections, elegant layouts, and product discovery.",
+    problem:
+      "Many children's clothing brands use noisy, over-stimulated website designs that distract from product details and compromise the premium feel of the brand.",
+    solution:
+      "Developed a clean, editorial-style interface with a soft, warm palette and spacious typography. Used styled-components to manage custom layouts and theme tokens, ensuring a premium shopping experience.",
+    challenges:
+      "Crafting a highly responsive grid layout that preserves the editorial look across all screen sizes, and optimizing image loading for high-quality product photos.",
+    lessons:
+      "Learned to implement sleek hover states and micro-interactions that enhance the luxury feel of a catalog store, and how to scale design assets with styled-components.",
+    tags: ['React.js', 'Vite', 'styled-components'],
+    category: 'frontend',
+    status: 'completed',
+    image: '/images/island-child-apparel.webp',
+    liveDemoUrl: 'https://islandchildapparela.vercel.app/',
+  },
 ];
