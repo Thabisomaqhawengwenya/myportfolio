@@ -94,7 +94,7 @@ export const Dashboard: React.FC = () => {
             <lord-icon
               src="https://cdn.lordicon.com/lupuorrc.json"
               trigger="loop"
-              colors="primary:#0d4626,secondary:#50b075"
+              colors="primary:#1A73E8,secondary:#4291f7"
               style={{ width: '30px', height: '30px' }}
             ></lord-icon>
           </div>
@@ -111,7 +111,7 @@ export const Dashboard: React.FC = () => {
               <lord-icon
                 src="https://cdn.lordicon.com/gqdnbnwt.json"
                 trigger="hover"
-                colors="primary:#555555,secondary:#0d4626"
+                colors="primary:#555555,secondary:#1A73E8"
                 style={{ width: '20px', height: '20px' }}
               ></lord-icon>
             </span>{' '}
@@ -125,7 +125,7 @@ export const Dashboard: React.FC = () => {
               <lord-icon
                 src="https://cdn.lordicon.com/fkdzyuuo.json"
                 trigger="hover"
-                colors="primary:#555555,secondary:#0d4626"
+                colors="primary:#555555,secondary:#1A73E8"
                 style={{ width: '20px', height: '20px' }}
               ></lord-icon>
             </span>{' '}
@@ -137,7 +137,7 @@ export const Dashboard: React.FC = () => {
               <lord-icon
                 src="https://cdn.lordicon.com/wmltstbg.json"
                 trigger="hover"
-                colors="primary:#555555,secondary:#0d4626"
+                colors="primary:#555555,secondary:#1A73E8"
                 style={{ width: '20px', height: '20px' }}
               ></lord-icon>
             </span>{' '}
@@ -148,7 +148,7 @@ export const Dashboard: React.FC = () => {
               <lord-icon
                 src="https://cdn.lordicon.com/qhviklyq.json"
                 trigger="hover"
-                colors="primary:#555555,secondary:#0d4626"
+                colors="primary:#555555,secondary:#1A73E8"
                 style={{ width: '20px', height: '20px' }}
               ></lord-icon>
             </span>{' '}
@@ -159,7 +159,7 @@ export const Dashboard: React.FC = () => {
               <lord-icon
                 src="https://cdn.lordicon.com/ljvnaqwh.json"
                 trigger="hover"
-                colors="primary:#555555,secondary:#0d4626"
+                colors="primary:#555555,secondary:#1A73E8"
                 style={{ width: '20px', height: '20px' }}
               ></lord-icon>
             </span>{' '}
@@ -174,7 +174,7 @@ export const Dashboard: React.FC = () => {
               <lord-icon
                 src="https://cdn.lordicon.com/lecpriep.json"
                 trigger="hover"
-                colors="primary:#555555,secondary:#0d4626"
+                colors="primary:#555555,secondary:#1A73E8"
                 style={{ width: '20px', height: '20px' }}
               ></lord-icon>
             </span>{' '}
@@ -185,7 +185,7 @@ export const Dashboard: React.FC = () => {
               <lord-icon
                 src="https://cdn.lordicon.com/cnyeuzcu.json"
                 trigger="hover"
-                colors="primary:#555555,secondary:#0d4626"
+                colors="primary:#555555,secondary:#1A73E8"
                 style={{ width: '20px', height: '20px' }}
               ></lord-icon>
             </span>{' '}
@@ -209,7 +209,7 @@ export const Dashboard: React.FC = () => {
             <lord-icon
               src="https://cdn.lordicon.com/kxhnpvqy.json"
               trigger="loop"
-              colors="primary:#ffffff,secondary:#50b075"
+              colors="primary:#ffffff,secondary:#4291f7"
               style={{ width: '38px', height: '38px' }}
             ></lord-icon>
           </div>
@@ -228,7 +228,7 @@ export const Dashboard: React.FC = () => {
               <lord-icon
                 src="https://cdn.lordicon.com/msoeawqm.json"
                 trigger="hover"
-                colors="primary:#888888,secondary:#0d4626"
+                colors="primary:#888888,secondary:#1A73E8"
                 style={{ width: '18px', height: '18px' }}
               ></lord-icon>
             </span>
@@ -250,7 +250,7 @@ export const Dashboard: React.FC = () => {
               <lord-icon
                 src="https://cdn.lordicon.com/nzxtwhfd.json"
                 trigger="hover"
-                colors="primary:#111111,secondary:#0d4626"
+                colors="primary:#111111,secondary:#1A73E8"
                 style={{ width: '20px', height: '20px' }}
               ></lord-icon>
             </button>
@@ -258,7 +258,7 @@ export const Dashboard: React.FC = () => {
               <lord-icon
                 src="https://cdn.lordicon.com/vspoxosx.json"
                 trigger="hover"
-                colors="primary:#111111,secondary:#0d4626"
+                colors="primary:#111111,secondary:#1A73E8"
                 style={{ width: '20px', height: '20px' }}
               ></lord-icon>
             </button>
@@ -303,14 +303,14 @@ const StyledLoader = styled.div`
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: #f4f7f5;
+  background: #f3f6fc;
   color: #333;
 
   .spinner {
     width: 3rem;
     height: 3rem;
     border: 4px solid #ddd;
-    border-top: 4px solid #0d4626;
+    border-top: 4px solid #1A73E8;
     border-radius: 50%;
     animation: spin 1s linear infinite;
   }
@@ -331,7 +331,7 @@ const StyledDashboard = styled.div`
   display: grid;
   grid-template-columns: 260px 1fr;
   min-height: 100vh;
-  background: #f4f7f5;
+  background: #f3f6fc;
   color: #333;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 
@@ -360,7 +360,7 @@ const StyledDashboard = styled.div`
 
     .logo-icon {
       font-size: 1.5rem;
-      background: #eaf3ed;
+      background: #eff6ff;
       width: 2.5rem;
       height: 2.5rem;
       border-radius: 10px;
@@ -371,7 +371,7 @@ const StyledDashboard = styled.div`
     .logo-text {
       font-size: 1.25rem;
       font-weight: 700;
-      color: #0b1a10;
+      color: #0b1e30;
     }
   }
 
@@ -412,7 +412,7 @@ const StyledDashboard = styled.div`
 
     .count-badge {
       margin-left: auto;
-      background: #0d4626;
+      background: #1A73E8;
       color: #fff;
       font-size: 0.72rem;
       padding: 0.1rem 0.4rem;
@@ -421,12 +421,12 @@ const StyledDashboard = styled.div`
 
     &:hover {
       background: #f7f9f7;
-      color: #0b1a10;
+      color: #0b1e30;
     }
 
     &.active {
-      background: #eaf3ed;
-      color: #0d4626;
+      background: #eff6ff;
+      color: #1A73E8;
     }
 
     &.disabled {
@@ -448,8 +448,8 @@ const StyledDashboard = styled.div`
 
   .sidebar-app-promo {
     margin-top: auto;
-    background: #041008;
-    background-image: radial-gradient(circle at 100% 100%, #0d4626 0%, transparent 60%);
+    background: #08172c;
+    background-image: radial-gradient(circle at 100% 100%, #1A73E8 0%, transparent 60%);
     border-radius: 1.25rem;
     padding: 1.25rem;
     color: #fff;
@@ -475,7 +475,7 @@ const StyledDashboard = styled.div`
     }
 
     .download-btn {
-      background: #0d4626;
+      background: #1A73E8;
       color: #fff;
       border: 0;
       width: 100%;
@@ -486,7 +486,7 @@ const StyledDashboard = styled.div`
       cursor: pointer;
 
       &:hover {
-        background: #09331b;
+        background: #1557B0;
       }
     }
   }
@@ -619,8 +619,8 @@ const StyledDashboard = styled.div`
       width: 2.5rem;
       height: 2.5rem;
       border-radius: 50%;
-      background: #eaf3ed;
-      color: #0d4626;
+      background: #eff6ff;
+      color: #1A73E8;
       font-weight: 700;
       font-size: 0.94rem;
       display: grid;
@@ -662,7 +662,7 @@ const StyledDashboard = styled.div`
       h1 {
         font-size: clamp(1.5rem, 3.5vw, 2.1rem);
         font-weight: 700;
-        color: #0b1a10;
+        color: #0b1e30;
         margin: 0;
       }
 

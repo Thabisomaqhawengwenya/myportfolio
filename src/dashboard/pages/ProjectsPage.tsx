@@ -350,7 +350,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                           <lord-icon
                             src="https://cdn.lordicon.com/smwmetot.json"
                             trigger="hover"
-                            colors="primary:#0d4626"
+                            colors="primary:#1A73E8"
                             style={{ width: '16px', height: '16px' }}
                           ></lord-icon>
                           Upload Local
@@ -426,7 +426,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                         <lord-icon
                           src="https://cdn.lordicon.com/gzkudoal.json"
                           trigger="hover"
-                          colors="primary:#0d4626"
+                          colors="primary:#1A73E8"
                           style={{ width: '14px', height: '14px' }}
                         ></lord-icon>
                       </a>
@@ -437,7 +437,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                         <lord-icon
                           src="https://cdn.lordicon.com/ftndunxo.json"
                           trigger="hover"
-                          colors="primary:#0d4626"
+                          colors="primary:#1A73E8"
                           style={{ width: '14px', height: '14px' }}
                         ></lord-icon>
                       </a>
@@ -460,14 +460,25 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                 </div>
 
                 <div className="table-actions">
-                  <button className="action-btn edit-action" onClick={() => handleEdit(project)}>
-                    Edit
+                  <button className="action-btn edit-action" onClick={() => handleEdit(project)} title="Edit Project">
+                    <lord-icon
+                      src="https://cdn.lordicon.com/wloilxuq.json"
+                      trigger="hover"
+                      colors="primary:#1A73E8,secondary:#4291f7"
+                      style={{ width: '18px', height: '18px' }}
+                    ></lord-icon>
                   </button>
                   <button
                     className="action-btn delete-action"
                     onClick={() => handleDelete(project.id)}
+                    title="Delete Project"
                   >
-                    Delete
+                    <lord-icon
+                      src="https://cdn.lordicon.com/gsqwyapz.json"
+                      trigger="hover"
+                      colors="primary:#b91c1c,secondary:#b91c1c"
+                      style={{ width: '18px', height: '18px' }}
+                    ></lord-icon>
                   </button>
                 </div>
               </div>
@@ -492,12 +503,12 @@ const StyledProjectsPage = styled.div`
     h2 {
       font-size: 1.6rem;
       font-weight: 700;
-      color: #0b1a10;
+      color: #0b1e30;
       margin: 0;
     }
 
     .add-btn {
-      background: #0d4626;
+      background: #1A73E8;
       color: #fff;
       border: 0;
       padding: 0.65rem 1.25rem;
@@ -508,7 +519,7 @@ const StyledProjectsPage = styled.div`
       box-shadow: 0 4px 12px rgba(13, 70, 38, 0.2);
 
       &:hover {
-        background: #09331b;
+        background: #1557B0;
       }
     }
   }
@@ -523,7 +534,7 @@ const StyledProjectsPage = styled.div`
     h3 {
       margin: 0 0 1.25rem;
       font-size: 1.2rem;
-      color: #0b1a10;
+      color: #0b1e30;
       font-weight: 600;
     }
 
@@ -568,7 +579,7 @@ const StyledProjectsPage = styled.div`
         color: #111;
 
         &:focus {
-          border-color: #0d4626;
+          border-color: #1A73E8;
           outline: 0;
           background: #fff;
         }
@@ -605,8 +616,8 @@ const StyledProjectsPage = styled.div`
 
       .upload-btn {
         background: #f0f3f1;
-        color: #0d4626;
-        border: 1px solid #d4dfc4;
+        color: #1A73E8;
+        border: 1px solid #bfdbfe;
         padding: 0 1.2rem;
         border-radius: 0.5rem;
         font-weight: 600;
@@ -652,12 +663,12 @@ const StyledProjectsPage = styled.div`
       }
 
       .save-btn {
-        background: #0d4626;
+        background: #1A73E8;
         color: #fff;
         border: 0;
 
         &:hover {
-          background: #09331b;
+          background: #1557B0;
         }
       }
 
@@ -759,7 +770,7 @@ const StyledProjectsPage = styled.div`
         width: 100%;
         height: 100%;
         background: #f0f3f1;
-        color: #0d4626;
+        color: #1A73E8;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -788,7 +799,7 @@ const StyledProjectsPage = styled.div`
         a {
           font-size: 0.78rem;
           font-weight: 600;
-          color: #0d4626;
+          color: #1A73E8;
           text-decoration: none;
 
           &:hover {
@@ -846,28 +857,33 @@ const StyledProjectsPage = styled.div`
       justify-content: flex-end;
 
       .action-btn {
-        padding: 0.35rem 0.7rem;
-        border-radius: 4px;
-        font-size: 0.78rem;
-        font-weight: 600;
+        display: inline-grid;
+        place-items: center;
+        width: 2.2rem;
+        height: 2.2rem;
+        padding: 0;
+        border-radius: 50%;
         cursor: pointer;
+        transition: transform 180ms ease, background-color 180ms ease;
+
+        &:hover {
+          transform: scale(1.08);
+        }
       }
 
       .edit-action {
-        background: transparent;
-        border: 1px solid #ddd;
-        color: #444;
+        background: #f0f7ff;
+        border: 1px solid #c2e0ff;
 
         &:hover {
-          background: #f9f9f9;
-          border-color: #ccc;
+          background: #e0edff;
+          border-color: #99ccff;
         }
       }
 
       .delete-action {
         background: #fee2e2;
         border: 1px solid #fca5a5;
-        color: #991b1b;
 
         &:hover {
           background: #fecaca;

@@ -205,7 +205,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects, onNavigate
               <lord-icon
                 src="https://cdn.lordicon.com/xcrjfuzb.json"
                 trigger="hover"
-                colors="primary:#0d4626"
+                colors="primary:#1A73E8"
                 style={{ width: '18px', height: '18px', marginRight: '6px' }}
               ></lord-icon>
               Start Action
@@ -327,7 +327,7 @@ const StyledOverview = styled.div`
       font-size: 2.2rem;
       font-weight: 700;
       margin: 0.75rem 0 0.35rem;
-      color: #0b1a10;
+      color: #0b1e30;
     }
 
     .stat-subtext {
@@ -336,9 +336,9 @@ const StyledOverview = styled.div`
     }
 
     &.stat-card-featured {
-      background: #0d4626;
+      background: #1A73E8;
       color: #fff;
-      border-color: #0d4626;
+      border-color: #1A73E8;
 
       .stat-header {
         color: rgba(255,255,255,0.7);
@@ -388,7 +388,7 @@ const StyledOverview = styled.div`
       margin: 0 0 1.2rem;
       font-size: 1.1rem;
       font-weight: 600;
-      color: #0b1a10;
+      color: #0b1e30;
     }
   }
 
@@ -444,13 +444,13 @@ const StyledOverview = styled.div`
       position: relative;
 
       &.filled {
-        background: #0d4626;
+        background: #1A73E8;
       }
       &.filled-dark {
-        background: #062313;
+        background: #0c2a50;
       }
       &.light {
-        background: #50b075;
+        background: #4291f7;
 
         &::after {
           content: attr(data-percentage);
@@ -459,7 +459,7 @@ const StyledOverview = styled.div`
           left: 50%;
           transform: translateX(-50%);
           background: #f0fdf4;
-          color: #0d4626;
+          color: #1A73E8;
           font-size: 0.7rem;
           font-weight: 700;
           padding: 0.15rem 0.35rem;
@@ -470,12 +470,12 @@ const StyledOverview = styled.div`
       &.striped {
         background: repeating-linear-gradient(
           45deg,
-          #e2ebd5,
-          #e2ebd5 4px,
-          #f4f8ee 4px,
-          #f4f8ee 8px
+          #dbeafe,
+          #dbeafe 4px,
+          #eff6ff 4px,
+          #eff6ff 8px
         );
-        border: 1px solid #d4dfc4;
+        border: 1px solid #bfdbfe;
       }
     }
 
@@ -510,8 +510,8 @@ const StyledOverview = styled.div`
       width: 2.5rem;
       height: 2.5rem;
       border-radius: 50%;
-      background: #eaf3ed;
-      color: #0d4626;
+      background: #eff6ff;
+      color: #1A73E8;
       font-weight: 700;
       font-size: 0.9rem;
       display: inline-grid;
@@ -560,7 +560,7 @@ const StyledOverview = styled.div`
       margin-top: 0.5rem;
       font-size: 0.84rem;
       font-weight: 600;
-      color: #0d4626;
+      color: #1A73E8;
       cursor: pointer;
       align-self: flex-start;
 
@@ -572,9 +572,9 @@ const StyledOverview = styled.div`
 
   /* Reminder Panel styling */
   .reminder-panel {
-    background: #0d4626;
+    background: #1A73E8;
     color: #fff;
-    border-color: #0d4626;
+    border-color: #1A73E8;
 
     .panel-tag {
       font-size: 0.74rem;
@@ -599,7 +599,7 @@ const StyledOverview = styled.div`
 
     .reminder-action {
       background: #fff;
-      color: #0d4626;
+      color: #1A73E8;
       border: 0;
       padding: 0.65rem 1.25rem;
       border-radius: 99px;
@@ -671,30 +671,30 @@ const StyledOverview = styled.div`
       border-radius: 50%;
 
       &.dot-completed {
-        background: #0d4626;
+        background: #1A73E8;
       }
       &.dot-progress {
-        background: #50b075;
+        background: #4291f7;
       }
       &.dot-pending {
-        background: #e2ebd5;
-        border: 1px solid #d4dfc4;
+        background: #dbeafe;
+        border: 1px solid #bfdbfe;
       }
     }
   }
 
   /* Time Tracker panel */
   .tracker-panel {
-    background: #041008;
+    background: #08172c;
     color: #fff;
-    border-color: #041008;
+    border-color: #08172c;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 1.75rem;
 
     /* Green background abstract structure */
-    background-image: radial-gradient(circle at 100% 100%, #0d4626 0%, transparent 60%);
+    background-image: radial-gradient(circle at 100% 100%, #1A73E8 0%, transparent 60%);
 
     .tracker-tag {
       font-size: 0.78rem;
@@ -746,5 +746,5 @@ const StyledOverview = styled.div`
     }
   }
 
-  --accent-green: #0d4626;
+  --accent-green: #1A73E8;
 `;
