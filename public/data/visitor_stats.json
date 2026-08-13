@@ -1,0 +1,108 @@
+{
+  "totalVisits": 312,
+  "uniqueVisitors": 184,
+  "pageViews": {
+    "home": 240,
+    "projects": 145,
+    "details": 64
+  },
+  "referrers": {
+    "direct": 110,
+    "github": 95,
+    "linkedin": 72,
+    "vercel": 24,
+    "other": 11
+  },
+  "devices": {
+    "desktop": 218,
+    "mobile": 82,
+    "tablet": 12
+  },
+  "browsers": {
+    "chrome": 194,
+    "safari": 62,
+    "firefox": 32,
+    "edge": 18,
+    "other": 6
+  },
+  "dailyTraffic": [
+    {
+      "date": "2026-08-07",
+      "visits": 28
+    },
+    {
+      "date": "2026-08-08",
+      "visits": 34
+    },
+    {
+      "date": "2026-08-09",
+      "visits": 41
+    },
+    {
+      "date": "2026-08-10",
+      "visits": 38
+    },
+    {
+      "date": "2026-08-11",
+      "visits": 48
+    },
+    {
+      "date": "2026-08-12",
+      "visits": 62
+    },
+    {
+      "date": "2026-08-13",
+      "visits": 61
+    }
+  ],
+  "hourlyTraffic": [
+    {
+      "hour": "00:00",
+      "count": 4
+    },
+    {
+      "hour": "02:00",
+      "count": 2
+    },
+    {
+      "hour": "04:00",
+      "count": 1
+    },
+    {
+      "hour": "06:00",
+      "count": 8
+    },
+    {
+      "hour": "08:00",
+      "count": 25
+    },
+    {
+      "hour": "10:00",
+      "count": 48
+    },
+    {
+      "hour": "12:00",
+      "count": 64
+    },
+    {
+      "hour": "14:00",
+      "count": 58
+    },
+    {
+      "hour": "16:00",
+      "count": 42
+    },
+    {
+      "hour": "18:00",
+      "count": 35
+    },
+    {
+      "hour": "20:00",
+      "count": 18
+    },
+    {
+      "hour": "22:00",
+      "count": 7
+    }
+  ]
+}

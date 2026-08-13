@@ -474,7 +474,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                     title="Delete Project"
                   >
                     <lord-icon
-                      src="https://cdn.lordicon.com/gsqwyapz.json"
+                      src="https://cdn.lordicon.com/gsqxdxog.json"
                       trigger="hover"
                       colors="primary:#b91c1c,secondary:#b91c1c"
                       style={{ width: '18px', height: '18px' }}
@@ -865,6 +865,10 @@ const StyledProjectsPage = styled.div`
         border-radius: 50%;
         cursor: pointer;
         transition: transform 180ms ease, background-color 180ms ease;
+
+        lord-icon {
+          pointer-events: none;
+        }
 
         &:hover {
           transform: scale(1.08);
