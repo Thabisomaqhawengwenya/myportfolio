@@ -573,6 +573,8 @@ const StyledProjectsPage = styled.div`
       input[type='url'],
       select,
       textarea {
+        width: 100%;
+        box-sizing: border-box;
         padding: 0.75rem 1rem;
         border: 1px solid #ddd;
         border-radius: 0.5rem;
@@ -610,9 +612,16 @@ const StyledProjectsPage = styled.div`
       .upload-row {
         display: flex;
         gap: 0.75rem;
+        align-items: stretch;
+
+        @media (max-width: 480px) {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
 
         input {
           flex: 1;
+          min-width: 0;
         }
       }
 
@@ -625,6 +634,17 @@ const StyledProjectsPage = styled.div`
         font-weight: 600;
         font-size: 0.88rem;
         cursor: pointer;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+
+        @media (max-width: 480px) {
+          padding: 0.65rem 1rem;
+          width: 100%;
+          height: auto;
+        }
 
         &:hover {
           background: #e1e9e3;
