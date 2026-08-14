@@ -99,6 +99,14 @@ const StyledCard = styled.article`
     background: var(--project-media-bg);
     border-bottom: 1px solid var(--line);
     overflow: hidden;
+
+    @media (max-width: 1024px) {
+      height: 140px;
+    }
+
+    @media (max-width: 600px) {
+      height: 110px;
+    }
   }
 
   .project-media-image {
@@ -158,6 +166,13 @@ const StyledCard = styled.article`
       box-shadow:
         0 0 28px rgba(0, 0, 244, 0.6),
         0 0 56px rgba(0, 0, 244, 0.3);
+
+      @media (max-width: 768px) {
+        top: 10px;
+        right: 10px;
+        width: 30px;
+        height: 30px;
+      }
     }
 
     .project-media-badge {
@@ -174,6 +189,13 @@ const StyledCard = styled.article`
       font-weight: 700;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+
+      @media (max-width: 768px) {
+        top: 10px;
+        left: 10px;
+        font-size: 0.6rem;
+        padding: 0.2rem 0.45rem;
+      }
     }
 
     .project-media-title {
@@ -184,6 +206,11 @@ const StyledCard = styled.article`
       font-size: clamp(1.5rem, 2vw, 2rem);
       font-weight: 800;
       letter-spacing: 0.02em;
+
+      @media (max-width: 768px) {
+        margin: 0 10px 0.1rem;
+        font-size: 1rem;
+      }
     }
 
     .project-media-copy {
@@ -194,6 +221,11 @@ const StyledCard = styled.article`
       font-size: 0.88rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+
+      @media (max-width: 768px) {
+        margin: 0 10px 10px;
+        font-size: 0.68rem;
+      }
     }
   }
 
@@ -234,16 +266,34 @@ const StyledCard = styled.article`
   .project-body {
     padding: 1.15rem 1.15rem 1.25rem;
 
+    @media (max-width: 768px) {
+      padding: 0.75rem 0.75rem 0.85rem;
+    }
+
     h3 {
       margin: 0;
       font-size: 1.15rem;
       color: var(--heading);
+
+      @media (max-width: 768px) {
+        font-size: 0.95rem;
+      }
     }
 
     p {
       margin: 0.7rem 0 0;
       color: var(--muted);
       font-size: 0.92rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+
+      @media (max-width: 768px) {
+        margin: 0.4rem 0 0;
+        font-size: 0.78rem;
+        -webkit-line-clamp: 2;
+      }
     }
   }
 
@@ -255,6 +305,11 @@ const StyledCard = styled.article`
     margin: 0.85rem 0 0;
     list-style: none;
 
+    @media (max-width: 768px) {
+      margin: 0.5rem 0 0;
+      gap: 0.3rem;
+    }
+
     li {
       padding: 0.42rem 0.62rem;
       border-radius: 999px;
@@ -262,6 +317,11 @@ const StyledCard = styled.article`
       border: 1px solid rgba(0, 0, 244, 0.55);
       color: var(--project-tag-text);
       font-size: 0.76rem;
+
+      @media (max-width: 768px) {
+        padding: 0.18rem 0.4rem;
+        font-size: 0.62rem;
+      }
     }
   }
 
@@ -276,6 +336,11 @@ const StyledCard = styled.article`
     font-size: 0.84rem;
     font-weight: 600;
     cursor: pointer;
+
+    @media (max-width: 768px) {
+      margin-top: 0.6rem;
+      font-size: 0.76rem;
+    }
 
     &::after {
       content: '->';
