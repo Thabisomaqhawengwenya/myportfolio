@@ -326,6 +326,7 @@ export const Dashboard: React.FC = () => {
           {activeTab === 'dashboard' && (
             <OverviewPage
               projects={projects}
+              onNavigateToTab={setActiveTab}
             />
           )}
            {activeTab === 'projects' && (

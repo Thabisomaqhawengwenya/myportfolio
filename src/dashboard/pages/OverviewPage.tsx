@@ -15,9 +15,10 @@ interface Project {
 
 interface OverviewPageProps {
   projects: Project[];
+  onNavigateToTab?: (tab: 'dashboard' | 'projects' | 'calendar' | 'analytics' | 'settings') => void;
 }
 
-export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
+export const OverviewPage: React.FC<OverviewPageProps> = ({ projects, onNavigateToTab }) => {
   // Time Tracker state
   const [time, setTime] = useState(0); // Start at 00:00:00 (0 seconds)
   const [isRunning, setIsRunning] = useState(false);
@@ -128,49 +129,12 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
 
       <div className="dashboard-grid">
         <div className="grid-left-col">
-          {/* Project Analytics Chart */}
-          <div className="dashboard-panel chart-panel">
-            <h3>Project Analytics</h3>
-            <div className="bar-chart">
-              <div className="bar-container">
-                <div className="bar striped" style={{ height: '50%' }}></div>
-                <span className="bar-label">S</span>
-              </div>
-              <div className="bar-container">
-                <div className="bar filled" style={{ height: '78%' }}></div>
-                <span className="bar-label">M</span>
-              </div>
-              <div className="bar-container">
-                <div className="bar light" style={{ height: '62%' }} data-percentage="74%"></div>
-                <span className="bar-label">T</span>
-              </div>
-              <div className="bar-container">
-                <div className="bar filled-dark" style={{ height: '90%' }}></div>
-                <span className="bar-label">W</span>
-              </div>
-              <div className="bar-container">
-                <div className="bar striped" style={{ height: '45%' }}></div>
-                <span className="bar-label">T</span>
-              </div>
-              <div className="bar-container">
-                <div className="bar striped" style={{ height: '35%' }}></div>
-                <span className="bar-label">F</span>
-              </div>
-              <div className="bar-container">
-                <div className="bar striped" style={{ height: '55%' }}></div>
-                <span className="bar-label">S</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid-right-col">
           {/* Reminders Card */}
           <div className="dashboard-panel reminder-panel">
             <div className="panel-tag">Reminders</div>
             <h3>Deploy Portfolio V2</h3>
             <p className="reminder-time">Time : 02.00 pm - 04.00 pm</p>
-            <button className="reminder-action">
+            <button className="reminder-action" onClick={() => onNavigateToTab?.('calendar')}>
               <Icon
                 icon="lucide:play"
                 width={18}
@@ -180,47 +144,9 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
               Start Action
             </button>
           </div>
+        </div>
 
-          {/* Project Progress Gauge */}
-          <div className="dashboard-panel progress-panel">
-            <h3>Project Progress</h3>
-            <div className="gauge-container">
-              <svg viewBox="0 0 100 50" className="gauge-svg">
-                <path
-                  d="M 10 50 A 40 40 0 0 1 90 50"
-                  fill="none"
-                  stroke="#eceff1"
-                  strokeWidth="10"
-                  strokeLinecap="round"
-                />
-                <path
-                  d="M 10 50 A 40 40 0 0 1 90 50"
-                  fill="none"
-                  stroke="var(--accent-green)"
-                  strokeWidth="10"
-                  strokeLinecap="round"
-                  strokeDasharray="125.6"
-                  strokeDashoffset="74" /* 41% complete */
-                />
-              </svg>
-              <div className="gauge-center">
-                <span className="gauge-percentage">41%</span>
-                <span className="gauge-label">Project Ended</span>
-              </div>
-            </div>
-            <div className="gauge-legend">
-              <div>
-                <span className="legend-dot dot-completed"></span> Completed
-              </div>
-              <div>
-                <span className="legend-dot dot-progress"></span> In Progress
-              </div>
-              <div>
-                <span className="legend-dot dot-pending"></span> Pending
-              </div>
-            </div>
-          </div>
-
+        <div className="grid-right-col">
           {/* Time Tracker Card */}
           <div className="dashboard-panel tracker-panel">
             <div className="tracker-tag">Time Tracker</div>
@@ -341,7 +267,7 @@ const StyledOverview = styled.div`
 
   .dashboard-grid {
     display: grid;
-    grid-template-columns: 1.6fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 1.5rem;
 
     @media (max-width: 960px) {
