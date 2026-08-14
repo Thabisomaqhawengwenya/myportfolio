@@ -299,7 +299,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                     ) : (
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                         <Icon
-                          icon="solar:upload-bold-duotone"
+                          icon="lucide:upload"
                           width={16}
                           height={16}
                           style={{ color: '#1A73E8' }}
@@ -464,7 +464,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                 <div className="table-actions">
                   <button className="action-btn edit-action" onClick={() => handleEdit(project)} title="Edit Project">
                     <Icon
-                      icon="solar:pen-bold-duotone"
+                      icon="lucide:pencil"
                       width={18}
                       height={18}
                       style={{ color: '#1A73E8' }}
@@ -476,7 +476,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                     title="Delete Project"
                   >
                     <Icon
-                      icon="solar:trash-bin-trash-bold-duotone"
+                      icon="lucide:trash-2"
                       width={18}
                       height={18}
                       style={{ color: '#b91c1c' }}

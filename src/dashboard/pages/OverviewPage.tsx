@@ -66,7 +66,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
             <span>Total Projects</span>
             <span className="arrow-icon">
               <Icon
-                icon="solar:arrow-right-up-bold-duotone"
+                icon="lucide:arrow-up-right"
                 width={16}
                 height={16}
                 style={{ color: '#ffffff' }}
@@ -82,7 +82,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
             <span>Business Projects</span>
             <span className="arrow-icon">
               <Icon
-                icon="solar:arrow-right-up-bold-duotone"
+                icon="lucide:arrow-up-right"
                 width={16}
                 height={16}
                 style={{ color: '#111111' }}
@@ -98,7 +98,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
             <span>Personal Brand</span>
             <span className="arrow-icon">
               <Icon
-                icon="solar:arrow-right-up-bold-duotone"
+                icon="lucide:arrow-up-right"
                 width={16}
                 height={16}
                 style={{ color: '#111111' }}
@@ -114,7 +114,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
             <span>Utility & Others</span>
             <span className="arrow-icon">
               <Icon
-                icon="solar:arrow-right-up-bold-duotone"
+                icon="lucide:arrow-up-right"
                 width={16}
                 height={16}
                 style={{ color: '#111111' }}
@@ -172,7 +172,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
             <p className="reminder-time">Time : 02.00 pm - 04.00 pm</p>
             <button className="reminder-action">
               <Icon
-                icon="solar:play-bold"
+                icon="lucide:play"
                 width={18}
                 height={18}
                 style={{ color: '#1A73E8', marginRight: '6px' }}

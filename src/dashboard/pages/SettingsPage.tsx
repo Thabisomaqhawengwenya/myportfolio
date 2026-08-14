@@ -72,7 +72,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           <div className="settings-col">
             <div className="settings-card">
               <div className="card-header">
-                <Icon icon="solar:user-circle-bold-duotone" className="card-icon" />
+                <Icon icon="lucide:user" className="card-icon" />
                 <h3>Profile Settings</h3>
               </div>
               <div className="card-body">
@@ -127,7 +127,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 
             <div className="settings-card">
               <div className="card-header">
-                <Icon icon="solar:settings-minimalistic-bold-duotone" className="card-icon" />
+                <Icon icon="lucide:sliders" className="card-icon" />
                 <h3>Preferences</h3>
               </div>
               <div className="card-body">
@@ -168,7 +168,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           <div className="settings-col">
             <div className="settings-card">
               <div className="card-header">
-                <Icon icon="solar:link-round-bold-duotone" className="card-icon" />
+                <Icon icon="lucide:link-2" className="card-icon" />
                 <h3>External Links</h3>
               </div>
               <div className="card-body">
@@ -205,7 +205,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 <div className="form-group">
                   <label>Personal Website</label>
                   <div className="input-with-icon">
-                    <Icon icon="solar:global-bold-duotone" className="input-inner-icon" />
+                    <Icon icon="lucide:globe" className="input-inner-icon" />
                     <input
                       type="url"
                       value={websiteUrl}
@@ -219,7 +219,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 
             <div className="settings-card security-card">
               <div className="card-header">
-                <Icon icon="solar:shield-keyhole-bold-duotone" className="card-icon" />
+                <Icon icon="lucide:shield-check" className="card-icon" />
                 <h3>Security & Platform</h3>
               </div>
               <div className="card-body">
@@ -244,7 +244,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
         <div className="settings-actions">
           {success && (
             <div className="success-toast">
-              <Icon icon="solar:check-circle-bold-duotone" className="toast-icon" />
+              <Icon icon="lucide:check-circle-2" className="toast-icon" />
               <span>Settings updated successfully!</span>
             </div>
           )}
@@ -256,7 +256,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
               </>
             ) : (
               <>
-                <Icon icon="solar:diskette-bold-duotone" className="btn-icon" />
+                <Icon icon="lucide:save" className="btn-icon" />
                 Save Settings
               </>
             )}

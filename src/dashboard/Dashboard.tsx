@@ -110,7 +110,7 @@ export const Dashboard: React.FC = () => {
         <div className="logo-section">
           <div className="logo-icon">
             <Icon
-              icon="solar:checklist-minimalistic-bold-duotone"
+              icon="lucide:check-square"
               width={30}
               height={30}
               style={{ color: '#1A73E8' }}
@@ -127,7 +127,7 @@ export const Dashboard: React.FC = () => {
           >
             <span className="item-icon">
               <Icon
-                icon="solar:dashboard-combined-bold-duotone"
+                icon="lucide:layout-dashboard"
                 width={20}
                 height={20}
                 style={{ color: activeTab === 'dashboard' ? '#1A73E8' : '#555555' }}
@@ -141,7 +141,7 @@ export const Dashboard: React.FC = () => {
           >
             <span className="item-icon">
               <Icon
-                icon="solar:folder-with-files-bold-duotone"
+                icon="lucide:folder-open"
                 width={20}
                 height={20}
                 style={{ color: activeTab === 'projects' ? '#1A73E8' : '#555555' }}
@@ -156,7 +156,7 @@ export const Dashboard: React.FC = () => {
           >
             <span className="item-icon">
               <Icon
-                icon="solar:calendar-date-bold-duotone"
+                icon="lucide:calendar"
                 width={20}
                 height={20}
                 style={{ color: activeTab === 'calendar' ? '#1A73E8' : '#555555' }}
@@ -170,7 +170,7 @@ export const Dashboard: React.FC = () => {
           >
             <span className="item-icon">
               <Icon
-                icon="solar:chart-square-bold-duotone"
+                icon="lucide:bar-chart-3"
                 width={20}
                 height={20}
                 style={{ color: activeTab === 'analytics' ? '#1A73E8' : '#555555' }}
@@ -188,7 +188,7 @@ export const Dashboard: React.FC = () => {
           >
             <span className="item-icon">
               <Icon
-                icon="solar:settings-bold-duotone"
+                icon="lucide:settings"
                 width={20}
                 height={20}
                 style={{ color: activeTab === 'settings' ? '#1A73E8' : '#555555' }}
@@ -199,7 +199,7 @@ export const Dashboard: React.FC = () => {
           <button className="menu-item disabled">
             <span className="item-icon">
               <Icon
-                icon="solar:question-square-bold-duotone"
+                icon="lucide:help-circle"
                 width={20}
                 height={20}
                 style={{ color: '#555555' }}
@@ -210,7 +210,7 @@ export const Dashboard: React.FC = () => {
           <button className="menu-item logout-btn" onClick={handleBackToPortfolio}>
             <span className="item-icon">
               <Icon
-                icon="solar:logout-2-bold-duotone"
+                icon="lucide:arrow-left-circle"
                 width={20}
                 height={20}
                 style={{ color: '#cf2c2c' }}
@@ -223,7 +223,7 @@ export const Dashboard: React.FC = () => {
         <div className="sidebar-app-promo">
           <div className="promo-icon">
             <Icon
-              icon="solar:smartphone-bold-duotone"
+              icon="lucide:smartphone"
               width={38}
               height={38}
               style={{ color: '#ffffff' }}
@@ -242,7 +242,7 @@ export const Dashboard: React.FC = () => {
           <div className="search-bar">
             <span className="search-icon">
               <Icon
-                icon="solar:magnifer-bold-duotone"
+                icon="lucide:search"
                 width={18}
                 height={18}
                 style={{ color: '#888888' }}
@@ -264,7 +264,7 @@ export const Dashboard: React.FC = () => {
             
             <button className="icon-action-btn" aria-label="Mail notification">
               <Icon
-                icon="solar:letter-bold-duotone"
+                icon="lucide:mail"
                 width={20}
                 height={20}
                 style={{ color: '#111111' }}
@@ -272,7 +272,7 @@ export const Dashboard: React.FC = () => {
             </button>
             <button className="icon-action-btn" aria-label="Alert notification">
               <Icon
-                icon="solar:bell-bing-bold-duotone"
+                icon="lucide:bell"
                 width={20}
                 height={20}
                 style={{ color: '#111111' }}
@@ -361,7 +361,7 @@ export const Dashboard: React.FC = () => {
           aria-label="Dashboard"
         >
           <Icon
-            icon="solar:dashboard-combined-bold-duotone"
+            icon="lucide:layout-dashboard"
             width={22}
             height={22}
             style={{ color: activeTab === 'dashboard' ? '#ffffff' : '#888888' }}
@@ -374,7 +374,7 @@ export const Dashboard: React.FC = () => {
           aria-label="Projects"
         >
           <Icon
-            icon="solar:folder-with-files-bold-duotone"
+            icon="lucide:folder-open"
             width={22}
             height={22}
             style={{ color: activeTab === 'projects' ? '#ffffff' : '#888888' }}
@@ -387,7 +387,7 @@ export const Dashboard: React.FC = () => {
           aria-label="Calendar"
         >
           <Icon
-            icon="solar:calendar-date-bold-duotone"
+            icon="lucide:calendar"
             width={22}
             height={22}
             style={{ color: activeTab === 'calendar' ? '#ffffff' : '#888888' }}
@@ -400,7 +400,7 @@ export const Dashboard: React.FC = () => {
           aria-label="Analytics"
         >
           <Icon
-            icon="solar:chart-square-bold-duotone"
+            icon="lucide:bar-chart-3"
             width={22}
             height={22}
             style={{ color: activeTab === 'analytics' ? '#ffffff' : '#888888' }}
