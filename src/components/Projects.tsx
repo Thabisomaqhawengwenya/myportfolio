@@ -209,19 +209,16 @@ const StyledProjects = styled.section`
 
   .projects-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 1.35rem;
-  }
 
-  @media (max-width: 960px) {
-    .projects-grid {
+    @media (max-width: 1024px) {
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
     }
-  }
 
-  @media (max-width: 760px) {
-    .projects-grid {
-      grid-template-columns: 1fr;
+    @media (max-width: 480px) {
+      gap: 0.75rem;
     }
   }
 `;
