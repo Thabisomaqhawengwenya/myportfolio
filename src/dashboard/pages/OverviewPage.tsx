@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { Icon } from '@iconify/react';
 
 interface Project {
   id: string;
@@ -18,7 +19,7 @@ interface OverviewPageProps {
 
 export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
   // Time Tracker state
-  const [time, setTime] = useState(5048); // Start at 01:24:08 (5048 seconds)
+  const [time, setTime] = useState(0); // Start at 00:00:00 (0 seconds)
   const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
@@ -64,12 +65,12 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
           <div className="stat-header">
             <span>Total Projects</span>
             <span className="arrow-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/zmzvclqh.json"
-                trigger="hover"
-                colors="primary:#ffffff"
-                style={{ width: '16px', height: '16px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:arrow-right-up-bold-duotone"
+                width={16}
+                height={16}
+                style={{ color: '#ffffff' }}
+              />
             </span>
           </div>
           <div className="stat-value">{total}</div>
@@ -80,12 +81,12 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
           <div className="stat-header">
             <span>Business Projects</span>
             <span className="arrow-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/zmzvclqh.json"
-                trigger="hover"
-                colors="primary:#111111"
-                style={{ width: '16px', height: '16px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:arrow-right-up-bold-duotone"
+                width={16}
+                height={16}
+                style={{ color: '#111111' }}
+              />
             </span>
           </div>
           <div className="stat-value">{business}</div>
@@ -96,12 +97,12 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
           <div className="stat-header">
             <span>Personal Brand</span>
             <span className="arrow-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/zmzvclqh.json"
-                trigger="hover"
-                colors="primary:#111111"
-                style={{ width: '16px', height: '16px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:arrow-right-up-bold-duotone"
+                width={16}
+                height={16}
+                style={{ color: '#111111' }}
+              />
             </span>
           </div>
           <div className="stat-value">{personal}</div>
@@ -112,12 +113,12 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
           <div className="stat-header">
             <span>Utility & Others</span>
             <span className="arrow-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/zmzvclqh.json"
-                trigger="hover"
-                colors="primary:#111111"
-                style={{ width: '16px', height: '16px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:arrow-right-up-bold-duotone"
+                width={16}
+                height={16}
+                style={{ color: '#111111' }}
+              />
             </span>
           </div>
           <div className="stat-value">{otherCount}</div>
@@ -170,12 +171,12 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
             <h3>Deploy Portfolio V2</h3>
             <p className="reminder-time">Time : 02.00 pm - 04.00 pm</p>
             <button className="reminder-action">
-              <lord-icon
-                src="https://cdn.lordicon.com/xcrjfuzb.json"
-                trigger="hover"
-                colors="primary:#1A73E8"
-                style={{ width: '18px', height: '18px', marginRight: '6px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:play-bold"
+                width={18}
+                height={18}
+                style={{ color: '#1A73E8', marginRight: '6px' }}
+              />
               Start Action
             </button>
           </div>

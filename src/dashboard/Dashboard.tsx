@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { Icon } from '@iconify/react';
 import { OverviewPage } from './pages/OverviewPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { CalendarPage } from './pages/CalendarPage';
@@ -29,6 +30,13 @@ export const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'calendar' | 'analytics'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return 'Good Morning, Maqhawe';
+    if (hour < 18) return 'Good Afternoon, Maqhawe';
+    return 'Good Evening, Maqhawe';
+  };
 
   // Load projects from projects.json
   useEffect(() => {
@@ -93,12 +101,12 @@ export const Dashboard: React.FC = () => {
       <aside className="sidebar">
         <div className="logo-section">
           <div className="logo-icon">
-            <lord-icon
-              src="https://cdn.lordicon.com/lupuorrc.json"
-              trigger="loop"
-              colors="primary:#1A73E8,secondary:#4291f7"
-              style={{ width: '30px', height: '30px' }}
-            ></lord-icon>
+            <Icon
+              icon="solar:checklist-minimalistic-bold-duotone"
+              width={30}
+              height={30}
+              style={{ color: '#1A73E8' }}
+            />
           </div>
           <span className="logo-text">Donezo</span>
         </div>
@@ -110,12 +118,12 @@ export const Dashboard: React.FC = () => {
             onClick={() => setActiveTab('dashboard')}
           >
             <span className="item-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/gqdnbnwt.json"
-                trigger="hover"
-                colors="primary:#555555,secondary:#1A73E8"
-                style={{ width: '20px', height: '20px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:dashboard-combined-bold-duotone"
+                width={20}
+                height={20}
+                style={{ color: activeTab === 'dashboard' ? '#1A73E8' : '#555555' }}
+              />
             </span>{' '}
             Dashboard
           </button>
@@ -124,12 +132,12 @@ export const Dashboard: React.FC = () => {
             onClick={() => setActiveTab('projects')}
           >
             <span className="item-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/fkdzyuuo.json"
-                trigger="hover"
-                colors="primary:#555555,secondary:#1A73E8"
-                style={{ width: '20px', height: '20px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:folder-with-files-bold-duotone"
+                width={20}
+                height={20}
+                style={{ color: activeTab === 'projects' ? '#1A73E8' : '#555555' }}
+              />
             </span>{' '}
             Projects
             <span className="count-badge">{projects.length}</span>
@@ -139,12 +147,12 @@ export const Dashboard: React.FC = () => {
             onClick={() => setActiveTab('calendar')}
           >
             <span className="item-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/wmltstbg.json"
-                trigger="hover"
-                colors="primary:#555555,secondary:#1A73E8"
-                style={{ width: '20px', height: '20px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:calendar-date-bold-duotone"
+                width={20}
+                height={20}
+                style={{ color: activeTab === 'calendar' ? '#1A73E8' : '#555555' }}
+              />
             </span>{' '}
             Calendar
           </button>
@@ -153,12 +161,12 @@ export const Dashboard: React.FC = () => {
             onClick={() => setActiveTab('analytics')}
           >
             <span className="item-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/qhviklyq.json"
-                trigger="hover"
-                colors="primary:#555555,secondary:#1A73E8"
-                style={{ width: '20px', height: '20px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:chart-square-bold-duotone"
+                width={20}
+                height={20}
+                style={{ color: activeTab === 'analytics' ? '#1A73E8' : '#555555' }}
+              />
             </span>{' '}
             Analytics
           </button>
@@ -168,34 +176,34 @@ export const Dashboard: React.FC = () => {
           <p className="menu-title">General</p>
           <button className="menu-item disabled">
             <span className="item-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/lecpriep.json"
-                trigger="hover"
-                colors="primary:#555555,secondary:#1A73E8"
-                style={{ width: '20px', height: '20px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:settings-bold-duotone"
+                width={20}
+                height={20}
+                style={{ color: '#555555' }}
+              />
             </span>{' '}
             Settings
           </button>
           <button className="menu-item disabled">
             <span className="item-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/cnyeuzcu.json"
-                trigger="hover"
-                colors="primary:#555555,secondary:#1A73E8"
-                style={{ width: '20px', height: '20px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:question-square-bold-duotone"
+                width={20}
+                height={20}
+                style={{ color: '#555555' }}
+              />
             </span>{' '}
             Help
           </button>
           <button className="menu-item logout-btn" onClick={handleBackToPortfolio}>
             <span className="item-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/hcuxorce.json"
-                trigger="hover"
-                colors="primary:#cf2c2c,secondary:#cf2c2c"
-                style={{ width: '20px', height: '20px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:logout-2-bold-duotone"
+                width={20}
+                height={20}
+                style={{ color: '#cf2c2c' }}
+              />
             </span>{' '}
             Back to Portfolio
           </button>
@@ -203,12 +211,12 @@ export const Dashboard: React.FC = () => {
 
         <div className="sidebar-app-promo">
           <div className="promo-icon">
-            <lord-icon
-              src="https://cdn.lordicon.com/kxhnpvqy.json"
-              trigger="loop"
-              colors="primary:#ffffff,secondary:#4291f7"
-              style={{ width: '38px', height: '38px' }}
-            ></lord-icon>
+            <Icon
+              icon="solar:smartphone-bold-duotone"
+              width={38}
+              height={38}
+              style={{ color: '#ffffff' }}
+            />
           </div>
           <h4>Download our App</h4>
           <p>Get easy in another way</p>
@@ -222,12 +230,12 @@ export const Dashboard: React.FC = () => {
         <header className="main-header">
           <div className="search-bar">
             <span className="search-icon">
-              <lord-icon
-                src="https://cdn.lordicon.com/msoeawqm.json"
-                trigger="hover"
-                colors="primary:#888888,secondary:#1A73E8"
-                style={{ width: '18px', height: '18px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:magnifer-bold-duotone"
+                width={18}
+                height={18}
+                style={{ color: '#888888' }}
+              />
             </span>
             <input
               type="text"
@@ -244,20 +252,20 @@ export const Dashboard: React.FC = () => {
             {saveStatus === 'error' && <span className="status-indicator error">Save failed!</span>}
             
             <button className="icon-action-btn" aria-label="Mail notification">
-              <lord-icon
-                src="https://cdn.lordicon.com/nzxtwhfd.json"
-                trigger="hover"
-                colors="primary:#111111,secondary:#1A73E8"
-                style={{ width: '20px', height: '20px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:letter-bold-duotone"
+                width={20}
+                height={20}
+                style={{ color: '#111111' }}
+              />
             </button>
             <button className="icon-action-btn" aria-label="Alert notification">
-              <lord-icon
-                src="https://cdn.lordicon.com/vspoxosx.json"
-                trigger="hover"
-                colors="primary:#111111,secondary:#1A73E8"
-                style={{ width: '20px', height: '20px' }}
-              ></lord-icon>
+              <Icon
+                icon="solar:bell-bing-bold-duotone"
+                width={20}
+                height={20}
+                style={{ color: '#111111' }}
+              />
             </button>
             <div className="user-profile">
               <div className="profile-pic">MT</div>
@@ -274,7 +282,7 @@ export const Dashboard: React.FC = () => {
           <div className="dashboard-header-text">
             {activeTab === 'dashboard' && (
               <>
-                <h1>Dashboard Overview</h1>
+                <h1>{getGreeting()}</h1>
                 <p>Plan, prioritize, and accomplish your tasks with ease.</p>
               </>
             )}
@@ -322,12 +330,12 @@ export const Dashboard: React.FC = () => {
           onClick={() => setActiveTab('dashboard')}
           aria-label="Dashboard"
         >
-          <lord-icon
-            src="https://cdn.lordicon.com/gqdnbnwt.json"
-            trigger={activeTab === 'dashboard' ? 'loop' : 'hover'}
-            colors={activeTab === 'dashboard' ? 'primary:#ffffff,secondary:#ffffff' : 'primary:#888888,secondary:#888888'}
-            style={{ width: '22px', height: '22px' }}
-          ></lord-icon>
+          <Icon
+            icon="solar:dashboard-combined-bold-duotone"
+            width={22}
+            height={22}
+            style={{ color: activeTab === 'dashboard' ? '#ffffff' : '#888888' }}
+          />
           {activeTab === 'dashboard' && <span className="nav-text">Dashboard</span>}
         </button>
         <button
@@ -335,12 +343,12 @@ export const Dashboard: React.FC = () => {
           onClick={() => setActiveTab('projects')}
           aria-label="Projects"
         >
-          <lord-icon
-            src="https://cdn.lordicon.com/fkdzyuuo.json"
-            trigger={activeTab === 'projects' ? 'loop' : 'hover'}
-            colors={activeTab === 'projects' ? 'primary:#ffffff,secondary:#ffffff' : 'primary:#888888,secondary:#888888'}
-            style={{ width: '22px', height: '22px' }}
-          ></lord-icon>
+          <Icon
+            icon="solar:folder-with-files-bold-duotone"
+            width={22}
+            height={22}
+            style={{ color: activeTab === 'projects' ? '#ffffff' : '#888888' }}
+          />
           {activeTab === 'projects' && <span className="nav-text">Projects</span>}
         </button>
         <button
@@ -348,12 +356,12 @@ export const Dashboard: React.FC = () => {
           onClick={() => setActiveTab('calendar')}
           aria-label="Calendar"
         >
-          <lord-icon
-            src="https://cdn.lordicon.com/wmltstbg.json"
-            trigger={activeTab === 'calendar' ? 'loop' : 'hover'}
-            colors={activeTab === 'calendar' ? 'primary:#ffffff,secondary:#ffffff' : 'primary:#888888,secondary:#888888'}
-            style={{ width: '22px', height: '22px' }}
-          ></lord-icon>
+          <Icon
+            icon="solar:calendar-date-bold-duotone"
+            width={22}
+            height={22}
+            style={{ color: activeTab === 'calendar' ? '#ffffff' : '#888888' }}
+          />
           {activeTab === 'calendar' && <span className="nav-text">Calendar</span>}
         </button>
         <button
@@ -361,12 +369,12 @@ export const Dashboard: React.FC = () => {
           onClick={() => setActiveTab('analytics')}
           aria-label="Analytics"
         >
-          <lord-icon
-            src="https://cdn.lordicon.com/qhviklyq.json"
-            trigger={activeTab === 'analytics' ? 'loop' : 'hover'}
-            colors={activeTab === 'analytics' ? 'primary:#ffffff,secondary:#ffffff' : 'primary:#888888,secondary:#888888'}
-            style={{ width: '22px', height: '22px' }}
-          ></lord-icon>
+          <Icon
+            icon="solar:chart-square-bold-duotone"
+            width={22}
+            height={22}
+            style={{ color: activeTab === 'analytics' ? '#ffffff' : '#888888' }}
+          />
           {activeTab === 'analytics' && <span className="nav-text">Analytics</span>}
         </button>
       </nav>

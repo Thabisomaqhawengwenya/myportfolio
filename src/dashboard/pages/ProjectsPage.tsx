@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
+import { Icon } from '@iconify/react';
 
 interface Project {
   id: string;
@@ -297,12 +298,12 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                       'Uploading...'
                     ) : (
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                        <lord-icon
-                          src="https://cdn.lordicon.com/smwmetot.json"
-                          trigger="hover"
-                          colors="primary:#1A73E8"
-                          style={{ width: '16px', height: '16px' }}
-                        ></lord-icon>
+                        <Icon
+                          icon="solar:upload-bold-duotone"
+                          width={16}
+                          height={16}
+                          style={{ color: '#1A73E8' }}
+                        />
                         Upload Local
                       </span>
                     )}
@@ -424,23 +425,23 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                     {project.liveDemoUrl && (
                       <a href={project.liveDemoUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                         Demo
-                        <lord-icon
-                          src="https://cdn.lordicon.com/gzkudoal.json"
-                          trigger="hover"
-                          colors="primary:#1A73E8"
-                          style={{ width: '14px', height: '14px' }}
-                        ></lord-icon>
+                        <Icon
+                          icon="lucide:external-link"
+                          width={14}
+                          height={14}
+                          style={{ color: '#1A73E8' }}
+                        />
                       </a>
                     )}
                     {project.githubUrl && (
                       <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                         GitHub
-                        <lord-icon
-                          src="https://cdn.lordicon.com/ftndunxo.json"
-                          trigger="hover"
-                          colors="primary:#1A73E8"
-                          style={{ width: '14px', height: '14px' }}
-                        ></lord-icon>
+                        <Icon
+                          icon="lucide:github"
+                          width={14}
+                          height={14}
+                          style={{ color: '#1A73E8' }}
+                        />
                       </a>
                     )}
                   </div>
@@ -462,24 +463,24 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
 
                 <div className="table-actions">
                   <button className="action-btn edit-action" onClick={() => handleEdit(project)} title="Edit Project">
-                    <lord-icon
-                      src="https://cdn.lordicon.com/wloilxuq.json"
-                      trigger="hover"
-                      colors="primary:#1A73E8,secondary:#4291f7"
-                      style={{ width: '18px', height: '18px' }}
-                    ></lord-icon>
+                    <Icon
+                      icon="solar:pen-bold-duotone"
+                      width={18}
+                      height={18}
+                      style={{ color: '#1A73E8' }}
+                    />
                   </button>
                   <button
                     className="action-btn delete-action"
                     onClick={() => handleDelete(project.id)}
                     title="Delete Project"
                   >
-                    <lord-icon
-                      src="https://cdn.lordicon.com/gsqxdxog.json"
-                      trigger="hover"
-                      colors="primary:#b91c1c,secondary:#b91c1c"
-                      style={{ width: '18px', height: '18px' }}
-                    ></lord-icon>
+                    <Icon
+                      icon="solar:trash-bin-trash-bold-duotone"
+                      width={18}
+                      height={18}
+                      style={{ color: '#b91c1c' }}
+                    />
                   </button>
                 </div>
               </div>
@@ -867,7 +868,7 @@ const StyledProjectsPage = styled.div`
         cursor: pointer;
         transition: transform 180ms ease, background-color 180ms ease;
 
-        lord-icon {
+        svg {
           pointer-events: none;
         }
 
