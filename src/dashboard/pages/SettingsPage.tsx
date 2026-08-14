@@ -365,6 +365,7 @@ const StyledSettings = styled.div`
         border: 1px solid #cbd5e1;
         outline: none;
         font-weight: 700;
+        background: #fafafa;
         color: #1e293b;
 
         &:focus {
@@ -391,6 +392,7 @@ const StyledSettings = styled.div`
       border-radius: 8px;
       border: 1px solid #d1d5db;
       font-size: 0.9rem;
+      background: #fafafa;
       color: #111;
       outline: none;
       transition: border-color 150ms ease;
