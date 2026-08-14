@@ -1,0 +1,16 @@
+[
+  {
+    "id": "1",
+    "title": "Portfolio Launch 🎉",
+    "date": "2026-08-01",
+    "type": "milestone",
+    "description": "Successfully deployed the new React + Vite portfolio website on Vercel."
+  },
+  {
+    "id": "3",
+    "title": "Dashboard Complete",
+    "date": "2026-08-14",
+    "type": "milestone",
+    "description": "Launch the full custom administration panel with projects, calendar, and analytics."
+  }
+]
