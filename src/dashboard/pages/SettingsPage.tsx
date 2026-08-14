@@ -7,13 +7,15 @@ interface SettingsPageProps {
   profileEmail: string;
   profileRole: string;
   onProfileUpdate: (name: string, email: string, role: string) => void;
+  onBackToPortfolio?: () => void;
 }
 
 export const SettingsPage: React.FC<SettingsPageProps> = ({
   profileName,
   profileEmail,
   profileRole,
-  onProfileUpdate
+  onProfileUpdate,
+  onBackToPortfolio
 }) => {
   // Profile settings
   const [name, setName] = useState(profileName);
@@ -67,6 +69,14 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   return (
     <StyledSettings>
       <form onSubmit={handleSave}>
+        {onBackToPortfolio && (
+          <div className="mobile-back-to-portfolio">
+            <button type="button" onClick={onBackToPortfolio} className="back-link-btn">
+              <Icon icon="lucide:arrow-left" className="btn-icon-left" />
+              Back to Portfolio
+            </button>
+          </div>
+        )}
         <div className="settings-grid">
           {/* Column 1: Profile card and System settings */}
           <div className="settings-col">
@@ -270,6 +280,36 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 const StyledSettings = styled.div`
   max-width: 1000px;
   margin: 0 auto;
+
+  .mobile-back-to-portfolio {
+    display: none;
+    margin-bottom: 1.25rem;
+
+    @media (max-width: 1024px) {
+      display: flex;
+    }
+
+    .back-link-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #1A73E8;
+      background: transparent;
+      border: 0;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 0.5rem 0;
+
+      &:hover {
+        color: #1557B0;
+      }
+
+      .btn-icon-left {
+        font-size: 1.1rem;
+      }
+    }
+  }
 
   .settings-grid {
     display: grid;

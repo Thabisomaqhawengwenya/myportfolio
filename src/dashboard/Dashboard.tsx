@@ -349,6 +349,7 @@ export const Dashboard: React.FC = () => {
                  setProfileRole(role);
                  setProfileInitials(localStorage.getItem('donezo_profile_initials') || 'MT');
                }}
+               onBackToPortfolio={handleBackToPortfolio}
              />
            )}
         </main>
