@@ -24,7 +24,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   // Social Links settings
   const [githubUrl, setGithubUrl] = useState(() => localStorage.getItem('donezo_github_url') || 'https://github.com/Thabisomaqhawengwenya');
   const [linkedinUrl, setLinkedinUrl] = useState(() => localStorage.getItem('donezo_linkedin_url') || 'https://linkedin.com/in/maqhawengwenya');
-  const [websiteUrl, setWebsiteUrl] = useState(() => localStorage.getItem('donezo_website_url') || 'https://donezo.com');
+  const [websiteUrl, setWebsiteUrl] = useState(() => localStorage.getItem('donezo_website_url') || 'https://yarry06.com');
 
   // System/Tracker Settings
   const [autoSave, setAutoSave] = useState(() => localStorage.getItem('donezo_system_autosave') !== 'false');
@@ -107,7 +107,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="e.g. admin@donezo.com"
+                    placeholder="e.g. admin@yarry_06.com"
                     required
                   />
                 </div>
