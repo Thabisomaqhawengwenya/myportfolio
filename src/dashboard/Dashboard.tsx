@@ -314,6 +314,62 @@ export const Dashboard: React.FC = () => {
           {activeTab === 'analytics' && <AnalyticsPage />}
         </main>
       </div>
+
+      {/* Floating Bottom Nav Bar for Mobile */}
+      <nav className="mobile-bottom-nav">
+        <button
+          className={`nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
+          onClick={() => setActiveTab('dashboard')}
+          aria-label="Dashboard"
+        >
+          <lord-icon
+            src="https://cdn.lordicon.com/gqdnbnwt.json"
+            trigger={activeTab === 'dashboard' ? 'loop' : 'hover'}
+            colors={activeTab === 'dashboard' ? 'primary:#ffffff,secondary:#ffffff' : 'primary:#888888,secondary:#888888'}
+            style={{ width: '22px', height: '22px' }}
+          ></lord-icon>
+          {activeTab === 'dashboard' && <span className="nav-text">Dashboard</span>}
+        </button>
+        <button
+          className={`nav-item ${activeTab === 'projects' ? 'active' : ''}`}
+          onClick={() => setActiveTab('projects')}
+          aria-label="Projects"
+        >
+          <lord-icon
+            src="https://cdn.lordicon.com/fkdzyuuo.json"
+            trigger={activeTab === 'projects' ? 'loop' : 'hover'}
+            colors={activeTab === 'projects' ? 'primary:#ffffff,secondary:#ffffff' : 'primary:#888888,secondary:#888888'}
+            style={{ width: '22px', height: '22px' }}
+          ></lord-icon>
+          {activeTab === 'projects' && <span className="nav-text">Projects</span>}
+        </button>
+        <button
+          className={`nav-item ${activeTab === 'calendar' ? 'active' : ''}`}
+          onClick={() => setActiveTab('calendar')}
+          aria-label="Calendar"
+        >
+          <lord-icon
+            src="https://cdn.lordicon.com/wmltstbg.json"
+            trigger={activeTab === 'calendar' ? 'loop' : 'hover'}
+            colors={activeTab === 'calendar' ? 'primary:#ffffff,secondary:#ffffff' : 'primary:#888888,secondary:#888888'}
+            style={{ width: '22px', height: '22px' }}
+          ></lord-icon>
+          {activeTab === 'calendar' && <span className="nav-text">Calendar</span>}
+        </button>
+        <button
+          className={`nav-item ${activeTab === 'analytics' ? 'active' : ''}`}
+          onClick={() => setActiveTab('analytics')}
+          aria-label="Analytics"
+        >
+          <lord-icon
+            src="https://cdn.lordicon.com/qhviklyq.json"
+            trigger={activeTab === 'analytics' ? 'loop' : 'hover'}
+            colors={activeTab === 'analytics' ? 'primary:#ffffff,secondary:#ffffff' : 'primary:#888888,secondary:#888888'}
+            style={{ width: '22px', height: '22px' }}
+          ></lord-icon>
+          {activeTab === 'analytics' && <span className="nav-text">Analytics</span>}
+        </button>
+      </nav>
     </StyledDashboard>
   );
 };
@@ -518,6 +574,10 @@ const StyledDashboard = styled.div`
     flex-direction: column;
     height: 100vh;
     overflow-y: auto;
+
+    @media (max-width: 1024px) {
+      padding-bottom: 5.5rem;
+    }
   }
 
   .main-header {
@@ -547,7 +607,8 @@ const StyledDashboard = styled.div`
     width: 320px;
 
     @media (max-width: 760px) {
-      width: 200px;
+      width: auto;
+      flex: 1;
     }
 
     .search-icon {
@@ -692,6 +753,54 @@ const StyledDashboard = styled.div`
         color: #666;
         font-size: 0.9rem;
       }
+    }
+  }
+
+  /* Mobile Bottom Navigation Bar */
+  .mobile-bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #08172c;
+    border-radius: 99px;
+    padding: 0.5rem 0.75rem;
+    gap: 0.5rem;
+    z-index: 1000;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.35);
+    align-items: center;
+    border: 1px solid rgba(255,255,255,0.08);
+    width: max-content;
+    max-width: 92vw;
+
+    @media (max-width: 1024px) {
+      display: flex;
+    }
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: 99px;
+    border: 0;
+    background: transparent;
+    color: #888;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 700;
+    transition: all 200ms ease;
+
+    .nav-text {
+      color: #fff;
+    }
+
+    &.active {
+      background: #1A73E8;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(26,115,232,0.3);
     }
   }
 `;

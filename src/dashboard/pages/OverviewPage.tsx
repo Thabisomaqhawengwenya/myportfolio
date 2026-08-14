@@ -19,7 +19,7 @@ interface OverviewPageProps {
 export const OverviewPage: React.FC<OverviewPageProps> = ({ projects }) => {
   // Time Tracker state
   const [time, setTime] = useState(5048); // Start at 01:24:08 (5048 seconds)
-  const [isRunning, setIsRunning] = useState(true);
+  const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
     let interval: number | null = null;
@@ -259,7 +259,8 @@ const StyledOverview = styled.div`
       grid-template-columns: repeat(2, 1fr);
     }
     @media (max-width: 560px) {
-      grid-template-columns: 1fr;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
     }
   }
 
@@ -270,6 +271,10 @@ const StyledOverview = styled.div`
     padding: 1.5rem;
     border: 1px solid #eaeaea;
     box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+
+    @media (max-width: 560px) {
+      padding: 1rem;
+    }
 
     .stat-header {
       display: flex;
@@ -296,6 +301,11 @@ const StyledOverview = styled.div`
       font-weight: 700;
       margin: 0.75rem 0 0.35rem;
       color: #0b1e30;
+
+      @media (max-width: 560px) {
+        font-size: 1.65rem;
+        margin: 0.4rem 0 0.2rem;
+      }
     }
 
     .stat-subtext {
