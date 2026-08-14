@@ -1,8 +1,20 @@
 import { defineConfig } from 'vite';
+import type { ViteDevServer } from 'vite';
 import react from '@vitejs/plugin-react';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { IncomingMessage, ServerResponse } from 'http';
+
+interface DailyTraffic {
+  date: string;
+  visits: number;
+}
+
+interface HourlyTraffic {
+  hour: string;
+  count: number;
+}
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -85,8 +97,8 @@ const initialCalendarEvents = [
 
 const apiPlugin = () => ({
   name: 'api-plugin',
-  configureServer(server: any) {
-    server.middlewares.use((req: any, res: any, next: any) => {
+  configureServer(server: ViteDevServer) {
+    server.middlewares.use((req: IncomingMessage, res: ServerResponse, next: () => void) => {
       // 1. Projects API
       if (req.url === '/api/projects') {
         const filePath = path.resolve(__dirname, 'public/data/projects.json');
@@ -95,7 +107,7 @@ const apiPlugin = () => ({
             const data = fs.readFileSync(filePath, 'utf-8');
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(data);
-          } catch (e) {
+          } catch {
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Failed to read projects' }));
           }
@@ -103,13 +115,13 @@ const apiPlugin = () => ({
         }
         if (req.method === 'POST') {
           let body = '';
-          req.on('data', (chunk: any) => { body += chunk; });
+          req.on('data', (chunk: Buffer) => { body += chunk.toString(); });
           req.on('end', () => {
             try {
               fs.writeFileSync(filePath, body, 'utf-8');
               res.writeHead(200, { 'Content-Type': 'application/json' });
               res.end(JSON.stringify({ success: true }));
-            } catch (e) {
+            } catch {
               res.writeHead(500, { 'Content-Type': 'application/json' });
               res.end(JSON.stringify({ error: 'Failed to write projects' }));
             }
@@ -130,7 +142,7 @@ const apiPlugin = () => ({
             const data = fs.readFileSync(filePath, 'utf-8');
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(data);
-          } catch (e) {
+          } catch {
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Failed to read visitor stats' }));
           }
@@ -142,7 +154,7 @@ const apiPlugin = () => ({
       if (req.url === '/api/track-visit' && req.method === 'POST') {
         const filePath = path.resolve(__dirname, 'public/data/visitor_stats.json');
         let body = '';
-        req.on('data', (chunk: any) => { body += chunk; });
+        req.on('data', (chunk: Buffer) => { body += chunk.toString(); });
         req.on('end', () => {
           try {
             if (!fs.existsSync(filePath)) {
@@ -196,7 +208,7 @@ const apiPlugin = () => ({
             // Traffic timestamp updates
             const todayStr = new Date().toISOString().slice(0, 10);
             stats.dailyTraffic = stats.dailyTraffic || [];
-            let dayObj = stats.dailyTraffic.find((d: any) => d.date === todayStr);
+            const dayObj = stats.dailyTraffic.find((d: DailyTraffic) => d.date === todayStr);
             if (dayObj) {
               dayObj.visits += 1;
             } else {
@@ -206,7 +218,7 @@ const apiPlugin = () => ({
 
             const currentHourStr = new Date().toTimeString().slice(0, 2) + ':00';
             stats.hourlyTraffic = stats.hourlyTraffic || [];
-            let hourObj = stats.hourlyTraffic.find((h: any) => h.hour === currentHourStr);
+            const hourObj = stats.hourlyTraffic.find((h: HourlyTraffic) => h.hour === currentHourStr);
             if (hourObj) {
               hourObj.count += 1;
             } else {
@@ -217,7 +229,7 @@ const apiPlugin = () => ({
             fs.writeFileSync(filePath, JSON.stringify(stats, null, 2), 'utf-8');
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ success: true }));
-          } catch (e) {
+          } catch {
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Failed to record visit' }));
           }
@@ -237,7 +249,7 @@ const apiPlugin = () => ({
             const data = fs.readFileSync(filePath, 'utf-8');
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(data);
-          } catch (e) {
+          } catch {
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Failed to read calendar events' }));
           }
@@ -246,13 +258,13 @@ const apiPlugin = () => ({
 
         if (req.method === 'POST') {
           let body = '';
-          req.on('data', (chunk: any) => { body += chunk; });
+          req.on('data', (chunk: Buffer) => { body += chunk.toString(); });
           req.on('end', () => {
             try {
               fs.writeFileSync(filePath, body, 'utf-8');
               res.writeHead(200, { 'Content-Type': 'application/json' });
               res.end(JSON.stringify({ success: true }));
-            } catch (e) {
+            } catch {
               res.writeHead(500, { 'Content-Type': 'application/json' });
               res.end(JSON.stringify({ error: 'Failed to write calendar events' }));
             }
@@ -267,7 +279,7 @@ const apiPlugin = () => ({
         const filename = urlObj.searchParams.get('name') || `upload-${Date.now()}.png`;
         const chunks: Buffer[] = [];
         
-        req.on('data', (chunk: any) => chunks.push(chunk));
+        req.on('data', (chunk: Buffer) => chunks.push(chunk));
         req.on('end', () => {
           try {
             const buffer = Buffer.concat(chunks);
@@ -276,7 +288,7 @@ const apiPlugin = () => ({
             fs.writeFileSync(targetPath, buffer);
             res.writeHead(200, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ url: `/images/${filename}` }));
-          } catch (e) {
+          } catch {
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Upload failed' }));
           }

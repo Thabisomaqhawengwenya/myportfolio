@@ -5,6 +5,7 @@ import { OverviewPage } from './pages/OverviewPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { CalendarPage } from './pages/CalendarPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
+import { SettingsPage } from './pages/SettingsPage';
 
 interface Project {
   id: string;
@@ -27,15 +28,22 @@ interface Project {
 export const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'calendar' | 'analytics'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'calendar' | 'analytics' | 'settings'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
+  // Profile states with localStorage persistence
+  const [profileName, setProfileName] = useState(() => localStorage.getItem('donezo_profile_name') || 'Maqhawe T');
+  const [profileEmail, setProfileEmail] = useState(() => localStorage.getItem('donezo_profile_email') || 'maqhawe@donezo.com');
+  const [profileRole, setProfileRole] = useState(() => localStorage.getItem('donezo_profile_role') || 'Software Engineer');
+  const [profileInitials, setProfileInitials] = useState(() => localStorage.getItem('donezo_profile_initials') || 'MT');
+
   const getGreeting = () => {
     const hour = new Date().getHours();
-    if (hour < 12) return 'Good Morning, Maqhawe';
-    if (hour < 18) return 'Good Afternoon, Maqhawe';
-    return 'Good Evening, Maqhawe';
+    const firstName = profileName.split(' ')[0];
+    if (hour < 12) return `Good Morning, ${firstName}`;
+    if (hour < 18) return `Good Afternoon, ${firstName}`;
+    return `Good Evening, ${firstName}`;
   };
 
   // Load projects from projects.json
@@ -174,13 +182,16 @@ export const Dashboard: React.FC = () => {
 
         <div className="menu-group">
           <p className="menu-title">General</p>
-          <button className="menu-item disabled">
+          <button
+            className={`menu-item ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('settings')}
+          >
             <span className="item-icon">
               <Icon
                 icon="solar:settings-bold-duotone"
                 width={20}
                 height={20}
-                style={{ color: '#555555' }}
+                style={{ color: activeTab === 'settings' ? '#1A73E8' : '#555555' }}
               />
             </span>{' '}
             Settings
@@ -267,13 +278,13 @@ export const Dashboard: React.FC = () => {
                 style={{ color: '#111111' }}
               />
             </button>
-            <div className="user-profile">
-              <div className="profile-pic">MT</div>
-              <div className="profile-info">
-                <h4>Maqhawe T</h4>
-                <p>maqhawe@donezo.com</p>
-              </div>
-            </div>
+             <div className="user-profile" onClick={() => setActiveTab('settings')} style={{ cursor: 'pointer' }}>
+               <div className="profile-pic">{profileInitials}</div>
+               <div className="profile-info">
+                 <h4>{profileName}</h4>
+                 <p>{profileEmail}</p>
+               </div>
+             </div>
           </div>
         </header>
 
@@ -282,7 +293,7 @@ export const Dashboard: React.FC = () => {
           <div className="dashboard-header-text">
             {activeTab === 'dashboard' && (
               <>
-                <h1>{getGreeting()}</h1>
+                 <h1>{getGreeting()}</h1>
                 <p>Plan, prioritize, and accomplish your tasks with ease.</p>
               </>
             )}
@@ -298,12 +309,18 @@ export const Dashboard: React.FC = () => {
                 <p>Track project deadlines and schedule task notes.</p>
               </>
             )}
-            {activeTab === 'analytics' && (
-              <>
-                <h1>Visitor Analytics</h1>
-                <p>Monitor visitor traffic and portfolio engagement stats.</p>
-              </>
-            )}
+             {activeTab === 'analytics' && (
+               <>
+                 <h1>Visitor Analytics</h1>
+                 <p>Monitor visitor traffic and portfolio engagement stats.</p>
+               </>
+             )}
+             {activeTab === 'settings' && (
+               <>
+                 <h1>Admin Settings</h1>
+                 <p>Manage your profile, system preferences and external portfolio links.</p>
+               </>
+             )}
           </div>
 
           {activeTab === 'dashboard' && (
@@ -311,15 +328,28 @@ export const Dashboard: React.FC = () => {
               projects={projects}
             />
           )}
-          {activeTab === 'projects' && (
-            <ProjectsPage
-              projects={projects}
-              onSaveProjects={handleSaveProjects}
-              searchQuery={searchQuery}
-            />
-          )}
-          {activeTab === 'calendar' && <CalendarPage />}
-          {activeTab === 'analytics' && <AnalyticsPage />}
+           {activeTab === 'projects' && (
+             <ProjectsPage
+               projects={projects}
+               onSaveProjects={handleSaveProjects}
+               searchQuery={searchQuery}
+             />
+           )}
+           {activeTab === 'calendar' && <CalendarPage />}
+           {activeTab === 'analytics' && <AnalyticsPage />}
+           {activeTab === 'settings' && (
+             <SettingsPage
+               profileName={profileName}
+               profileEmail={profileEmail}
+               profileRole={profileRole}
+               onProfileUpdate={(name, email, role) => {
+                 setProfileName(name);
+                 setProfileEmail(email);
+                 setProfileRole(role);
+                 setProfileInitials(localStorage.getItem('donezo_profile_initials') || 'MT');
+               }}
+             />
+           )}
         </main>
       </div>
 

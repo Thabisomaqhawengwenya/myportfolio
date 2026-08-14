@@ -266,7 +266,7 @@ export const CalendarPage: React.FC = () => {
                 <label>Event Type</label>
                 <select
                   value={modalType}
-                  onChange={(e) => setModalType(e.target.value as any)}
+                  onChange={(e) => setModalType(e.target.value as 'milestone' | 'task')}
                 >
                   <option value="task">Task / To-Do</option>
                   <option value="milestone">Project Milestone</option>

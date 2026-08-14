@@ -220,7 +220,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                 <label>Category *</label>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value as any)}
+                  onChange={(e) => setCategory(e.target.value as 'personal' | 'business' | 'education' | 'utility' | 'gift')}
                 >
                   <option value="business">Business</option>
                   <option value="personal">Personal</option>
@@ -359,7 +359,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                     <label>Placeholder Style Class</label>
                     <select
                       value={placeholderMediaClass}
-                      onChange={(e) => setPlaceholderMediaClass(e.target.value as any)}
+                      onChange={(e) => setPlaceholderMediaClass(e.target.value as 'media-five' | 'media-six')}
                     >
                       <option value="media-five">Diagonal Waves (Light)</option>
                       <option value="media-six">Sharp Peaks (Dark)</option>

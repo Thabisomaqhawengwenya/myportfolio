@@ -62,7 +62,7 @@ const App: React.FC = () => {
           path: currentPath,
         }),
       }).catch(() => {});
-    } catch (e) {
+    } catch {
       // LocalStorage or Fetch exceptions handled gracefully
     }
   }, [currentPath]);

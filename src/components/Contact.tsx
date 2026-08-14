@@ -71,7 +71,7 @@ export const Contact: React.FC = () => {
         message: '',
         _honey: '',
       });
-    } catch (error) {
+    } catch {
       setSubmitBtnText('Send Message');
       setStatus({
         text: 'Message failed to send. Please try again in a moment.',
