@@ -83,7 +83,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
     }
 
     setShowForm(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    document.querySelector('.main-content-area')?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleDelete = (id: string) => {
@@ -108,6 +108,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
     setPlaceholderCopy('');
     setPlaceholderMediaClass('media-five');
     setShowForm(true);
+    document.querySelector('.main-content-area')?.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,6 +161,8 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
       githubUrl: githubUrl.trim() || undefined,
     };
 
+    projectData.image = imageUrl.trim() || undefined;
+
     if (usePlaceholder) {
       projectData.placeholder = {
         badge: placeholderBadge.trim() || 'Project',
@@ -167,8 +170,6 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
         copy: placeholderCopy.trim() || category,
         mediaClass: placeholderMediaClass,
       };
-    } else {
-      projectData.image = imageUrl.trim() || undefined;
     }
 
     let updated: Project[];
@@ -270,6 +271,50 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                 />
               </div>
 
+              <div className="form-group full-width upload-section">
+                <label>Project Image URL or File Upload</label>
+                <div className="upload-row">
+                  <input
+                    type="text"
+                    placeholder="/images/project-image.webp or http://..."
+                    value={imageUrl}
+                    onChange={(e) => setImageUrl(e.target.value)}
+                  />
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileUpload}
+                    style={{ display: 'none' }}
+                    accept="image/*"
+                  />
+                  <button
+                    type="button"
+                    className="upload-btn"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploading}
+                  >
+                    {uploading ? (
+                      'Uploading...'
+                    ) : (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                        <lord-icon
+                          src="https://cdn.lordicon.com/smwmetot.json"
+                          trigger="hover"
+                          colors="primary:#1A73E8"
+                          style={{ width: '16px', height: '16px' }}
+                        ></lord-icon>
+                        Upload Local
+                      </span>
+                    )}
+                  </button>
+                </div>
+                {imageUrl && (
+                  <div className="image-preview">
+                    <img src={imageUrl} alt="Uploaded preview" />
+                  </div>
+                )}
+              </div>
+
               <div className="form-group checkbox-group full-width">
                 <input
                   type="checkbox"
@@ -277,10 +322,10 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                   checked={usePlaceholder}
                   onChange={(e) => setUsePlaceholder(e.target.checked)}
                 />
-                <label htmlFor="usePlaceholder">Use custom badge/text placeholder (No Image)</label>
+                <label htmlFor="usePlaceholder">Use custom badge/text placeholder (Optional)</label>
               </div>
 
-              {usePlaceholder ? (
+              {usePlaceholder && (
                 <>
                   <div className="form-group">
                     <label>Placeholder Badge</label>
@@ -320,50 +365,6 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
                     </select>
                   </div>
                 </>
-              ) : (
-                <div className="form-group full-width upload-section">
-                  <label>Project Image URL or File Upload</label>
-                  <div className="upload-row">
-                    <input
-                      type="text"
-                      placeholder="/images/project-image.webp or http://..."
-                      value={imageUrl}
-                      onChange={(e) => setImageUrl(e.target.value)}
-                    />
-                    <input
-                      type="file"
-                      ref={fileInputRef}
-                      onChange={handleFileUpload}
-                      style={{ display: 'none' }}
-                      accept="image/*"
-                    />
-                    <button
-                      type="button"
-                      className="upload-btn"
-                      onClick={() => fileInputRef.current?.click()}
-                      disabled={uploading}
-                    >
-                      {uploading ? (
-                        'Uploading...'
-                      ) : (
-                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                          <lord-icon
-                            src="https://cdn.lordicon.com/smwmetot.json"
-                            trigger="hover"
-                            colors="primary:#1A73E8"
-                            style={{ width: '16px', height: '16px' }}
-                          ></lord-icon>
-                          Upload Local
-                        </span>
-                      )}
-                    </button>
-                  </div>
-                  {imageUrl && (
-                    <div className="image-preview">
-                      <img src={imageUrl} alt="Uploaded preview" />
-                    </div>
-                  )}
-                </div>
               )}
             </div>
 
