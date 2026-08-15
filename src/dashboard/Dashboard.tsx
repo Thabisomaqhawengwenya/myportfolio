@@ -220,19 +220,6 @@ export const Dashboard: React.FC = () => {
           </button>
         </div>
 
-        <div className="sidebar-app-promo">
-          <div className="promo-icon">
-            <Icon
-              icon="lucide:smartphone"
-              width={38}
-              height={38}
-              style={{ color: '#ffffff' }}
-            />
-          </div>
-          <h4>Download our App</h4>
-          <p>Get easy in another way</p>
-          <button className="download-btn">Download</button>
-        </div>
       </aside>
 
       {/* Main Panel Content */}
@@ -559,51 +546,6 @@ const StyledDashboard = styled.div`
       color: #cf2c2c;
       &:hover {
         background: #fef2f2;
-      }
-    }
-  }
-
-  .sidebar-app-promo {
-    margin-top: auto;
-    background: #08172c;
-    background-image: radial-gradient(circle at 100% 100%, #1A73E8 0%, transparent 60%);
-    border-radius: 1.25rem;
-    padding: 1.25rem;
-    color: #fff;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-
-    .promo-icon {
-      font-size: 1.75rem;
-      margin-bottom: 0.5rem;
-    }
-
-    h4 {
-      margin: 0;
-      font-size: 0.94rem;
-      font-weight: 700;
-    }
-
-    p {
-      margin: 0.25rem 0 0.85rem;
-      font-size: 0.76rem;
-      color: rgba(255,255,255,0.7);
-    }
-
-    .download-btn {
-      background: #1A73E8;
-      color: #fff;
-      border: 0;
-      width: 100%;
-      padding: 0.5rem 0;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      cursor: pointer;
-
-      &:hover {
-        background: #1557B0;
       }
     }
   }

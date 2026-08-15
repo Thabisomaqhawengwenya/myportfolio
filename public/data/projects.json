@@ -183,15 +183,15 @@
   },
   {
     "id": "island-child-apparel",
-    "category": "business",
     "title": "Island Child Apparel",
+    "category": "business",
     "description": "A minimalist, gender-neutral children's clothing store. Built with React, Vite, and styled-components, it features a curated catalog, elegant layout, and a smooth e-commerce shopping experience.",
     "tags": [
       "React.js",
       "Vite",
       "styled-components"
     ],
-    "image": "/images/island-child-apparel.webp",
-    "liveDemoUrl": "https://islandchildapparela.vercel.app/"
+    "liveDemoUrl": "https://islandchildapparela.vercel.app/",
+    "image": "/images/1786796797438-Screenshot_2026_08_13_122201_png.png"
   }
 ]
