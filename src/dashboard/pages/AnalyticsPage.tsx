@@ -70,6 +70,29 @@ export const AnalyticsPage: React.FC = () => {
 
   return (
     <StyledAnalyticsPage>
+      {/* Vercel Live Analytics Link Banner */}
+      <div className="vercel-link-banner">
+        <div className="banner-icon">
+          <svg viewBox="0 0 75 65" fill="currentColor" width="28" height="24">
+            <path d="M37.5 0L75 65H0L37.5 0Z" />
+          </svg>
+        </div>
+        <div className="banner-details">
+          <h4>Vercel Live Analytics Active</h4>
+          <p>
+            Real-time, detailed visitor statistics (including bounce rate, page speed, referrers, and demographics) are tracked securely in production.
+          </p>
+        </div>
+        <a href="https://vercel.com/dashboard" target="_blank" rel="noopener noreferrer" className="vercel-btn">
+          <span>Open Vercel Console</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+            <polyline points="15 3 21 3 21 9" />
+            <line x1="10" y1="14" x2="21" y2="3" />
+          </svg>
+        </a>
+      </div>
+
       {/* 4 Cards Summary */}
       <div className="stats-row">
         <div className="stat-card">
@@ -235,6 +258,83 @@ const StyledAnalyticsPage = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+
+  .vercel-link-banner {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: #090d16;
+    border: 1px solid #1f293d;
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    color: #ffffff;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+    @media (max-width: 760px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1.2rem;
+    }
+  }
+
+  .banner-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    flex-shrink: 0;
+  }
+
+  .banner-details {
+    flex: 1;
+
+    h4 {
+      margin: 0 0 0.25rem 0;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+  }
+
+  .vercel-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #ffffff;
+    color: #000000;
+    border: none;
+    border-radius: 8px;
+    padding: 0.6rem 1.1rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+
+    &:hover {
+      background: #eaeaea;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    @media (max-width: 760px) {
+      width: 100%;
+      justify-content: center;
+    }
+  }
 
   .subtitle {
     font-size: 0.8rem;
