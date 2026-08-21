@@ -369,10 +369,10 @@ export const UfoCanvas: React.FC = () => {
       (window as Window).addEventListener('resize', resizeHeroUfoScene);
     }
 
-    const clock = new THREE.Clock();
+    const startTime = performance.now();
 
     const renderUfoScene = () => {
-      const elapsed = clock.getElapsedTime();
+      const elapsed = (performance.now() - startTime) / 1000;
 
       currentPointerX += (targetPointerX - currentPointerX) * 0.045;
       currentPointerY += (targetPointerY - currentPointerY) * 0.045;
