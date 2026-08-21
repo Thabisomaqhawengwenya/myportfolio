@@ -31,7 +31,7 @@ export const AICompanion: React.FC<AICompanionProps> = ({ projects, onSaveProjec
     {
       id: 'welcome',
       sender: 'ai',
-      text: "Hi Maqhawe! I'm your AI Admin Assistant. 🤖\n\nI can help you manage your tasks and portfolio. Try typing:\n• **show stats** — View visitor analytics\n• **add task [title] on [date] desc [description]**\n• **add project [title] desc [description] category [category] tags [tags]**",
+      text: "Hey Maqhawe! 👋 Hope you're having an awesome day! I'm your AI Admin Assistant, here to make managing your portfolio a breeze! 🚀\n\nWhat can I do for you today? Try typing:\n• **show stats** — get visitor insights\n• **add task [title] on [date] desc [description]**\n• **add project [title] desc [description] category [category] tags [tags]**",
       timestamp: new Date(),
     },
   ]);
@@ -62,15 +62,15 @@ export const AICompanion: React.FC<AICompanionProps> = ({ projects, onSaveProjec
 
     // Simulate AI response delay
     setTimeout(async () => {
-      let reply = "I didn't quite get that. Type **help** to see all available commands.";
+      let reply = "Hmm, I didn't quite catch that! 🤔 Double-check your spelling or type **help** to see all commands I can run for you! ✨";
       const trimmed = textToSend.trim();
 
       // 1. HELP / GREETING
       if (/^(help|hello|hi|hey|menu)/i.test(trimmed)) {
-        reply = "Here are the commands I can execute for you:\n\n" +
-          "1. **Add Task/Milestone**:\n`add task [title] on [YYYY-MM-DD] desc [description]`\n\n" +
-          "2. **Add Project**:\n`add project [title] desc [description] category [personal/business/...] tags [React, Vite]`\n\n" +
-          "3. **Show Visitor Stats**:\n`show stats` or `visitor summary`";
+        reply = "Here is a quick cheat sheet of commands I can run for you! 🛠️\n\n" +
+          "1. **Add Task/Milestone** 📅\n`add task [title] on [YYYY-MM-DD] desc [description]`\n\n" +
+          "2. **Add Project** 📁\n`add project [title] desc [description] category [personal/business/...] tags [React, Vite]`\n\n" +
+          "3. **Show Stats** 📊\n`show stats` or `visitor summary`";
       }
       // 2. SHOW STATS
       else if (/^(show\s+stats|stats|visitor\s+summary|traffic|analytics)/i.test(trimmed)) {
@@ -78,7 +78,7 @@ export const AICompanion: React.FC<AICompanionProps> = ({ projects, onSaveProjec
           const res = await fetch('/api/visitor-stats');
           if (!res.ok) throw new Error('API error');
           const data = await res.json();
-          reply = `📈 **Visitor Analytics Summary**:\n\n` +
+          reply = `📊 **Here's a breakdown of your portfolio traffic!** You're doing great! 🌟\n\n` +
             `• **Total Visits**: ${data.totalVisits}\n` +
             `• **Unique Visitors**: ${data.uniqueVisitors}\n` +
             `• **Desktop Views**: ${data.devices.desktop}\n` +
@@ -122,7 +122,7 @@ export const AICompanion: React.FC<AICompanionProps> = ({ projects, onSaveProjec
             if (saveRes.ok) {
               // Dispatch event to refresh Calendar page in real time
               window.dispatchEvent(new CustomEvent('calendar-updated'));
-              reply = `✅ **${type.toUpperCase()} ADDED SUCCESSFULLY!**\n\n` +
+              reply = `🎉 **Boom! Task added!** I've pinned this directly to your calendar so you won't miss it. 📅\n\n` +
                 `• **Title**: ${title}\n` +
                 `• **Date**: ${date}\n` +
                 `• **Description**: ${desc || '*None*'}`;
@@ -157,7 +157,7 @@ export const AICompanion: React.FC<AICompanionProps> = ({ projects, onSaveProjec
             };
 
             onSaveProjects([...projects, newProject]);
-            reply = `✅ **PROJECT ADDED SUCCESSFULLY!**\n\n` +
+            reply = `🚀 **Awesome! New project created!** I've added it to your portfolio showcase. Go check it out! 📁\n\n` +
               `• **Title**: ${title}\n` +
               `• **Category**: ${category}\n` +
               `• **Tags**: ${tags.join(', ') || '*None*'}\n` +
@@ -427,6 +427,9 @@ const MessageItem = styled.div`
       background: #1a73e8;
       color: #ffffff;
       border-radius: 12px 12px 0 12px;
+      p, strong {
+        color: #ffffff !important;
+      }
     }
     .time {
       align-self: flex-end;
@@ -441,6 +444,9 @@ const MessageItem = styled.div`
       border: 1px solid #e2e8f0;
       border-radius: 12px 12px 12px 0;
       box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      p, strong {
+        color: #1e293b !important;
+      }
     }
     .time {
       align-self: flex-start;
