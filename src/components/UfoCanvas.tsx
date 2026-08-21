@@ -438,7 +438,7 @@ export const UfoCanvas: React.FC = () => {
   return (
     <StyledUfoStage ref={stageRef} id="hero-ufo-stage">
       <canvas ref={canvasRef} className="hero-ufo-canvas" id="hero-ufo-canvas" />
-      <img className="hero-ufo-fallback" src="/ufo-tractor-beam.png" alt="" />
+      <img className="hero-ufo-fallback" src="/ufo-tractor-beam.webp" alt="" />
       <div className="hero-ufo-aura hero-ufo-aura-one" />
       <div className="hero-ufo-aura hero-ufo-aura-two" />
     </StyledUfoStage>
