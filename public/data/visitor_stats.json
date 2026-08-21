@@ -1,35 +1,31 @@
 {
-  "totalVisits": 334,
-  "uniqueVisitors": 186,
+  "totalVisits": 338,
+  "uniqueVisitors": 187,
   "pageViews": {
-    "home": 262,
+    "home": 266,
     "projects": 145,
     "details": 64
   },
   "referrers": {
-    "direct": 125,
+    "direct": 127,
     "github": 95,
     "linkedin": 72,
     "vercel": 24,
-    "other": 18
+    "other": 20
   },
   "devices": {
-    "desktop": 239,
+    "desktop": 243,
     "mobile": 83,
     "tablet": 12
   },
   "browsers": {
-    "chrome": 215,
+    "chrome": 219,
     "safari": 63,
     "firefox": 32,
     "edge": 18,
     "other": 6
   },
   "dailyTraffic": [
-    {
-      "date": "2026-08-10",
-      "visits": 38
-    },
     {
       "date": "2026-08-11",
       "visits": 48
@@ -53,6 +49,10 @@
     {
       "date": "2026-08-17",
       "visits": 4
+    },
+    {
+      "date": "2026-08-21",
+      "visits": 4
     }
   ],
   "hourlyTraffic": [
@@ -66,7 +66,7 @@
     },
     {
       "hour": "12:00",
-      "count": 65
+      "count": 69
     },
     {
       "hour": "14:00",
