@@ -31,7 +31,7 @@ export const AICompanion: React.FC<AICompanionProps> = ({ projects, onSaveProjec
     {
       id: 'welcome',
       sender: 'ai',
-      text: "Hey Maqhawe! 👋 Hope you're having an awesome day! I'm your AI Admin Assistant, here to make managing your portfolio a breeze! 🚀\n\nWhat can I do for you today? Try typing:\n• **show stats** — get visitor insights\n• **add task [title] on [date] desc [description]**\n• **add project [title] desc [description] category [category] tags [tags]**",
+      text: "Hey Maqhawe! 👋 Hope you're having an awesome day! I'm your AI Admin Assistant, here to make managing your portfolio a breeze! 🚀\n\nWhat can I do for you today? Try typing:\n• **show stats** — get visitor insights\n• **add task [title] on [date] desc [description]**\n• **list tasks** / **delete task [title]**\n• **add project [title] desc [description]**\n• **list projects**",
       timestamp: new Date(),
     },
   ]);
@@ -68,9 +68,15 @@ export const AICompanion: React.FC<AICompanionProps> = ({ projects, onSaveProjec
       // 1. HELP / GREETING
       if (/^(help|hello|hi|hey|menu)/i.test(trimmed)) {
         reply = "Here is a quick cheat sheet of commands I can run for you! 🛠️\n\n" +
-          "1. **Add Task/Milestone** 📅\n`add task [title] on [YYYY-MM-DD] desc [description]`\n\n" +
-          "2. **Add Project** 📁\n`add project [title] desc [description] category [personal/business/...] tags [React, Vite]`\n\n" +
-          "3. **Show Stats** 📊\n`show stats` or `visitor summary`";
+          "1. **Tasks & Milestones** 📅\n" +
+          "• `add task [title] on [date] desc [description]`\n" +
+          "• `list tasks` — see all tasks\n" +
+          "• `delete task [title]` — remove a task\n\n" +
+          "2. **Projects** 📁\n" +
+          "• `add project [title] desc [description] category [category] tags [tags]`\n" +
+          "• `list projects` — see all projects\n\n" +
+          "3. **Visitor Stats** 📊\n" +
+          "• `show stats` or `visitor summary`";
       }
       // 2. SHOW STATS
       else if (/^(show\s+stats|stats|visitor\s+summary|traffic|analytics)/i.test(trimmed)) {
@@ -134,6 +140,58 @@ export const AICompanion: React.FC<AICompanionProps> = ({ projects, onSaveProjec
           }
         }
       }
+      // 3a. LIST TASKS
+      else if (/^(list\s+(?:tasks|milestones)|show\s+(?:tasks|milestones)|view\s+(?:tasks|milestones)|what\s+tasks(?:\s+do\s+I\s+have)?)/i.test(trimmed)) {
+        try {
+          const res = await fetch('/api/calendar-events');
+          if (!res.ok) throw new Error('API error');
+          const events = await res.json();
+          if (events.length === 0) {
+            reply = "📅 **You don't have any tasks scheduled on your calendar right now!** Type `add task [title] on [date]` to create one! ✨";
+          } else {
+            reply = `📅 **Here are your scheduled tasks & milestones:**\n\n` +
+              events.map((ev: any) => `• **${ev.title}** (${ev.date}) - _${ev.type}_${ev.description ? `: ${ev.description}` : ''}`).join('\n');
+          }
+        } catch {
+          reply = "❌ Failed to read calendar events from the API.";
+        }
+      }
+      // 3b. DELETE TASK
+      else if (/^(?:delete|remove)\s+(?:task|milestone)\s+(.+)$/i.test(trimmed)) {
+        const match = trimmed.match(/^(?:delete|remove)\s+(?:task|milestone)\s+(.+)$/i);
+        if (match) {
+          const target = match[1].trim().toLowerCase();
+          try {
+            const res = await fetch('/api/calendar-events');
+            const events = res.ok ? await res.json() : [];
+            
+            // Find event by id or by case-insensitive title match
+            const index = events.findIndex((ev: any) => ev.id.toLowerCase() === target || ev.title.toLowerCase() === target);
+            
+            if (index !== -1) {
+              const deletedEvent = events[index];
+              const updatedEvents = events.filter((_: any, i: number) => i !== index);
+              
+              const saveRes = await fetch('/api/calendar-events', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedEvents, null, 2),
+              });
+              
+              if (saveRes.ok) {
+                window.dispatchEvent(new CustomEvent('calendar-updated'));
+                reply = `🗑️ **Task deleted successfully!** I've removed "**${deletedEvent.title}**" from your calendar list. 📅`;
+              } else {
+                throw new Error('Save error');
+              }
+            } else {
+              reply = `🔍 **Couldn't find that task!** I searched for a task matching "**${match[1]}**" on your calendar but couldn't find any. Double check the title and try again! 📅`;
+            }
+          } catch {
+            reply = "❌ Failed to update calendar events. Make sure your local server is running.";
+          }
+        }
+      }
       // 4. ADD PROJECT
       // e.g. add project Nike Store desc High-performance frontend store category business tags React, Three.js, CSS
       else if (/^add\s+project\s+(.+?)\s+(?:desc|description)\s+(.+?)(?:\s+category\s+(personal|business|education|utility|gift))?(?:\s+tags\s+(.+))?$/i.test(trimmed)) {
@@ -165,6 +223,15 @@ export const AICompanion: React.FC<AICompanionProps> = ({ projects, onSaveProjec
           } catch {
             reply = "❌ Failed to add project to the portfolio projects list.";
           }
+        }
+      }
+      // 4a. LIST PROJECTS
+      else if (/^(list\s+projects|show\s+projects|view\s+projects|what\s+projects(?:\s+do\s+I\s+have)?)/i.test(trimmed)) {
+        if (projects.length === 0) {
+          reply = "📁 **You don't have any projects in your portfolio right now!** Type `add project [title] desc [description]` to showcase one! 🚀";
+        } else {
+          reply = `📁 **Here are your current portfolio projects:**\n\n` +
+            projects.map((proj: any) => `• **${proj.title}** (_${proj.category}_) ${proj.tags && proj.tags.length > 0 ? `- Tags: ${proj.tags.join(', ')}` : ''}`).join('\n');
         }
       }
 
