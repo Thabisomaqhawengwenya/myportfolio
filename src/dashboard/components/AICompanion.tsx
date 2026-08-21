@@ -539,8 +539,9 @@ const ChatInputForm = styled.form`
     padding: 0.6rem 1rem;
     font-size: 0.88rem;
     outline: none;
+    background: #ffffff !important;
     background-color: #ffffff !important;
-    color: #1e293b !important;
+    color: #0b1e30 !important;
     transition: border 0.2s;
 
     &::placeholder {
@@ -549,6 +550,8 @@ const ChatInputForm = styled.form`
 
     &:focus {
       border-color: #1a73e8;
+      background: #ffffff !important;
+      background-color: #ffffff !important;
     }
   }
 
