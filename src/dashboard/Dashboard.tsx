@@ -6,6 +6,7 @@ import { ProjectsPage } from './pages/ProjectsPage';
 import { CalendarPage } from './pages/CalendarPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { SettingsPage } from './pages/SettingsPage';
+import { AICompanion } from './components/AICompanion';
 
 interface Project {
   id: string;
@@ -397,6 +398,7 @@ export const Dashboard: React.FC = () => {
           {activeTab === 'analytics' && <span className="nav-text">Analytics</span>}
         </button>
       </nav>
+      <AICompanion projects={projects} onSaveProjects={handleSaveProjects} />
     </StyledDashboard>
   );
 };

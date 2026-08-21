@@ -22,7 +22,7 @@ export const CalendarPage: React.FC = () => {
   const [modalDesc, setModalDesc] = useState('');
   const [editingEventId, setEditingEventId] = useState<string | null>(null);
 
-  useEffect(() => {
+  const loadEvents = () => {
     fetch('/api/calendar-events')
       .then((res) => {
         if (!res.ok) throw new Error('Failed to load calendar events');
@@ -36,6 +36,12 @@ export const CalendarPage: React.FC = () => {
         console.error(err);
         setLoading(false);
       });
+  };
+
+  useEffect(() => {
+    loadEvents();
+    window.addEventListener('calendar-updated', loadEvents);
+    return () => window.removeEventListener('calendar-updated', loadEvents);
   }, []);
 
   const handleSaveEvents = async (updated: CalendarEvent[]) => {

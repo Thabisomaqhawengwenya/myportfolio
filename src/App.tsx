@@ -11,9 +11,25 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { BackToTop } from './components/BackToTop';
 import { Dashboard } from './dashboard/Dashboard';
+import { LoadingScreen } from './components/LoadingScreen';
 
 const App: React.FC = () => {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const [isLoading, setIsLoading] = useState(() => {
+    const path = window.location.pathname;
+    return path !== '/dashboard' && path !== '/admin';
+  });
+
+  useEffect(() => {
+    if (isLoading) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isLoading]);
 
   useEffect(() => {
     const handleLocationChange = () => {
@@ -124,6 +140,10 @@ const App: React.FC = () => {
   return (
     <MuiThemeProvider theme={muiTheme}>
       <GlobalStyles />
+
+      {!isDashboard && isLoading && (
+        <LoadingScreen onComplete={() => setIsLoading(false)} />
+      )}
 
       {isDashboard ? (
         <Dashboard />

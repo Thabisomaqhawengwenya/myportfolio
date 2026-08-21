@@ -1,25 +1,25 @@
 {
-  "totalVisits": 338,
+  "totalVisits": 346,
   "uniqueVisitors": 187,
   "pageViews": {
-    "home": 266,
+    "home": 274,
     "projects": 145,
     "details": 64
   },
   "referrers": {
-    "direct": 127,
+    "direct": 135,
     "github": 95,
     "linkedin": 72,
     "vercel": 24,
     "other": 20
   },
   "devices": {
-    "desktop": 243,
+    "desktop": 251,
     "mobile": 83,
     "tablet": 12
   },
   "browsers": {
-    "chrome": 219,
+    "chrome": 227,
     "safari": 63,
     "firefox": 32,
     "edge": 18,
@@ -52,7 +52,7 @@
     },
     {
       "date": "2026-08-21",
-      "visits": 4
+      "visits": 12
     }
   ],
   "hourlyTraffic": [
@@ -66,7 +66,7 @@
     },
     {
       "hour": "12:00",
-      "count": 69
+      "count": 77
     },
     {
       "hour": "14:00",
