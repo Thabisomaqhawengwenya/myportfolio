@@ -33,6 +33,26 @@ export const Dashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
+  // Theme states with localStorage persistence
+  const [dashboardTheme, setDashboardTheme] = useState<'light' | 'dark'>(() => {
+    try {
+      const savedTheme = localStorage.getItem('dashboard-theme');
+      if (savedTheme === 'light' || savedTheme === 'dark') {
+        return savedTheme;
+      }
+      const portfolioTheme = localStorage.getItem('portfolio-theme');
+      return portfolioTheme === 'light' ? 'light' : 'dark';
+    } catch {
+      return 'dark';
+    }
+  });
+
+  const toggleTheme = () => {
+    const nextTheme = dashboardTheme === 'dark' ? 'light' : 'dark';
+    setDashboardTheme(nextTheme);
+    localStorage.setItem('dashboard-theme', nextTheme);
+  };
+
   // Profile states with localStorage persistence
   const [profileName, setProfileName] = useState(() => localStorage.getItem('donezo_profile_name') || 'Maqhawe T');
   const [profileEmail, setProfileEmail] = useState(() => localStorage.getItem('donezo_profile_email') || 'maqhawe@yarry_06.com');
@@ -97,7 +117,7 @@ export const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <StyledLoader>
+      <StyledLoader className={dashboardTheme === 'dark' ? 'dark-theme' : ''}>
         <div className="spinner"></div>
         <p>Loading Admin Dashboard...</p>
       </StyledLoader>
@@ -105,7 +125,7 @@ export const Dashboard: React.FC = () => {
   }
 
   return (
-    <StyledDashboard>
+    <StyledDashboard className={dashboardTheme === 'dark' ? 'dark-theme' : ''}>
       {/* Sidebar Panel */}
       <aside className="sidebar">
         <div className="logo-section">
@@ -250,6 +270,19 @@ export const Dashboard: React.FC = () => {
             {saveStatus === 'saved' && <span className="status-indicator saved">Changes saved on disk!</span>}
             {saveStatus === 'error' && <span className="status-indicator error">Save failed!</span>}
             
+            <button 
+              className="icon-action-btn theme-toggle-btn" 
+              onClick={toggleTheme} 
+              aria-label="Toggle dark/light mode"
+              style={{ marginRight: '0.25rem' }}
+            >
+              <Icon
+                icon={dashboardTheme === 'dark' ? "lucide:sun" : "lucide:moon"}
+                width={20}
+                height={20}
+                style={{ color: dashboardTheme === 'dark' ? '#ffffff' : '#111111' }}
+              />
+            </button>
             <button className="icon-action-btn" aria-label="Mail notification">
               <Icon
                 icon="lucide:mail"
@@ -411,6 +444,17 @@ const StyledLoader = styled.div`
   min-height: 100vh;
   background: #f3f6fc;
   color: #333;
+  transition: all 0.3s ease;
+
+  &.dark-theme {
+    background: #090d16;
+    color: #f8fafc;
+    
+    .spinner {
+      border-color: #1e293b;
+      border-top-color: #38bdf8;
+    }
+  }
 
   .spinner {
     width: 3rem;
@@ -439,6 +483,288 @@ const StyledDashboard = styled.div`
   min-height: 100vh;
   background: #f3f6fc;
   color: #333;
+  transition: background 0.3s ease, color 0.3s ease;
+
+  &.dark-theme {
+    --bg-primary: #090d16;
+    --bg-secondary: #0f172a;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --border-color: #1e293b;
+    --card-border: #1e293b;
+    --input-bg: #1e293b;
+    --input-border: #334155;
+    --input-text: #f8fafc;
+    --hover-bg: #1e293b;
+    --active-menu-bg: #1e293b;
+    --active-menu-text: #38bdf8;
+    --badge-bg: #1e293b;
+    --icon-color: #94a3b8;
+
+    background: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+
+    /* Sidebar and Header Overrides */
+    .sidebar {
+      background: var(--bg-secondary) !important;
+      border-right-color: var(--border-color) !important;
+
+      .logo-text {
+        color: var(--text-primary) !important;
+      }
+      .logo-icon {
+        background: #1e293b !important;
+      }
+      .menu-title {
+        color: #64748b !important;
+      }
+      .menu-item {
+        color: var(--text-secondary) !important;
+
+        &:hover {
+          background: var(--hover-bg) !important;
+          color: var(--text-primary) !important;
+        }
+
+        &.active {
+          background: var(--active-menu-bg) !important;
+          color: var(--active-menu-text) !important;
+        }
+      }
+    }
+
+    .main-header {
+      background: var(--bg-secondary) !important;
+      border-bottom-color: var(--border-color) !important;
+
+      .icon-action-btn {
+        background: var(--bg-secondary) !important;
+        border-color: var(--border-color) !important;
+        
+        svg {
+          color: var(--text-primary) !important;
+        }
+
+        &:hover {
+          background: var(--hover-bg) !important;
+        }
+      }
+
+      .user-profile {
+        border-left-color: var(--border-color) !important;
+        
+        .profile-pic {
+          background: #1e293b !important;
+          color: #38bdf8 !important;
+        }
+        
+        .profile-info {
+          h4 {
+            color: var(--text-primary) !important;
+          }
+          p {
+            color: var(--text-secondary) !important;
+          }
+        }
+      }
+    }
+
+    .search-bar {
+      background: var(--input-bg) !important;
+      border-color: var(--input-border) !important;
+
+      input {
+        color: var(--input-text) !important;
+
+        &::placeholder {
+          color: #64748b !important;
+        }
+      }
+      
+      .shortcut-badge {
+        background: var(--bg-primary) !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-secondary) !important;
+      }
+    }
+
+    /* Subtitle and header overrides across pages */
+    h1, h2, h3, h4, h5, h6,
+    .dashboard-header-text h1,
+    .dashboard-header-text p {
+      color: var(--text-primary) !important;
+    }
+    
+    .subtitle, .stat-subtext, .stat-sub, .reminder-time, .tracker-tag, .panel-tag {
+      color: var(--text-secondary) !important;
+    }
+
+    /* Card Panels & Containers Overrides in Pages */
+    .stat-card,
+    .dashboard-panel,
+    .grid-card,
+    .form-panel,
+    .projects-list-panel,
+    .calendar-main,
+    .calendar-side,
+    .settings-card,
+    .modal-content {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+      color: var(--text-primary) !important;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2) !important;
+
+      /* Overview card statistics */
+      .stat-value {
+        color: var(--text-primary) !important;
+      }
+    }
+
+    /* Projects Page Specific Overrides */
+    .table-row {
+      border-bottom-color: var(--border-color) !important;
+      
+      .table-info h4 {
+        color: var(--text-primary) !important;
+      }
+      .table-category, .table-tags {
+        color: var(--text-secondary) !important;
+      }
+      .tag-pill {
+        background: #1e293b !important;
+        color: #38bdf8 !important;
+        border: 1px solid #334155 !important;
+      }
+      .action-btn {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: var(--text-primary) !important;
+        
+        &:hover {
+          background: #334155 !important;
+        }
+      }
+    }
+    
+    .form-group {
+      label {
+        color: var(--text-secondary) !important;
+      }
+      input, select, textarea {
+        background: var(--input-bg) !important;
+        border-color: var(--input-border) !important;
+        color: var(--input-text) !important;
+        outline: none;
+        
+        &:focus {
+          border-color: #38bdf8 !important;
+        }
+      }
+    }
+    
+    /* Calendar Page Specific Overrides */
+    .day-cell {
+      border-right-color: var(--border-color) !important;
+      border-bottom-color: var(--border-color) !important;
+      background: var(--bg-secondary) !important;
+      
+      &.other-month {
+        background: #090d16 !important;
+        opacity: 0.4;
+      }
+      
+      &.today {
+        background: #1e293b !important;
+        .day-number {
+          background: #38bdf8 !important;
+          color: #000000 !important;
+        }
+      }
+      
+      .day-number {
+        color: var(--text-primary) !important;
+      }
+    }
+    
+    .days-header-grid {
+      border-bottom-color: var(--border-color) !important;
+      .day-header {
+        color: var(--text-secondary) !important;
+      }
+    }
+    
+    .calendar-header {
+      .month-title {
+        color: var(--text-primary) !important;
+      }
+      .nav-btn {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: var(--text-primary) !important;
+        
+        &:hover {
+          background: #334155 !important;
+        }
+      }
+    }
+    
+    .upcoming-card {
+      background: #1e293b !important;
+      border-color: #334155 !important;
+      h4 {
+        color: var(--text-primary) !important;
+      }
+      .event-description {
+        color: var(--text-secondary) !important;
+      }
+    }
+
+    /* Analytics Page Specific Overrides */
+    .traffic-chart {
+      background: #090d16 !important;
+      border-color: var(--border-color) !important;
+    }
+    
+    .bar-wrapper {
+      background: #1e293b !important;
+    }
+    
+    .table-header-row {
+      border-bottom-color: var(--border-color) !important;
+      color: var(--text-secondary) !important;
+    }
+    
+    .table-body-row {
+      border-bottom-color: var(--border-color) !important;
+      color: var(--text-secondary) !important;
+      
+      .ref-name, .path-name {
+        color: var(--text-primary) !important;
+      }
+    }
+    
+    .progress-bar-wrapper {
+      background: #1e293b !important;
+    }
+
+    .device-bar {
+      background: #1e293b !important;
+    }
+    .device-legend {
+      color: var(--text-secondary) !important;
+    }
+
+    /* Settings Page Specific Overrides */
+    .settings-card {
+      h3 {
+        color: var(--text-primary) !important;
+      }
+      .profile-details p {
+        color: var(--text-secondary) !important;
+      }
+    }
+  }
+
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
 
   @media (max-width: 1024px) {
