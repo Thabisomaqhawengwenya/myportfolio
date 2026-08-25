@@ -30,18 +30,18 @@
   },
   {
     "id": "shark-web",
-    "category": "personal",
     "title": "Shark.web",
+    "category": "personal",
     "description": "Shark.web is a visually immersive website built around shark-themed content, strong hero imagery, and a clean structure that introduces visitors to the site through an engaging marine-inspired design.",
     "tags": [
-      "Landing Page",
-      "HTML",
-      "JS",
-      "CSS"
+      "React",
+      "Vite",
+      "Tailwind",
+      "Framer Motion"
     ],
-    "image": "/images/shark.web.webp",
     "liveDemoUrl": "https://sharks-web.vercel.app/",
-    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/sharks.web.git"
+    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/sharks.web.git",
+    "image": "/images/shark.web.webp"
   },
   {
     "id": "tutorme",
