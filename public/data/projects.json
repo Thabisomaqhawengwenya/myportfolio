@@ -206,5 +206,18 @@
     ],
     "liveDemoUrl": "https://tnfootwear.vercel.app",
     "image": "/images/1786964505605-Screenshot_2026_08_17_125731_png.webp"
+  },
+  {
+    "id": "codefam",
+    "title": "Codefam",
+    "category": "business",
+    "description": "CodeFam is a developer community built to connect programmers, encourage collaboration, and support continuous learning in software development.",
+    "tags": [
+      "React.js",
+      "vite"
+    ],
+    "liveDemoUrl": "https://codefam.dev/",
+    "githubUrl": "https://github.com/codefam-dev",
+    "image": "/images/1787750527921-Screenshot_2026_08_26_152143_png.png"
   }
 ]
