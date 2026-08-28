@@ -292,7 +292,8 @@ const StyledHero = styled.section`
       margin-inline: auto;
     }
 
-    .hero-title-top {
+    .hero-title-top,
+    .hero-main-title {
       justify-content: center;
     }
 
