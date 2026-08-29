@@ -130,11 +130,10 @@ export const Dashboard: React.FC = () => {
       <aside className="sidebar">
         <div className="logo-section">
           <div className="logo-icon">
-            <Icon
-              icon="lucide:check-square"
-              width={30}
-              height={30}
-              style={{ color: '#1A73E8' }}
+            <img
+              src={dashboardTheme === 'light' ? '/images/p.logo.dark.png' : '/images/p.logo.light.png'}
+              alt="Logo"
+              className="dashboard-logo-img"
             />
           </div>
           <span className="logo-text">Yarry_06</span>
@@ -798,6 +797,12 @@ const StyledDashboard = styled.div`
       border-radius: 10px;
       display: inline-grid;
       place-items: center;
+    }
+
+    .dashboard-logo-img {
+      width: 1.6rem;
+      height: auto;
+      display: block;
     }
 
     .logo-text {
