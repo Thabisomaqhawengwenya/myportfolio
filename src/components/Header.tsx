@@ -173,7 +173,7 @@ const StyledHeader = styled.header`
   }
 
   .brand-logo {
-    height: 32px;
+    height: 36px;
     width: auto;
     display: block;
     transition: transform var(--transition);
