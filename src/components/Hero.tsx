@@ -52,7 +52,11 @@ export const Hero: React.FC = () => {
             style={{ cursor: 'pointer', userSelect: 'none' }}
             title="Secret Admin Access"
           >
-            MAQHAWE
+            {"MAQHAWE".split("").map((char, index) => (
+              <span key={index} className="char" style={{ animationDelay: `${400 + index * 60}ms` }}>
+                {char}
+              </span>
+            ))}
           </h1>
           <p className="hero-role">Full-Stack Developer</p>
           <p className="hero-description">
@@ -107,6 +111,10 @@ const StyledHero = styled.section`
     font-weight: 600;
     letter-spacing: 0.16em;
     text-transform: uppercase;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s ease forwards;
+    animation-delay: 100ms;
   }
 
   .hero-title-top {
@@ -122,6 +130,23 @@ const StyledHero = styled.section`
     text-shadow:
       0 0 10px rgba(255, 255, 255, 0.05),
       0 0 26px rgba(0, 0, 244, 0.28);
+    
+    .hero-title-muted {
+      color: var(--heading-muted);
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: 200ms;
+    }
+    
+    .hero-title-accent {
+      color: var(--hero-accent);
+      text-shadow: 0 0 22px var(--hero-accent-glow);
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation-delay: 300ms;
+    }
   }
 
   .hero-main-title {
@@ -136,15 +161,16 @@ const StyledHero = styled.section`
     text-shadow:
       0 0 10px rgba(255, 255, 255, 0.05),
       0 0 26px rgba(0, 0, 244, 0.28);
-  }
 
-  .hero-title-muted {
-    color: var(--heading-muted);
-  }
-
-  .hero-title-accent {
-    color: var(--hero-accent);
-    text-shadow: 0 0 22px var(--hero-accent-glow);
+    .char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      background: linear-gradient(135deg, #ffffff 40%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
   }
 
   .hero-role {
@@ -152,6 +178,10 @@ const StyledHero = styled.section`
     font-size: clamp(1.45rem, 3.2vw, 2.2rem);
     font-weight: 700;
     text-shadow: 0 0 18px rgba(0, 0, 244, 0.24);
+    opacity: 0;
+    transform: translateY(15px);
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 900ms;
   }
 
   .hero-description {
@@ -159,6 +189,9 @@ const StyledHero = styled.section`
     margin: 1.25rem 0 0;
     color: var(--muted);
     font-size: clamp(1rem, 1.55vw, 1.08rem);
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+    animation-delay: 1050ms;
   }
 
   .hero-actions {
@@ -166,6 +199,10 @@ const StyledHero = styled.section`
     flex-wrap: wrap;
     gap: 0.95rem;
     margin-top: 2rem;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: 1200ms;
   }
 
   .btn {
@@ -303,6 +340,19 @@ const StyledHero = styled.section`
 
     .hero-actions {
       justify-content: center;
+    }
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
     }
   }
 
