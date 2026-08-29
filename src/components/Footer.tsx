@@ -10,26 +10,12 @@ export const Footer: React.FC = () => {
 
         <div className="footer-links" aria-label="Social links">
           <a
-            href="https://wa.me/263787755074"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="WhatsApp"
-          >
-            <Icon icon="logos:whatsapp-icon" width={36} height={36} />
-          </a>
-          <a
             href="https://github.com/Thabisomaqhawengwenya"
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub"
           >
             <Icon icon="skill-icons:github-dark" width={36} height={36} />
-          </a>
-          <a
-            href="mailto:thabisomaqhawengwenya@gmail.com"
-            aria-label="Email"
-          >
-            <Icon icon="logos:google-gmail" width={36} height={36} />
           </a>
           <a
             href="https://www.linkedin.com/in/maqhawe-ngwenya"
