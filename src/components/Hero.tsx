@@ -112,8 +112,7 @@ const StyledHero = styled.section`
     letter-spacing: 0.16em;
     text-transform: uppercase;
     opacity: 0;
-    transform: translateY(10px);
-    animation: fadeInUp 0.5s ease forwards;
+    animation: fadeIn 0.5s ease forwards;
     animation-delay: 100ms;
   }
 
@@ -134,8 +133,7 @@ const StyledHero = styled.section`
     .hero-title-muted {
       color: var(--heading-muted);
       opacity: 0;
-      transform: translateY(15px);
-      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       animation-delay: 200ms;
     }
     
@@ -143,8 +141,7 @@ const StyledHero = styled.section`
       color: var(--hero-accent);
       text-shadow: 0 0 22px var(--hero-accent-glow);
       opacity: 0;
-      transform: translateY(15px);
-      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       animation-delay: 300ms;
     }
   }
@@ -165,8 +162,7 @@ const StyledHero = styled.section`
     .char {
       display: inline-block;
       opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       background: linear-gradient(135deg, #ffffff 40%, var(--accent) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -179,8 +175,7 @@ const StyledHero = styled.section`
     font-weight: 700;
     text-shadow: 0 0 18px rgba(0, 0, 244, 0.24);
     opacity: 0;
-    transform: translateY(15px);
-    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     animation-delay: 900ms;
   }
 
@@ -200,8 +195,7 @@ const StyledHero = styled.section`
     gap: 0.95rem;
     margin-top: 2rem;
     opacity: 0;
-    transform: translateY(10px);
-    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     animation-delay: 1200ms;
   }
 
@@ -340,13 +334,6 @@ const StyledHero = styled.section`
 
     .hero-actions {
       justify-content: center;
-    }
-  }
-
-  @keyframes fadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
     }
   }
 
