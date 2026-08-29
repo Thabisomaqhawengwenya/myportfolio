@@ -63,7 +63,11 @@ export const Header: React.FC<HeaderProps> = ({ theme, setTheme }) => {
     <StyledHeader className={`site-header ${scrolled || mobileMenuOpen ? 'is-scrolled' : ''}`}>
       <div className="container nav-bar">
         <a className="brand" href="#home" onClick={(e) => handleLinkClick(e, 'home')}>
-          M.T.N
+          <img
+            src={theme === 'light' ? '/images/p.logo.dark.png' : '/images/p.logo.light.png'}
+            alt="Maqhawe"
+            className="brand-logo"
+          />
         </a>
 
         <button
@@ -164,12 +168,19 @@ const StyledHeader = styled.header`
   }
 
   .brand {
-    color: var(--brand-color);
-    font-size: 1.05rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: lowercase;
-    text-shadow: 0 0 14px rgba(0, 0, 244, 0.35);
+    display: flex;
+    align-items: center;
+  }
+
+  .brand-logo {
+    height: 32px;
+    width: auto;
+    display: block;
+    transition: transform var(--transition);
+  }
+
+  .brand:hover .brand-logo {
+    transform: scale(1.04);
   }
 
   .site-nav {

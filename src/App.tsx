@@ -107,6 +107,10 @@ const App: React.FC = () => {
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
+    const favicon = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
+    if (favicon) {
+      favicon.href = theme === 'light' ? '/images/p.logo.dark.png' : '/images/p.logo.light.png';
+    }
   }, [theme]);
 
   // Mount video after first paint so it doesn't compete with LCP resources
