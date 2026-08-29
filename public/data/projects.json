@@ -219,5 +219,31 @@
     "liveDemoUrl": "https://codefam.dev/",
     "githubUrl": "https://github.com/codefam-dev",
     "image": "/images/1787750527921-Screenshot_2026_08_26_152143_png.png"
+  },
+  {
+    "id": "agrosmart",
+    "title": "AgroSmart",
+    "category": "business",
+    "description": "Agrosmart is an agricultural web app suited to help farmers in their day-to-day life when raising crops and also selling them. It also",
+    "tags": [
+      "React",
+      "Vite",
+      "styled-components"
+    ],
+    "liveDemoUrl": "https://agrosmart-one.vercel.app/",
+    "image": "/images/1788022376710-Screenshot_2026_08_06_120658_png.png"
+  },
+  {
+    "id": "mehluli-s-portfolio",
+    "title": "Mehluli's portfolio",
+    "category": "gift",
+    "description": "A portfolio based on creativity, design experience",
+    "tags": [
+      "React.js",
+      "Vite",
+      "Styled-components"
+    ],
+    "liveDemoUrl": "https://mehluli.vercel.app/",
+    "image": "/images/1788022694489-Screenshot_2026_08_25_094705_png.png"
   }
 ]
