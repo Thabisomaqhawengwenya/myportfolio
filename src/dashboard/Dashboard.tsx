@@ -117,6 +117,11 @@ export const Dashboard: React.FC = () => {
           if (res.ok) {
             const localData = await res.json();
             setProjects(localData);
+            
+            // Auto-populate Firestore with local JSON so the database isn't empty
+            for (const project of localData) {
+              await setDoc(doc(db, 'projects', project.id), project);
+            }
           }
           setLoading(false);
         }
