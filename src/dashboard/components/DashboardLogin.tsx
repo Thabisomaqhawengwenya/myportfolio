@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
-import { 
-  signInWithEmailAndPassword, 
-  createUserWithEmailAndPassword, 
-  signInWithPopup 
-} from 'firebase/auth';
-import { auth, googleProvider } from '../../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../../firebase';
 
 interface DashboardLoginProps {
   theme: 'light' | 'dark';
@@ -14,7 +10,6 @@ interface DashboardLoginProps {
 }
 
 export const DashboardLogin: React.FC<DashboardLoginProps> = ({ theme, onBack }) => {
-  const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -28,40 +23,17 @@ export const DashboardLogin: React.FC<DashboardLoginProps> = ({ theme, onBack })
     setErrorMsg('');
 
     try {
-      if (isSignUp) {
-        await createUserWithEmailAndPassword(auth, email, password);
-      } else {
-        await signInWithEmailAndPassword(auth, email, password);
-      }
+      await signInWithEmailAndPassword(auth, email, password);
     } catch (err: any) {
       console.error('Email Auth Error:', err);
       // Simplify error messages for standard user visibility
       let message = 'Authentication failed. Please verify credentials.';
       if (err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
         message = 'Invalid email or password.';
-      } else if (err.code === 'auth/email-already-in-use') {
-        message = 'This email is already registered.';
-      } else if (err.code === 'auth/weak-password') {
-        message = 'Password must be at least 6 characters.';
       } else if (err.code === 'auth/invalid-email') {
         message = 'Please enter a valid email address.';
       }
       setErrorMsg(message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    setLoading(true);
-    setErrorMsg('');
-    try {
-      await signInWithPopup(auth, googleProvider);
-    } catch (err: any) {
-      console.error('Google Sign In Error:', err);
-      if (err.code !== 'auth/popup-closed-by-user') {
-        setErrorMsg('Google Sign-in failed. Please try again.');
-      }
     } finally {
       setLoading(false);
     }
@@ -84,7 +56,7 @@ export const DashboardLogin: React.FC<DashboardLoginProps> = ({ theme, onBack })
             />
           </div>
           <h2>Admin Dashboard</h2>
-          <p>{isSignUp ? 'Create an administrator account' : 'Sign in to access your dashboard'}</p>
+          <p>Sign in to access your dashboard</p>
         </div>
 
         {errorMsg && (
@@ -129,25 +101,10 @@ export const DashboardLogin: React.FC<DashboardLoginProps> = ({ theme, onBack })
             {loading ? (
               <span className="spinner-small" />
             ) : (
-              <span>{isSignUp ? 'Create Admin Account' : 'Sign In'}</span>
+              <span>Sign In</span>
             )}
           </button>
         </form>
-
-        <div className="divider">
-          <span>or</span>
-        </div>
-
-        <button className="google-btn" onClick={handleGoogleSignIn} disabled={loading} type="button">
-          <Icon icon="logos:google-icon" width={18} height={18} />
-          <span>Continue with Google</span>
-        </button>
-
-        <div className="toggle-mode">
-          <button onClick={() => { setIsSignUp(!isSignUp); setErrorMsg(''); }} type="button">
-            {isSignUp ? 'Already have an account? Sign In' : "New administrator? Create Account"}
-          </button>
-        </div>
       </div>
     </StyledLoginContainer>
   );
