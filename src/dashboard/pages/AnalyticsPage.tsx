@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase';
+
+interface LocationStat {
+  country: string;
+  city: string;
+  hits: number;
+}
 
 interface VisitorStats {
   totalVisits: number;
@@ -10,6 +18,7 @@ interface VisitorStats {
   browsers: Record<string, number>;
   dailyTraffic: { date: string; visits: number }[];
   hourlyTraffic: { hour: string; count: number }[];
+  locations: LocationStat[];
 }
 
 export const AnalyticsPage: React.FC = () => {
@@ -17,19 +26,117 @@ export const AnalyticsPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/visitor-stats')
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to load visitor stats');
-        return res.json();
-      })
-      .then((data) => {
-        setStats(data);
+    const fetchStats = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'visits'));
+        const visitDocs: any[] = [];
+        querySnapshot.forEach((docSnap) => {
+          visitDocs.push(docSnap.data());
+        });
+
+        if (visitDocs.length === 0) {
+          setStats(null);
+          setLoading(false);
+          return;
+        }
+
+        // Calculate statistics
+        const totalVisits = visitDocs.length;
+        
+        const uniqueIds = new Set(visitDocs.map((v) => v.visitorId || 'anon'));
+        const uniqueVisitors = uniqueIds.size;
+
+        const pageViews: Record<string, number> = {};
+        const referrers: Record<string, number> = {};
+        const devices: Record<string, number> = {};
+        const browsers: Record<string, number> = {};
+        const locationMap: Record<string, LocationStat> = {};
+
+        // Track daily traffic (grouped by date)
+        const dailyGroups: Record<string, number> = {};
+        // Track hourly traffic
+        const hourlyGroups: Record<string, number> = {};
+
+        visitDocs.forEach((v) => {
+          // Page views
+          const rawPath = v.path === '/' ? 'home' : (v.path?.replace('/', '') || 'home');
+          pageViews[rawPath] = (pageViews[rawPath] || 0) + 1;
+
+          // Referrer
+          const ref = v.referrer || 'direct';
+          let refKey = 'other';
+          if (ref.includes('github')) refKey = 'github';
+          else if (ref.includes('linkedin')) refKey = 'linkedin';
+          else if (ref.includes('vercel')) refKey = 'vercel';
+          else if (ref === 'direct') refKey = 'direct';
+          referrers[refKey] = (referrers[refKey] || 0) + 1;
+
+          // Device
+          if (v.device) {
+            devices[v.device] = (devices[v.device] || 0) + 1;
+          }
+
+          // Browser
+          if (v.browser) {
+            browsers[v.browser] = (browsers[v.browser] || 0) + 1;
+          }
+
+          // Location
+          if (v.location) {
+            const country = v.location.country || 'Unknown';
+            const city = v.location.city || 'Unknown';
+            if (country !== 'Unknown' || city !== 'Unknown') {
+              const key = `${city}, ${country}`;
+              if (!locationMap[key]) {
+                locationMap[key] = { country, city, hits: 0 };
+              }
+              locationMap[key].hits += 1;
+            }
+          }
+
+          // Daily Traffic
+          if (v.timestamp) {
+            const dateStr = v.timestamp.slice(0, 10);
+            dailyGroups[dateStr] = (dailyGroups[dateStr] || 0) + 1;
+
+            // Hourly Traffic (e.g. "14:00")
+            const hour = v.timestamp.slice(11, 13) + ':00';
+            hourlyGroups[hour] = (hourlyGroups[hour] || 0) + 1;
+          }
+        });
+
+        // Format dailyTraffic sorted by date (last 7 active days)
+        const dailyTraffic = Object.entries(dailyGroups)
+          .map(([date, visits]) => ({ date, visits }))
+          .sort((a, b) => a.date.localeCompare(b.date))
+          .slice(-7);
+
+        // Format hourlyTraffic
+        const hourlyTraffic = Object.entries(hourlyGroups)
+          .map(([hour, count]) => ({ hour, count }))
+          .sort((a, b) => a.hour.localeCompare(b.hour));
+
+        const locations = Object.values(locationMap).sort((a, b) => b.hits - a.hits);
+
+        setStats({
+          totalVisits,
+          uniqueVisitors,
+          pageViews,
+          referrers,
+          devices,
+          browsers,
+          locations,
+          dailyTraffic,
+          hourlyTraffic
+        });
         setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
+      } catch (err) {
+        console.error('Error fetching analytics from Firestore:', err);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchStats();
   }, []);
 
   if (loading) {
@@ -216,6 +323,35 @@ export const AnalyticsPage: React.FC = () => {
                   <div style={{ textAlign: 'right' }} className="path-count">{count}</div>
                 </div>
               ))}
+          </div>
+        </div>
+
+        {/* Bottom Span: Visitor Locations */}
+        <div className="grid-card locations-card">
+          <h3>Visitor Locations</h3>
+          <p className="subtitle">Physical geographical locations of portfolio visitors</p>
+          <div className="table-wrapper">
+            <div className="table-header-row locations-header">
+              <div>City / Region</div>
+              <div>Country</div>
+              <div style={{ textAlign: 'right' }}>Hits</div>
+              <div style={{ textAlign: 'right' }}>Share</div>
+            </div>
+            {stats.locations.length === 0 ? (
+              <div className="no-data">No location details recorded yet.</div>
+            ) : (
+              stats.locations.slice(0, 10).map((loc, idx) => {
+                const sharePct = Math.round((loc.hits / totalViews) * 100) || 0;
+                return (
+                  <div key={idx} className="table-body-row locations-row">
+                    <div className="city-name">{loc.city}</div>
+                    <div className="country-name-cell">{loc.country}</div>
+                    <div style={{ textAlign: 'right' }} className="loc-hits">{loc.hits}</div>
+                    <div style={{ textAlign: 'right' }} className="loc-share">{sharePct}%</div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </div>
       </div>
@@ -634,5 +770,58 @@ const StyledAnalyticsPage = styled.div`
 
   .ref-share {
     color: #64748b;
+  }
+
+  .locations-card {
+    grid-column: span 2;
+    @media (max-width: 1024px) {
+      grid-column: span 1;
+    }
+  }
+
+  .locations-header, .locations-row {
+    grid-template-columns: 1.5fr 1.5fr 80px 80px;
+  }
+
+  .city-name {
+    color: #0b1e30;
+    font-weight: 700;
+  }
+
+  .country-name-cell {
+    color: #475569;
+    font-weight: 500;
+  }
+
+  .loc-hits {
+    color: #334155;
+  }
+
+  .loc-share {
+    color: #64748b;
+  }
+
+  .no-data {
+    padding: 2rem;
+    text-align: center;
+    color: #94a3b8;
+    font-weight: 500;
+    font-size: 0.88rem;
+  }
+
+  /* Dark mode overrides for custom child elements */
+  .dark-theme & {
+    .city-name {
+      color: #f8fafc;
+    }
+    .country-name-cell {
+      color: #94a3b8;
+    }
+    .loc-hits {
+      color: #f8fafc;
+    }
+    .loc-share {
+      color: #94a3b8;
+    }
   }
 `;

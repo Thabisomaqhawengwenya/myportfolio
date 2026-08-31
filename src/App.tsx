@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from './firebase';
 import { getMuiTheme } from './theme/theme';
 import { GlobalStyles } from './theme/GlobalStyles';
 import { Header } from './components/Header';
@@ -66,10 +68,10 @@ const App: React.FC = () => {
     if (currentPath === '/dashboard' || currentPath === '/admin') return;
 
     try {
-      const hasVisited = localStorage.getItem('has_visited');
-      const isNewUnique = !hasVisited;
-      if (isNewUnique) {
-        localStorage.setItem('has_visited', 'true');
+      let visitorId = localStorage.getItem('visitor_id');
+      if (!visitorId) {
+        visitorId = 'visitor_' + Math.random().toString(36).substring(2, 15);
+        localStorage.setItem('visitor_id', visitorId);
       }
 
       let device = 'desktop';
@@ -86,21 +88,50 @@ const App: React.FC = () => {
       else if (ua.includes('firefox')) browser = 'firefox';
       else if (ua.includes('edge')) browser = 'edge';
 
-      fetch('/api/track-visit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          isNewUnique,
-          referrer: document.referrer || 'direct',
-          device,
-          browser,
-          path: currentPath,
-        }),
-      }).catch(() => {});
-    } catch {
-      // LocalStorage or Fetch exceptions handled gracefully
+      let referrer = 'direct';
+      if (document.referrer) {
+        try {
+          referrer = new URL(document.referrer).hostname;
+        } catch {
+          referrer = document.referrer;
+        }
+      }
+
+      const logVisit = async () => {
+        let country = 'Unknown';
+        let city = 'Unknown';
+        let region = 'Unknown';
+
+        try {
+          const geoRes = await fetch('https://ipapi.co/json/');
+          if (geoRes.ok) {
+            const geoData = await geoRes.json();
+            country = geoData.country_name || 'Unknown';
+            city = geoData.city || 'Unknown';
+            region = geoData.region || 'Unknown';
+          }
+        } catch (e) {
+          console.warn('Geolocation lookup failed:', e);
+        }
+
+        try {
+          await addDoc(collection(db, 'visits'), {
+            visitorId,
+            timestamp: new Date().toISOString(),
+            referrer,
+            device,
+            browser,
+            path: currentPath,
+            location: { country, city, region }
+          });
+        } catch (e) {
+          console.error('Error logging visit to Firestore:', e);
+        }
+      };
+
+      logVisit();
+    } catch (err) {
+      console.error('Tracking system error:', err);
     }
   }, [currentPath]);
 
