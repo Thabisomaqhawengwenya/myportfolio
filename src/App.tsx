@@ -15,6 +15,7 @@ import { LoadingScreen } from './components/LoadingScreen';
 
 const App: React.FC = () => {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
+  const isDashboard = currentPath === '/dashboard' || currentPath === '/admin';
   const [isLoading, setIsLoading] = useState(() => {
     const path = window.location.pathname;
     return path !== '/dashboard' && path !== '/admin';
@@ -38,6 +39,26 @@ const App: React.FC = () => {
     window.addEventListener('popstate', handleLocationChange);
     return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
+
+  // Dynamic Scroll Reveal Intersection Observer
+  useEffect(() => {
+    if (isDashboard || isLoading) return;
+    const revealItems = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    revealItems.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, [currentPath, isDashboard, isLoading]);
+
 
   // Track page visits dynamically
   useEffect(() => {
@@ -139,7 +160,6 @@ const App: React.FC = () => {
   }, [videoReady]);
 
   const muiTheme = getMuiTheme(theme);
-  const isDashboard = currentPath === '/dashboard' || currentPath === '/admin';
 
   return (
     <MuiThemeProvider theme={muiTheme}>

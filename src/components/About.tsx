@@ -20,7 +20,7 @@ export const About: React.FC = () => {
         </div>
 
         {/* ── Right: copy ── */}
-        <div className="about-copy reveal is-visible">
+        <div className="about-copy reveal">
           <p className="about-kicker">
             <span className="kicker-arrow">›</span> About me
           </p>

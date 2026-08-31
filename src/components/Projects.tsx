@@ -64,7 +64,7 @@ export const Projects: React.FC = () => {
 
   return (
     <StyledProjects className="section projects-section" id="projects">
-      <div className="container section-header section-header-center projects-header reveal is-visible">
+      <div className="container section-header section-header-center projects-header reveal">
         <h2>Work &amp; Projects</h2>
         <p>
           Exploring creativity through code, personal experiments, business ideas, education-focused experiences,
@@ -72,7 +72,7 @@ export const Projects: React.FC = () => {
         </p>
       </div>
 
-      <div className="container projects-filter-bar reveal is-visible" aria-label="Project categories">
+      <div className="container projects-filter-bar reveal" aria-label="Project categories">
         {categories.map(({ key, label }) => {
           const count = getCategoryCount(key);
           const isActive = activeCategory === key;

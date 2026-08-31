@@ -454,6 +454,82 @@ export const GlobalStyles = createGlobalStyle`
     transform: translateY(0);
   }
 
+  /* ── Header animations ────────────────────────────────────────── */
+  .about-copy h2,
+  .projects-header h2,
+  .skills-header h2,
+  .contact-section .section-header h2 {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.6rem;
+  }
+
+  .about-copy h2::after,
+  .projects-header h2::after,
+  .skills-header h2::after,
+  .contact-section .section-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--hero-accent) 100%);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Center alignment for centered headers */
+  .projects-header h2::after,
+  .skills-header h2::after,
+  .contact-section .section-header h2::after {
+    left: 50%;
+    transform: translateX(-50%) scaleX(0);
+    transform-origin: center;
+  }
+
+  /* When the parent reveal is visible, animate the text and underline */
+  .reveal.is-visible .about-copy h2,
+  .reveal.is-visible.projects-header h2,
+  .reveal.is-visible.skills-header h2,
+  .reveal.is-visible.section-header h2 {
+    animation: revealText 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .reveal.is-visible .about-copy h2::after {
+    transform: scaleX(1);
+    transition-delay: 200ms;
+  }
+  .reveal.is-visible .projects-header h2::after,
+  .reveal.is-visible .skills-header h2::after,
+  .reveal.is-visible.section-header h2::after {
+    transform: translateX(-50%) scaleX(1);
+    transition-delay: 200ms;
+  }
+
+  /* Hover interactive scale-up */
+  .about-copy h2:hover::after {
+    transform: scaleX(1.08);
+  }
+  .projects-header h2:hover::after,
+  .skills-header h2:hover::after,
+  .contact-section .section-header h2:hover::after {
+    transform: translateX(-50%) scaleX(1.08);
+  }
+
+  @keyframes revealText {
+    from {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+
   /* ── Shared button tokens ─────────────────────────────────────── */
   .btn {
     display: inline-flex;

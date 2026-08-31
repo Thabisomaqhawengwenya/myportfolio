@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react';
 export const Footer: React.FC = () => {
   return (
     <StyledFooter className="site-footer">
-      <div className="container footer-shell reveal is-visible">
+      <div className="container footer-shell reveal">
         <p className="footer-note">© 2026 Maqhawe. All rights reserved.</p>
 
         <div className="footer-links" aria-label="Social links">

@@ -1061,12 +1061,15 @@ const StyledDashboard = styled.div`
         font-weight: 700;
         color: #0b1e30;
         margin: 0;
+        animation: slideInLeft 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
 
       p {
         margin: 0.25rem 0 0;
         color: #666;
         font-size: 0.9rem;
+        animation: slideInLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation-delay: 50ms;
       }
     }
   }

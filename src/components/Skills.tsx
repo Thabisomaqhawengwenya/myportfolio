@@ -57,7 +57,7 @@ const row3: TechItem[] = [
 export const Skills: React.FC = () => {
   return (
     <StyledSkills id="skills">
-      <div className="container skills-header reveal is-visible">
+      <div className="container skills-header reveal">
         <p className="skills-kicker">What I work with</p>
         <h2>My <span className="accent">Tech Stack</span></h2>
       </div>

@@ -87,11 +87,11 @@ export const Contact: React.FC = () => {
 
   return (
     <StyledContact className="section contact-section" id="contact">
-      <div className="container section-header section-header-center reveal is-visible">
+      <div className="container section-header section-header-center reveal">
         <h2>Let's Work Together</h2>
       </div>
 
-      <div className="container contact-panel reveal is-visible">
+      <div className="container contact-panel reveal">
         <form className="contact-form" onSubmit={handleSubmit}>
           <label className="sr-only" htmlFor="contact-honey">
             Leave this field empty
