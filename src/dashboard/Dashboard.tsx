@@ -63,7 +63,7 @@ export const Dashboard: React.FC = () => {
 
   // Profile states with localStorage persistence
   const [profileName, setProfileName] = useState(() => localStorage.getItem('donezo_profile_name') || 'Maqhawe T');
-  const [profileEmail, setProfileEmail] = useState(() => localStorage.getItem('donezo_profile_email') || 'maqhawe@yarry_06.com');
+  const [profileEmail, setProfileEmail] = useState(() => localStorage.getItem('donezo_profile_email') || 'thabisongwenya39@gmail.com');
   const [profileRole, setProfileRole] = useState(() => localStorage.getItem('donezo_profile_role') || 'Software Engineer');
   const [profileInitials, setProfileInitials] = useState(() => localStorage.getItem('donezo_profile_initials') || 'MT');
 
