@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
 import { ProjectCard } from './ProjectCard';
 import { ProjectModal } from './ProjectModal';
 
@@ -30,17 +32,35 @@ export const Projects: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
-    fetch('/data/projects.json')
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch projects');
-        return res.json();
-      })
-      .then((data) => {
-        setProjects(data);
-      })
-      .catch((err) => {
-        console.error('Error fetching projects:', err);
-      });
+    const loadProjects = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'projects'));
+        const list: Project[] = [];
+        querySnapshot.forEach((docSnap) => {
+          list.push({ id: docSnap.id, ...docSnap.data() } as Project);
+        });
+
+        if (list.length > 0) {
+          setProjects(list);
+        } else {
+          // Fallback to local JSON if Firestore is empty
+          const res = await fetch('/data/projects.json');
+          if (res.ok) {
+            const localData = await res.json();
+            setProjects(localData);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching projects from Firestore, falling back to local JSON:', err);
+        const res = await fetch('/data/projects.json');
+        if (res.ok) {
+          const localData = await res.json();
+          setProjects(localData);
+        }
+      }
+    };
+
+    loadProjects();
   }, []);
 
   const categories: { key: Category; label: string }[] = [

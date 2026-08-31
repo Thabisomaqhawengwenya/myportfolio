@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
+import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { db, auth } from '../firebase';
+import { DashboardLogin } from './components/DashboardLogin';
 import { OverviewPage } from './pages/OverviewPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { CalendarPage } from './pages/CalendarPage';
@@ -33,6 +37,10 @@ export const Dashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
+  // Firebase Auth states
+  const [user, setUser] = useState<any>(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
   // Theme states with localStorage persistence
   const [dashboardTheme, setDashboardTheme] = useState<'light' | 'dark'>(() => {
     try {
@@ -59,6 +67,28 @@ export const Dashboard: React.FC = () => {
   const [profileRole, setProfileRole] = useState(() => localStorage.getItem('donezo_profile_role') || 'Software Engineer');
   const [profileInitials, setProfileInitials] = useState(() => localStorage.getItem('donezo_profile_initials') || 'MT');
 
+  // Listen to Auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) {
+        setProfileEmail(currentUser.email || '');
+        const name = currentUser.displayName || currentUser.email?.split('@')[0] || 'Admin';
+        setProfileName(name);
+        // Extract initials
+        const initials = name
+          .split(' ')
+          .map((n) => n[0])
+          .join('')
+          .toUpperCase()
+          .slice(0, 2);
+        setProfileInitials(initials || 'AD');
+      }
+      setAuthLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
   const getGreeting = () => {
     const hour = new Date().getHours();
     const firstName = profileName.split(' ')[0];
@@ -67,46 +97,75 @@ export const Dashboard: React.FC = () => {
     return `Good Evening, ${firstName}`;
   };
 
-  // Load projects from projects.json
+  // Load projects from Cloud Firestore
   useEffect(() => {
-    fetch('/data/projects.json')
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to load projects');
-        return res.json();
-      })
-      .then((data) => {
-        setProjects(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error('Error fetching projects:', err);
-        setLoading(false);
-      });
-  }, []);
+    if (!user) return;
+    const fetchProjects = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'projects'));
+        const list: Project[] = [];
+        querySnapshot.forEach((docSnap) => {
+          list.push({ id: docSnap.id, ...docSnap.data() } as Project);
+        });
 
-  // Save projects using the Vite dev server mock backend
+        if (list.length > 0) {
+          setProjects(list);
+          setLoading(false);
+        } else {
+          // Fallback to local JSON if Firestore is empty
+          const res = await fetch('/data/projects.json');
+          if (res.ok) {
+            const localData = await res.json();
+            setProjects(localData);
+          }
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error('Error fetching projects from Firestore, falling back to local JSON:', err);
+        const res = await fetch('/data/projects.json');
+        if (res.ok) {
+          const localData = await res.json();
+          setProjects(localData);
+        }
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, [user]);
+
+  // Save projects to Cloud Firestore
   const handleSaveProjects = async (updatedProjects: Project[]) => {
     setProjects(updatedProjects);
     setSaveStatus('saving');
 
     try {
-      const response = await fetch('/api/projects', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedProjects, null, 2),
+      // 1. Get existing project IDs from Firestore
+      const querySnapshot = await getDocs(collection(db, 'projects'));
+      const existingIds = new Set<string>();
+      querySnapshot.forEach((docSnap) => {
+        existingIds.add(docSnap.id);
       });
 
-      if (!response.ok) throw new Error('Failed to save to server');
+      // 2. Save/Upsert all projects in the updated list
+      for (const project of updatedProjects) {
+        const docRef = doc(db, 'projects', project.id);
+        await setDoc(docRef, project, { merge: true });
+        existingIds.delete(project.id);
+      }
+
+      // 3. Delete any projects that are no longer in the updated list
+      for (const idToDelete of existingIds) {
+        const docRef = doc(db, 'projects', idToDelete);
+        await deleteDoc(docRef);
+      }
       
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
     } catch (err) {
-      console.error('Error saving projects:', err);
+      console.error('Error saving projects to Firestore:', err);
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 3000);
-      alert('Failed to save changes to file. (Local saving only works when running npm run dev)');
     }
   };
 
@@ -115,12 +174,27 @@ export const Dashboard: React.FC = () => {
     window.dispatchEvent(new Event('popstate'));
   };
 
-  if (loading) {
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      handleBackToPortfolio();
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
+  };
+
+  if (authLoading || (user && loading)) {
     return (
       <StyledLoader className={dashboardTheme === 'dark' ? 'dark-theme' : ''}>
         <div className="spinner"></div>
-        <p>Loading Admin Dashboard...</p>
+        <p>{authLoading ? 'Authenticating Admin...' : 'Loading Admin Dashboard...'}</p>
       </StyledLoader>
+    );
+  }
+
+  if (!user) {
+    return (
+      <DashboardLogin theme={dashboardTheme} onBack={handleBackToPortfolio} />
     );
   }
 
@@ -227,16 +301,16 @@ export const Dashboard: React.FC = () => {
             </span>{' '}
             Help
           </button>
-          <button className="menu-item logout-btn" onClick={handleBackToPortfolio}>
+          <button className="menu-item logout-btn" onClick={handleLogout}>
             <span className="item-icon">
               <Icon
-                icon="lucide:arrow-left-circle"
+                icon="lucide:log-out"
                 width={20}
                 height={20}
                 style={{ color: '#cf2c2c' }}
               />
             </span>{' '}
-            Back to Portfolio
+            Sign Out
           </button>
         </div>
 
