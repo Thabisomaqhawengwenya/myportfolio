@@ -10,10 +10,19 @@ export const Header: React.FC<HeaderProps> = ({ theme, setTheme }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 24);
+
+      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (totalHeight > 0) {
+        const progress = (window.scrollY / totalHeight) * 100;
+        setScrollProgress(progress);
+      } else {
+        setScrollProgress(0);
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -133,6 +142,10 @@ export const Header: React.FC<HeaderProps> = ({ theme, setTheme }) => {
             <span className="theme-toggle-label theme-toggle-label-dark">Dark</span>
           </button>
         </nav>
+      </div>
+
+      <div className="scroll-progress-container" aria-hidden="true">
+        <div className="scroll-progress-bar" style={{ width: `${scrollProgress}%` }} />
       </div>
     </StyledHeader>
   );
@@ -350,5 +363,22 @@ const StyledHeader = styled.header`
       margin: 0.35rem 0 0;
       padding-top: 0.35rem;
     }
+  }
+
+  .scroll-progress-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: transparent;
+    overflow: hidden;
+  }
+
+  .scroll-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent) 0%, var(--hero-accent) 100%);
+    width: 0%;
+    transition: width 80ms ease-out;
   }
 `;
