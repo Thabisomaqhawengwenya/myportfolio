@@ -1,9 +1,21 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
+    // Projects collection rules
+    match /projects/{projectId} {
       allow read: if true;
-      allow write: if request.auth != null;
+      allow write: if request.auth != null && 
+                    (request.auth.token.email == "thabisomaqhawengwenya@gmail.com" || 
+                     request.auth.token.email == "maqhawe@yarry_06.com");
+    }
+
+    // Visits collection rules
+    match /visits/{visitId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null && 
+                                    (request.auth.token.email == "thabisomaqhawengwenya@gmail.com" || 
+                                     request.auth.token.email == "maqhawe@yarry_06.com");
     }
   }
 }
+
