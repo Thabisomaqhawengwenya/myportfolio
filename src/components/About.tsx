@@ -27,11 +27,9 @@ export const About: React.FC = () => {
           <h2>Who Am I</h2>
 
           <p className="about-body">
-            I am a student developer focused on building websites and applications that feel
-            modern, clean, and reliable. I enjoy turning ideas into practical projects that
-            balance clear structure with thoughtful design and continuous improvement. From
-            building interfaces to developing core logic, I focus on clarity, usability, and
-            the small details that make a project feel intentional.
+            I am a software developer with experience building responsive web applications and practical digital solutions.
+            I am passionate about creating user-friendly products, solving real-world problems, and combining development with UI/UX design.
+            I also have experience mentoring learners through programming workshops while continuously improving through personal projects and hands-on learning.
           </p>
 
           <a

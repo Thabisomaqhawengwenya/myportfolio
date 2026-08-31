@@ -10,14 +10,24 @@ export interface TimelineItem {
 
 export const experienceData: TimelineItem[] = [
   {
-    id: 'uncommon',
-    role: 'Software Development Student',
+    id: 'uncommon-student',
+    role: 'Student',
     org: 'Uncommon.org',
-    period: '2026 – Present',
+    period: '2025 – 2026',
     description:
-      'Studying software development with a focus on modern web technologies, clean code practices, and building production-quality applications. Working on real-world projects that span frontend development, UI design, and full-stack fundamentals.',
-    tags: ['HTML', 'CSS', 'JavaScript', 'React', 'Git'],
+      'Completed training in UX/UI Design, Digital Marketing, and Software Engineering. Specialized in frontend development using HTML, CSS, JavaScript, React, and Vite. Gained hands-on experience with Node.js and backend development using Firebase and Supabase. Applied Git and GitHub for version control and collaborative development. Strengthened debugging, problem-solving, and responsive web development skills.',
+    tags: ['HTML', 'CSS', 'JavaScript', 'React', 'Vite', 'Node.js', 'Firebase', 'Supabase', 'Git', 'GitHub', 'UI/UX'],
     type: 'education',
+  },
+  {
+    id: 'scratch-instructor',
+    role: 'Scratch Coding Instructor (Volunteer)',
+    org: 'Teaching at local schools',
+    period: '2025 – Present',
+    description:
+      'Taught Scratch programming concepts to groups of learners. Assisted students in building interactive games and animations. Simplified programming concepts for beginners through practical demonstrations.',
+    tags: ['Scratch', 'Teaching', 'Mentorship', 'Game Development'],
+    type: 'project',
   },
   {
     id: 'freecodecamp',
