@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 export const Contact: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -46,6 +48,7 @@ export const Contact: React.FC = () => {
     bodyData.append('_url', window.location.href);
 
     try {
+      // 1. Send via FormSubmit email service
       const response = await fetch(formEndpoint, {
         method: 'POST',
         body: bodyData,
@@ -56,6 +59,21 @@ export const Contact: React.FC = () => {
 
       if (!response.ok) {
         throw new Error('The message could not be sent.');
+      }
+
+      // 2. Save directly into Cloud Firestore for Admin Dashboard Inbox
+      try {
+        await addDoc(collection(db, 'messages'), {
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          subject: formData.subject.trim(),
+          message: formData.message.trim(),
+          timestamp: new Date().toISOString(),
+          read: false,
+          starred: false,
+        });
+      } catch (firestoreErr) {
+        console.warn('Could not save message to Firestore:', firestoreErr);
       }
 
       setSubmitBtnText('Message Sent');

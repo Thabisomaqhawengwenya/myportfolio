@@ -16,6 +16,14 @@ service cloud.firestore {
                                     (request.auth.token.email == "thabisomaqhawengwenya@gmail.com" || 
                                      request.auth.token.email == "thabisongwenya39@gmail.com");
     }
+
+    // Messages / Contact form collection rules
+    match /messages/{messageId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null && 
+                                    (request.auth.token.email == "thabisomaqhawengwenya@gmail.com" || 
+                                     request.auth.token.email == "thabisongwenya39@gmail.com");
+    }
   }
 }
 

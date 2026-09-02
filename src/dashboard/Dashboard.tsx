@@ -7,6 +7,7 @@ import { db, auth } from '../firebase';
 import { DashboardLogin } from './components/DashboardLogin';
 import { OverviewPage } from './pages/OverviewPage';
 import { ProjectsPage } from './pages/ProjectsPage';
+import { MessagesPage, type ContactMessage } from './pages/MessagesPage';
 import { CalendarPage } from './pages/CalendarPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { SettingsPage } from './pages/SettingsPage';
@@ -33,8 +34,9 @@ interface Project {
 
 export const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'calendar' | 'analytics' | 'settings'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'messages' | 'calendar' | 'analytics' | 'settings'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
@@ -98,7 +100,7 @@ export const Dashboard: React.FC = () => {
     return `Good Evening, ${firstName}`;
   };
 
-  // Load projects from Cloud Firestore
+  // Load projects and messages from Cloud Firestore
   useEffect(() => {
     if (!user) return;
     const fetchProjects = async () => {
@@ -141,7 +143,22 @@ export const Dashboard: React.FC = () => {
       }
     };
 
+    const fetchMessages = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'messages'));
+        const list: ContactMessage[] = [];
+        querySnapshot.forEach((docSnap) => {
+          list.push({ id: docSnap.id, ...docSnap.data() } as ContactMessage);
+        });
+        list.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+        setMessages(list);
+      } catch (err) {
+        console.error('Error fetching messages from Firestore:', err);
+      }
+    };
+
     fetchProjects();
+    fetchMessages();
   }, [user]);
 
   // Save projects to Cloud Firestore
@@ -156,21 +173,18 @@ export const Dashboard: React.FC = () => {
     setSaveStatus('saving');
 
     try {
-      // 1. Get existing project IDs from Firestore
       const querySnapshot = await getDocs(collection(db, 'projects'));
       const existingIds = new Set<string>();
       querySnapshot.forEach((docSnap) => {
         existingIds.add(docSnap.id);
       });
 
-      // 2. Save/Upsert all projects in the updated list
       for (const project of formattedProjects) {
         const docRef = doc(db, 'projects', project.id);
         await setDoc(docRef, project, { merge: true });
         existingIds.delete(project.id);
       }
 
-      // 3. Delete any projects that are no longer in the updated list
       for (const idToDelete of existingIds) {
         const docRef = doc(db, 'projects', idToDelete);
         await deleteDoc(docRef);
@@ -184,6 +198,50 @@ export const Dashboard: React.FC = () => {
       setTimeout(() => setSaveStatus('idle'), 3000);
     }
   };
+
+  // Message Handlers
+  const handleToggleRead = async (id: string, currentRead: boolean) => {
+    const newRead = !currentRead;
+    setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, read: newRead } : m)));
+    try {
+      await setDoc(doc(db, 'messages', id), { read: newRead }, { merge: true });
+    } catch (e) {
+      console.error('Failed to update message read state:', e);
+    }
+  };
+
+  const handleToggleStar = async (id: string, currentStarred: boolean) => {
+    const newStarred = !currentStarred;
+    setMessages((prev) => prev.map((m) => (m.id === id ? { ...m, starred: newStarred } : m)));
+    try {
+      await setDoc(doc(db, 'messages', id), { starred: newStarred }, { merge: true });
+    } catch (e) {
+      console.error('Failed to update message starred state:', e);
+    }
+  };
+
+  const handleDeleteMessage = async (id: string) => {
+    setMessages((prev) => prev.filter((m) => m.id !== id));
+    try {
+      await deleteDoc(doc(db, 'messages', id));
+    } catch (e) {
+      console.error('Failed to delete message:', e);
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    setMessages((prev) => prev.map((m) => ({ ...m, read: true })));
+    try {
+      const unreadList = messages.filter((m) => !m.read);
+      for (const msg of unreadList) {
+        await setDoc(doc(db, 'messages', msg.id), { read: true }, { merge: true });
+      }
+    } catch (e) {
+      console.error('Failed to mark all as read:', e);
+    }
+  };
+
+  const unreadMessagesCount = messages.filter((m) => !m.read).length;
 
   const handleBackToPortfolio = () => {
     window.history.pushState({}, '', '/');
@@ -259,6 +317,25 @@ export const Dashboard: React.FC = () => {
             </span>{' '}
             Projects
             <span className="count-badge">{projects.length}</span>
+          </button>
+          <button
+            className={`menu-item ${activeTab === 'messages' ? 'active' : ''}`}
+            onClick={() => setActiveTab('messages')}
+          >
+            <span className="item-icon">
+              <Icon
+                icon="lucide:mail"
+                width={20}
+                height={20}
+                style={{ color: activeTab === 'messages' ? '#1A73E8' : '#555555' }}
+              />
+            </span>{' '}
+            Messages
+            {unreadMessagesCount > 0 ? (
+              <span className="count-badge unread-badge">{unreadMessagesCount}</span>
+            ) : (
+              <span className="count-badge">{messages.length}</span>
+            )}
           </button>
           <button
             className={`menu-item ${activeTab === 'calendar' ? 'active' : ''}`}
@@ -347,7 +424,7 @@ export const Dashboard: React.FC = () => {
             </span>
             <input
               type="text"
-              placeholder="Search project, tags or category..."
+              placeholder="Search projects, messages, or tags..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -372,20 +449,28 @@ export const Dashboard: React.FC = () => {
                 style={{ color: dashboardTheme === 'dark' ? '#ffffff' : '#111111' }}
               />
             </button>
-            <button className="icon-action-btn" aria-label="Mail notification">
+            <button 
+              className="icon-action-btn mail-action-btn" 
+              onClick={() => setActiveTab('messages')}
+              aria-label="Mail messages"
+              title="Messages Inbox"
+            >
               <Icon
                 icon="lucide:mail"
                 width={20}
                 height={20}
-                style={{ color: '#111111' }}
+                style={{ color: activeTab === 'messages' ? '#1A73E8' : (dashboardTheme === 'dark' ? '#ffffff' : '#111111') }}
               />
+              {unreadMessagesCount > 0 && (
+                <span className="mail-badge">{unreadMessagesCount}</span>
+              )}
             </button>
             <button className="icon-action-btn" aria-label="Alert notification">
               <Icon
                 icon="lucide:bell"
                 width={20}
                 height={20}
-                style={{ color: '#111111' }}
+                style={{ color: dashboardTheme === 'dark' ? '#ffffff' : '#111111' }}
               />
             </button>
              <div className="user-profile" onClick={() => setActiveTab('settings')} style={{ cursor: 'pointer' }}>
@@ -410,7 +495,13 @@ export const Dashboard: React.FC = () => {
             {activeTab === 'projects' && (
               <>
                 <h1>Manage Projects</h1>
-                <p>Add, edit, or delete items in your portfolio.</p>
+                <p>Add, edit, or arrange items in your portfolio.</p>
+              </>
+            )}
+            {activeTab === 'messages' && (
+              <>
+                <h1>Contact Messages Inbox</h1>
+                <p>Manage, read, and reply to client inquiries from your portfolio.</p>
               </>
             )}
             {activeTab === 'calendar' && (
@@ -439,29 +530,39 @@ export const Dashboard: React.FC = () => {
               onNavigateToTab={setActiveTab}
             />
           )}
-           {activeTab === 'projects' && (
-             <ProjectsPage
-               projects={projects}
-               onSaveProjects={handleSaveProjects}
-               searchQuery={searchQuery}
-             />
-           )}
-           {activeTab === 'calendar' && <CalendarPage />}
-           {activeTab === 'analytics' && <AnalyticsPage />}
-           {activeTab === 'settings' && (
-             <SettingsPage
-               profileName={profileName}
-               profileEmail={profileEmail}
-               profileRole={profileRole}
-               onProfileUpdate={(name, email, role) => {
-                 setProfileName(name);
-                 setProfileEmail(email);
-                 setProfileRole(role);
-                 setProfileInitials(localStorage.getItem('donezo_profile_initials') || 'MT');
-               }}
-               onBackToPortfolio={handleBackToPortfolio}
-             />
-           )}
+          {activeTab === 'projects' && (
+            <ProjectsPage
+              projects={projects}
+              onSaveProjects={handleSaveProjects}
+              searchQuery={searchQuery}
+            />
+          )}
+          {activeTab === 'messages' && (
+            <MessagesPage
+              messages={messages}
+              onToggleRead={handleToggleRead}
+              onToggleStar={handleToggleStar}
+              onDeleteMessage={handleDeleteMessage}
+              onMarkAllAsRead={handleMarkAllAsRead}
+              searchQuery={searchQuery}
+            />
+          )}
+          {activeTab === 'calendar' && <CalendarPage />}
+          {activeTab === 'analytics' && <AnalyticsPage />}
+          {activeTab === 'settings' && (
+            <SettingsPage
+              profileName={profileName}
+              profileEmail={profileEmail}
+              profileRole={profileRole}
+              onProfileUpdate={(name, email, role) => {
+                setProfileName(name);
+                setProfileEmail(email);
+                setProfileRole(role);
+                setProfileInitials(localStorage.getItem('donezo_profile_initials') || 'MT');
+              }}
+              onBackToPortfolio={handleBackToPortfolio}
+            />
+          )}
         </main>
       </div>
 
@@ -492,6 +593,19 @@ export const Dashboard: React.FC = () => {
             style={{ color: activeTab === 'projects' ? '#ffffff' : '#888888' }}
           />
           {activeTab === 'projects' && <span className="nav-text">Projects</span>}
+        </button>
+        <button
+          className={`nav-item ${activeTab === 'messages' ? 'active' : ''}`}
+          onClick={() => setActiveTab('messages')}
+          aria-label="Messages"
+        >
+          <Icon
+            icon="lucide:mail"
+            width={22}
+            height={22}
+            style={{ color: activeTab === 'messages' ? '#ffffff' : '#888888' }}
+          />
+          {activeTab === 'messages' && <span className="nav-text">Inbox</span>}
         </button>
         <button
           className={`nav-item ${activeTab === 'calendar' ? 'active' : ''}`}
@@ -807,6 +921,168 @@ const StyledDashboard = styled.div`
       }
     }
     
+    /* Messages Page Specific Overrides */
+    .inbox-tabs {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+
+      .tab-btn {
+        color: var(--text-secondary) !important;
+
+        &:hover {
+          background: var(--hover-bg) !important;
+          color: var(--text-primary) !important;
+        }
+
+        &.active {
+          background: #1A73E8 !important;
+          color: #ffffff !important;
+        }
+
+        .count-pill {
+          background: var(--input-bg) !important;
+          color: var(--text-secondary) !important;
+
+          &.unread-pill {
+            background: #ef4444 !important;
+            color: #ffffff !important;
+          }
+
+          &.starred-pill {
+            background: #f59e0b !important;
+            color: #ffffff !important;
+          }
+        }
+      }
+    }
+
+    .mark-all-btn {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+      color: #38bdf8 !important;
+
+      &:hover {
+        background: var(--hover-bg) !important;
+      }
+    }
+
+    .inbox-empty-card, .messages-list-pane, .message-detail-pane, .no-selection-pane {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+      color: var(--text-primary) !important;
+    }
+
+    .messages-list-pane {
+      .message-item {
+        border-bottom-color: var(--border-color) !important;
+
+        &:hover {
+          background: var(--hover-bg) !important;
+        }
+
+        &.is-selected {
+          background: #1e293b !important;
+          border-left-color: #38bdf8 !important;
+        }
+
+        &.is-unread {
+          background: #0f172a !important;
+          .item-sender {
+            color: var(--text-primary) !important;
+          }
+          .item-subject {
+            color: #f1f5f9 !important;
+          }
+        }
+
+        .item-avatar {
+          background: #1e293b !important;
+          color: #38bdf8 !important;
+        }
+
+        .item-content {
+          .item-sender {
+            color: var(--text-primary) !important;
+          }
+          .item-time {
+            color: var(--text-secondary) !important;
+          }
+          .item-subject {
+            color: var(--text-secondary) !important;
+          }
+          .item-snippet {
+            color: #64748b !important;
+          }
+        }
+      }
+    }
+
+    .message-detail-pane {
+      .detail-header {
+        border-bottom-color: var(--border-color) !important;
+
+        .detail-avatar {
+          background: #1e293b !important;
+          color: #38bdf8 !important;
+        }
+
+        .sender-text {
+          h3 {
+            color: var(--text-primary) !important;
+          }
+          .sender-email {
+            color: var(--text-secondary) !important;
+          }
+          .copy-btn {
+            background: #1e293b !important;
+            border-color: #334155 !important;
+            color: var(--text-secondary) !important;
+
+            &:hover {
+              background: #334155 !important;
+              color: var(--text-primary) !important;
+            }
+          }
+        }
+
+        .detail-action-buttons .action-icon-btn {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+          color: var(--text-secondary) !important;
+
+          &:hover {
+            background: #334155 !important;
+            color: var(--text-primary) !important;
+          }
+
+          &.starred {
+            color: #f59e0b !important;
+            background: #451a03 !important;
+            border-color: #78350f !important;
+          }
+        }
+      }
+
+      .detail-subject-bar {
+        .subject-tag {
+          background: #1e293b !important;
+          color: #38bdf8 !important;
+        }
+        .subject-title {
+          color: var(--text-primary) !important;
+        }
+        .timestamp-badge {
+          color: var(--text-secondary) !important;
+        }
+      }
+
+      .detail-body {
+        background: #090d16 !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-primary) !important;
+      }
+    }
+
     .form-group {
       label {
         color: var(--text-secondary) !important;
@@ -1155,10 +1431,28 @@ const StyledDashboard = styled.div`
       place-items: center;
       cursor: pointer;
       font-size: 0.95rem;
+      position: relative;
 
       &:hover {
         background: #f9f9f9;
         border-color: #ddd;
+      }
+
+      .mail-badge {
+        position: absolute;
+        top: -3px;
+        right: -3px;
+        background: #ef4444;
+        color: #fff;
+        font-size: 0.65rem;
+        font-weight: 700;
+        min-width: 1rem;
+        height: 1rem;
+        border-radius: 999px;
+        display: grid;
+        place-items: center;
+        padding: 0 0.2rem;
+        border: 2px solid #fff;
       }
 
       @media (max-width: 560px) {
