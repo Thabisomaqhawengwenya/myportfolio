@@ -48,6 +48,22 @@ service cloud.firestore {
                     (request.auth.token.email == "thabisomaqhawengwenya@gmail.com" || 
                      request.auth.token.email == "thabisongwenya39@gmail.com");
     }
+
+    // Blog / Case studies collection rules
+    match /blog/{blogId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+                    (request.auth.token.email == "thabisomaqhawengwenya@gmail.com" || 
+                     request.auth.token.email == "thabisongwenya39@gmail.com");
+    }
+
+    // Site settings & config collection rules
+    match /settings/{settingId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+                    (request.auth.token.email == "thabisomaqhawengwenya@gmail.com" || 
+                     request.auth.token.email == "thabisongwenya39@gmail.com");
+    }
   }
 }
 

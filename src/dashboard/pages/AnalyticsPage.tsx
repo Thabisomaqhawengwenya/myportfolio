@@ -9,6 +9,19 @@ interface LocationStat {
   hits: number;
 }
 
+interface VisitDocument {
+  visitorId?: string;
+  path?: string;
+  referrer?: string;
+  device?: string;
+  browser?: string;
+  location?: {
+    country?: string;
+    city?: string;
+  };
+  timestamp?: string;
+}
+
 interface VisitorStats {
   totalVisits: number;
   uniqueVisitors: number;
@@ -29,9 +42,9 @@ export const AnalyticsPage: React.FC = () => {
     const fetchStats = async () => {
       try {
         const querySnapshot = await getDocs(collection(db, 'visits'));
-        const visitDocs: any[] = [];
+        const visitDocs: VisitDocument[] = [];
         querySnapshot.forEach((docSnap) => {
-          visitDocs.push(docSnap.data());
+          visitDocs.push(docSnap.data() as VisitDocument);
         });
 
         if (visitDocs.length === 0) {

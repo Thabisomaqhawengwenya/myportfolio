@@ -19,7 +19,10 @@ interface OverviewPageProps {
   projects: Project[];
   messages?: ContactMessage[];
   cvDownloadsCount?: number;
-  onNavigateToTab?: (tab: 'dashboard' | 'projects' | 'messages' | 'calendar' | 'analytics' | 'settings') => void;
+  skillsCount?: number;
+  testimonialsCount?: number;
+  postsCount?: number;
+  onNavigateToTab?: (tab: 'dashboard' | 'projects' | 'skills' | 'testimonials' | 'blog' | 'messages' | 'calendar' | 'analytics' | 'settings') => void;
 }
 
 interface PingStatus {
@@ -31,6 +34,9 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
   projects,
   messages = [],
   cvDownloadsCount = 0,
+  skillsCount = 0,
+  testimonialsCount = 0,
+  postsCount = 0,
   onNavigateToTab,
 }) => {
   // Time Tracker state
@@ -134,7 +140,7 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
           <div className="stat-header">
             <span>Total Projects</span>
             <span className="arrow-icon">
-              <Icon icon="lucide:folder-open" width={16} height={16} />
+              <Icon icon="lucide:folder-open" width={16} height={16} style={{ color: '#1A73E8' }} />
             </span>
           </div>
           <div className="stat-value">{projects.length}</div>
@@ -143,13 +149,58 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
 
         <div
           className="stat-card clickable"
+          onClick={() => onNavigateToTab?.('skills')}
+          title="Click to view tech stack manager"
+        >
+          <div className="stat-header">
+            <span>Tech Stack</span>
+            <span className="arrow-icon">
+              <Icon icon="lucide:cpu" width={16} height={16} style={{ color: '#f59e0b' }} />
+            </span>
+          </div>
+          <div className="stat-value">{skillsCount}</div>
+          <div className="stat-subtext">3 animated marquee rows</div>
+        </div>
+
+        <div
+          className="stat-card clickable"
+          onClick={() => onNavigateToTab?.('testimonials')}
+          title="Click to view client testimonials"
+        >
+          <div className="stat-header">
+            <span>Testimonials</span>
+            <span className="arrow-icon">
+              <Icon icon="lucide:message-square-quote" width={16} height={16} style={{ color: '#10b981' }} />
+            </span>
+          </div>
+          <div className="stat-value">{testimonialsCount}</div>
+          <div className="stat-subtext">Client endorsements</div>
+        </div>
+
+        <div
+          className="stat-card clickable"
+          onClick={() => onNavigateToTab?.('blog')}
+          title="Click to view articles and case studies"
+        >
+          <div className="stat-header">
+            <span>Blog Articles</span>
+            <span className="arrow-icon">
+              <Icon icon="lucide:book-open" width={16} height={16} style={{ color: '#ec4899' }} />
+            </span>
+          </div>
+          <div className="stat-value">{postsCount}</div>
+          <div className="stat-subtext">Case studies & tutorials</div>
+        </div>
+
+        <div
+          className="stat-card clickable"
           onClick={() => onNavigateToTab?.('messages')}
           title="Click to view inquiries inbox"
         >
           <div className="stat-header">
-            <span>Contact Inquiries</span>
+            <span>Inquiries</span>
             <span className="arrow-icon">
-              <Icon icon="lucide:mail" width={16} height={16} style={{ color: '#1A73E8' }} />
+              <Icon icon="lucide:mail" width={16} height={16} style={{ color: '#0284c7' }} />
             </span>
           </div>
           <div className="stat-value">{messages.length}</div>
@@ -166,22 +217,11 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
           <div className="stat-header">
             <span>CV Downloads</span>
             <span className="arrow-icon">
-              <Icon icon="lucide:file-text" width={16} height={16} style={{ color: '#10b981' }} />
+              <Icon icon="lucide:file-text" width={16} height={16} style={{ color: '#8b5cf6' }} />
             </span>
           </div>
           <div className="stat-value">{cvDownloadsCount}</div>
           <div className="stat-subtext">Recruiters & visitors</div>
-        </div>
-
-        <div className="stat-card">
-          <div className="stat-header">
-            <span>Live Demos</span>
-            <span className="arrow-icon">
-              <Icon icon="lucide:globe" width={16} height={16} style={{ color: '#6366f1' }} />
-            </span>
-          </div>
-          <div className="stat-value">{deployedProjects.length}</div>
-          <div className="stat-subtext">Vercel & cloud hosted</div>
         </div>
       </div>
 
@@ -325,6 +365,27 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
                   {projects.filter((p) => ['utility', 'education', 'gift'].includes(p.category)).length}
                 </span>
               </div>
+              <div className="summary-row">
+                <span className="summary-label">
+                  <Icon icon="lucide:cpu" width={16} height={16} style={{ color: '#f59e0b' }} />
+                  Active Tech Skills
+                </span>
+                <span className="summary-val">{skillsCount}</span>
+              </div>
+              <div className="summary-row">
+                <span className="summary-label">
+                  <Icon icon="lucide:book-open" width={16} height={16} style={{ color: '#ec4899' }} />
+                  Published Articles
+                </span>
+                <span className="summary-val">{postsCount}</span>
+              </div>
+              <div className="summary-row">
+                <span className="summary-label">
+                  <Icon icon="lucide:message-square-quote" width={16} height={16} style={{ color: '#14b8a6' }} />
+                  Client Reviews
+                </span>
+                <span className="summary-val">{testimonialsCount}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -455,14 +516,17 @@ const StyledOverview = styled.div`
 
   .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 1rem;
 
-    @media (max-width: 1024px) {
+    @media (max-width: 1400px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    @media (max-width: 768px) {
       grid-template-columns: repeat(2, 1fr);
     }
-    @media (max-width: 560px) {
-      grid-template-columns: repeat(2, 1fr);
+    @media (max-width: 480px) {
+      grid-template-columns: repeat(1, 1fr);
       gap: 0.75rem;
     }
   }

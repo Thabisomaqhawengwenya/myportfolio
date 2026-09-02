@@ -24,13 +24,14 @@ export const DashboardLogin: React.FC<DashboardLoginProps> = ({ theme, onBack })
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Email Auth Error:', err);
       // Simplify error messages for standard user visibility
       let message = 'Authentication failed. Please verify credentials.';
-      if (err.code === 'auth/wrong-password' || err.code === 'auth/user-not-found') {
+      const firebaseError = err as { code?: string };
+      if (firebaseError?.code === 'auth/wrong-password' || firebaseError?.code === 'auth/user-not-found') {
         message = 'Invalid email or password.';
-      } else if (err.code === 'auth/invalid-email') {
+      } else if (firebaseError?.code === 'auth/invalid-email') {
         message = 'Please enter a valid email address.';
       }
       setErrorMsg(message);

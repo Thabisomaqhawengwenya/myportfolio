@@ -14,6 +14,14 @@ interface Project {
   order?: number;
 }
 
+interface CalendarEventItem {
+  id: string;
+  title: string;
+  date: string;
+  type: string;
+  description?: string;
+}
+
 interface AICompanionProps {
   projects: Project[];
   onSaveProjects: (updated: Project[]) => void;
@@ -146,12 +154,12 @@ export const AICompanion: React.FC<AICompanionProps> = ({ projects, onSaveProjec
         try {
           const res = await fetch('/api/calendar-events');
           if (!res.ok) throw new Error('API error');
-          const events = await res.json();
+          const events: CalendarEventItem[] = await res.json();
           if (events.length === 0) {
             reply = "📅 **You don't have any tasks scheduled on your calendar right now!** Type `add task [title] on [date]` to create one! ✨";
           } else {
             reply = `📅 **Here are your scheduled tasks & milestones:**\n\n` +
-              events.map((ev: any) => `• **${ev.title}** (${ev.date}) - _${ev.type}_${ev.description ? `: ${ev.description}` : ''}`).join('\n');
+              events.map((ev: CalendarEventItem) => `• **${ev.title}** (${ev.date}) - _${ev.type}_${ev.description ? `: ${ev.description}` : ''}`).join('\n');
           }
         } catch {
           reply = "❌ Failed to read calendar events from the API.";
@@ -164,14 +172,14 @@ export const AICompanion: React.FC<AICompanionProps> = ({ projects, onSaveProjec
           const target = match[1].trim().toLowerCase();
           try {
             const res = await fetch('/api/calendar-events');
-            const events = res.ok ? await res.json() : [];
+            const events: CalendarEventItem[] = res.ok ? await res.json() : [];
             
             // Find event by id or by case-insensitive title match
-            const index = events.findIndex((ev: any) => ev.id.toLowerCase() === target || ev.title.toLowerCase() === target);
+            const index = events.findIndex((ev: CalendarEventItem) => ev.id.toLowerCase() === target || ev.title.toLowerCase() === target);
             
             if (index !== -1) {
               const deletedEvent = events[index];
-              const updatedEvents = events.filter((_: any, i: number) => i !== index);
+              const updatedEvents = events.filter((_: CalendarEventItem, i: number) => i !== index);
               
               const saveRes = await fetch('/api/calendar-events', {
                 method: 'POST',
@@ -232,7 +240,7 @@ export const AICompanion: React.FC<AICompanionProps> = ({ projects, onSaveProjec
           reply = "📁 **You don't have any projects in your portfolio right now!** Type `add project [title] desc [description]` to showcase one! 🚀";
         } else {
           reply = `📁 **Here are your current portfolio projects:**\n\n` +
-            projects.map((proj: any) => `• **${proj.title}** (_${proj.category}_) ${proj.tags && proj.tags.length > 0 ? `- Tags: ${proj.tags.join(', ')}` : ''}`).join('\n');
+            projects.map((proj: Project) => `• **${proj.title}** (_${proj.category}_) ${proj.tags && proj.tags.length > 0 ? `- Tags: ${proj.tags.join(', ')}` : ''}`).join('\n');
         }
       }
 

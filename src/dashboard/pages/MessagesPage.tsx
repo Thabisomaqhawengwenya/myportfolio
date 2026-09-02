@@ -88,6 +88,7 @@ export const MessagesPage: React.FC<MessagesPageProps> = ({
 
   const getTimeAgo = (isoString: string) => {
     try {
+      // eslint-disable-next-line react-hooks/purity
       const diffMs = Date.now() - new Date(isoString).getTime();
       const diffMins = Math.floor(diffMs / (1000 * 60));
       if (diffMins < 1) return 'Just now';

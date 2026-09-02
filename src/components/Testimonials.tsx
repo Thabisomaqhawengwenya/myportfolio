@@ -1,16 +1,28 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { defaultTestimonials, type Testimonial } from '../data/testimonials';
 
 export const Testimonials: React.FC = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonials);
+  const [isSectionEnabled, setIsSectionEnabled] = useState<boolean>(true);
+  const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchTestimonials = async () => {
+    const fetchData = async () => {
       try {
+        // Fetch Section visibility config
+        const configSnap = await getDoc(doc(db, 'settings', 'testimonials'));
+        if (configSnap.exists()) {
+          const data = configSnap.data();
+          if (data.enabled !== undefined) {
+            setIsSectionEnabled(Boolean(data.enabled));
+          }
+        }
+
+        // Fetch testimonials
         const querySnapshot = await getDocs(collection(db, 'testimonials'));
         const list: Testimonial[] = [];
         querySnapshot.forEach((docSnap) => {
@@ -24,86 +36,131 @@ export const Testimonials: React.FC = () => {
         console.warn('Using default testimonials fallback:', err);
       }
     };
-    fetchTestimonials();
+    fetchData();
   }, []);
 
-  const visibleTestimonials = testimonials.filter((t) => t.visible !== false);
+  if (!isSectionEnabled) return null;
 
+  const visibleTestimonials = testimonials.filter((t) => t.visible !== false);
   if (visibleTestimonials.length === 0) return null;
+
+  // Duplicate items for infinite seamless carousel loop
+  const displayItems = [...visibleTestimonials, ...visibleTestimonials, ...visibleTestimonials];
+
+  const handleScrollPrev = () => {
+    if (trackRef.current) {
+      trackRef.current.scrollBy({ left: -360, behavior: 'smooth' });
+    }
+  };
+
+  const handleScrollNext = () => {
+    if (trackRef.current) {
+      trackRef.current.scrollBy({ left: 360, behavior: 'smooth' });
+    }
+  };
 
   return (
     <StyledTestimonials className="section" id="testimonials">
       <div className="container">
         {/* Section Header */}
         <div className="testimonials-header reveal">
-          <p className="section-kicker">
-            <span className="kicker-arrow">›</span> Recommendations & Praise
-          </p>
+          <div className="header-badge-row">
+            <p className="section-kicker">
+              <span className="kicker-arrow">›</span> Recommendations & Praise
+            </p>
+            {/* Carousel Navigation Buttons */}
+            <div className="carousel-nav-btns">
+              <button
+                className="carousel-btn"
+                onClick={handleScrollPrev}
+                aria-label="Scroll testimonials backward"
+                title="Scroll Left"
+              >
+                <Icon icon="lucide:chevron-left" width={18} height={18} />
+              </button>
+              <button
+                className="carousel-btn"
+                onClick={handleScrollNext}
+                aria-label="Scroll testimonials forward"
+                title="Scroll Right"
+              >
+                <Icon icon="lucide:chevron-right" width={18} height={18} />
+              </button>
+            </div>
+          </div>
+
           <h2>
             What People <span className="accent">Say</span>
           </h2>
           <p className="header-desc">
-            Feedback from clients, collaborative engineering peers, and mentorship programs.
+            Feedback from clients, engineering peers, and technical collaborators.
           </p>
         </div>
+      </div>
 
-        {/* Testimonials Grid */}
-        <div className="testimonials-grid">
-          {visibleTestimonials.map((item) => {
-            const initials = item.name
-              .split(' ')
-              .map((n) => n[0])
-              .join('')
-              .toUpperCase()
-              .slice(0, 2);
+      {/* Moving Left-To-Right Carousel Track */}
+      <div className="carousel-container-outer">
+        <div className="gradient-mask mask-left" />
+        <div className="gradient-mask mask-right" />
 
-            return (
-              <div
-                key={item.id}
-                className={`testimonial-card reveal ${item.featured ? 'is-featured' : ''}`}
-              >
-                <div className="card-top">
-                  <div className="stars-row">
-                    {Array.from({ length: 5 }).map((_, i) => (
-                      <Icon
-                        key={i}
-                        icon="lucide:star"
-                        width={16}
-                        height={16}
-                        style={{
-                          color: i < (item.rating || 5) ? '#f59e0b' : '#64748b',
-                          fill: i < (item.rating || 5) ? '#f59e0b' : 'transparent',
-                        }}
-                      />
-                    ))}
+        <div className="carousel-viewport" ref={trackRef}>
+          <div className="carousel-track">
+            {displayItems.map((item, idx) => {
+              const initials = item.name
+                .split(' ')
+                .map((n) => n[0])
+                .join('')
+                .toUpperCase()
+                .slice(0, 2);
+
+              return (
+                <div
+                  key={`${item.id}-${idx}`}
+                  className={`testimonial-card ${item.featured ? 'is-featured' : ''}`}
+                >
+                  <div className="card-top">
+                    <div className="stars-row">
+                      {Array.from({ length: 5 }).map((_, i) => (
+                        <Icon
+                          key={i}
+                          icon="lucide:star"
+                          width={16}
+                          height={16}
+                          style={{
+                            color: i < (item.rating || 5) ? '#f59e0b' : '#64748b',
+                            fill: i < (item.rating || 5) ? '#f59e0b' : 'transparent',
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <Icon
+                      icon="lucide:quote"
+                      width={26}
+                      height={26}
+                      className="quote-icon"
+                    />
                   </div>
-                  <Icon
-                    icon="lucide:quote"
-                    width={28}
-                    height={28}
-                    className="quote-icon"
-                  />
-                </div>
 
-                <p className="testimonial-text">"{item.content}"</p>
+                  <p className="testimonial-text">"{item.content}"</p>
 
-                <div className="author-row">
-                  {item.avatar ? (
-                    <img src={item.avatar} alt={item.name} className="author-avatar" />
-                  ) : (
-                    <div className="author-avatar-fallback">{initials}</div>
-                  )}
-                  <div className="author-info">
-                    <h4 className="author-name">{item.name}</h4>
-                    <p className="author-role">
-                      {item.role}
-                      {item.company ? ` • ${item.company}` : ''}
-                    </p>
+                  <div className="author-row">
+                    {item.avatar ? (
+                      <img src={item.avatar} alt={item.name} className="author-avatar" />
+                    ) : (
+                      <div className="author-avatar-fallback">{initials}</div>
+                    )}
+                    <div className="author-info">
+                      <h4 className="author-name">{item.name}</h4>
+                      <p className="author-role">
+                        {item.role}
+                        {item.company ? ` • ${item.company}` : ''}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
       </div>
     </StyledTestimonials>
@@ -111,16 +168,26 @@ export const Testimonials: React.FC = () => {
 };
 
 const StyledTestimonials = styled.section`
-  padding: 80px 0;
+  padding: 85px 0 90px;
   position: relative;
+  overflow: hidden;
 
   .testimonials-header {
     text-align: center;
-    max-width: 640px;
-    margin: 0 auto 3.5rem;
+    max-width: 680px;
+    margin: 0 auto 3rem;
+    position: relative;
+
+    .header-badge-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      margin-bottom: 0.5rem;
+    }
 
     .section-kicker {
-      margin: 0 0 0.5rem;
+      margin: 0;
       font-size: 0.8rem;
       font-weight: 600;
       letter-spacing: 0.12em;
@@ -129,6 +196,36 @@ const StyledTestimonials = styled.section`
 
       .kicker-arrow {
         color: var(--accent);
+      }
+    }
+
+    .carousel-nav-btns {
+      position: absolute;
+      right: 0;
+      display: flex;
+      gap: 0.4rem;
+
+      @media (max-width: 640px) {
+        display: none;
+      }
+
+      .carousel-btn {
+        width: 2.1rem;
+        height: 2.1rem;
+        border-radius: 50%;
+        background: var(--surface-raised);
+        border: 1px solid var(--border);
+        color: var(--text);
+        display: grid;
+        place-items: center;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        &:hover {
+          background: var(--accent);
+          color: #ffffff;
+          border-color: var(--accent);
+        }
       }
     }
 
@@ -151,25 +248,76 @@ const StyledTestimonials = styled.section`
     }
   }
 
-  .testimonials-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 1.75rem;
+  .carousel-container-outer {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 0.5rem 0;
 
-    @media (max-width: 640px) {
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
+    .gradient-mask {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100px;
+      z-index: 5;
+      pointer-events: none;
+
+      &.mask-left {
+        left: 0;
+        background: linear-gradient(90deg, var(--bg) 0%, transparent 100%);
+      }
+
+      &.mask-right {
+        right: 0;
+        background: linear-gradient(270deg, var(--bg) 0%, transparent 100%);
+      }
+
+      @media (max-width: 768px) {
+        width: 40px;
+      }
+    }
+  }
+
+  .carousel-viewport {
+    overflow-x: auto;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  /* Left-to-Right Animated Moving Track */
+  .carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    width: max-content;
+    animation: scrollLeftToRight 45s linear infinite;
+
+    &:hover {
+      animation-play-state: paused;
+    }
+  }
+
+  @keyframes scrollLeftToRight {
+    0% {
+      transform: translateX(-50%);
+    }
+    100% {
+      transform: translateX(0%);
     }
   }
 
   .testimonial-card {
+    width: 360px;
+    max-width: 85vw;
     background: var(--surface-raised);
     border: 1px solid var(--border);
     border-radius: 1.25rem;
-    padding: 2rem;
+    padding: 1.75rem;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    flex-shrink: 0;
     transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     position: relative;
     overflow: hidden;
@@ -198,7 +346,7 @@ const StyledTestimonials = styled.section`
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 1.25rem;
+      margin-bottom: 1.15rem;
 
       .stars-row {
         display: flex;
@@ -212,10 +360,10 @@ const StyledTestimonials = styled.section`
     }
 
     .testimonial-text {
-      font-size: 0.94rem;
+      font-size: 0.92rem;
       line-height: 1.65;
       color: var(--text);
-      margin: 0 0 1.75rem;
+      margin: 0 0 1.5rem;
       font-style: italic;
     }
 
@@ -224,25 +372,25 @@ const StyledTestimonials = styled.section`
       align-items: center;
       gap: 0.85rem;
       margin-top: auto;
-      padding-top: 1.25rem;
+      padding-top: 1.15rem;
       border-top: 1px solid var(--border);
 
       .author-avatar {
-        width: 2.75rem;
-        height: 2.75rem;
+        width: 2.65rem;
+        height: 2.65rem;
         border-radius: 50%;
         object-fit: cover;
       }
 
       .author-avatar-fallback {
-        width: 2.75rem;
-        height: 2.75rem;
+        width: 2.65rem;
+        height: 2.65rem;
         border-radius: 50%;
         background: var(--surface);
         border: 1px solid var(--border);
         color: var(--accent);
         font-weight: 700;
-        font-size: 0.92rem;
+        font-size: 0.9rem;
         display: grid;
         place-items: center;
         flex-shrink: 0;
@@ -253,14 +401,14 @@ const StyledTestimonials = styled.section`
 
         .author-name {
           margin: 0;
-          font-size: 0.94rem;
+          font-size: 0.92rem;
           font-weight: 600;
           color: var(--heading);
         }
 
         .author-role {
           margin: 0.15rem 0 0;
-          font-size: 0.78rem;
+          font-size: 0.76rem;
           color: var(--text-muted);
           white-space: nowrap;
           overflow: hidden;

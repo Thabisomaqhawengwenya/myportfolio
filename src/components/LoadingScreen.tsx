@@ -7,7 +7,6 @@ interface LoadingScreenProps {
 
 export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
-  const [statusText, setStatusText] = useState('INITIALIZING EXPERIENCE...');
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
@@ -25,33 +24,34 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete }) => {
     return () => clearInterval(interval);
   }, []);
 
+  const statusText =
+    progress < 25
+      ? 'INITIALIZING EXPERIENCE...'
+      : progress < 50
+      ? 'LOADING CREATIVE ASSETS...'
+      : progress < 75
+      ? 'ASSEMBLING 3D ENVIRONMENT...'
+      : progress < 100
+      ? 'OPTIMIZING PERFORMANCE...'
+      : 'WELCOME!';
+
   useEffect(() => {
-    if (progress < 25) {
-      setStatusText('INITIALIZING EXPERIENCE...');
-    } else if (progress < 50) {
-      setStatusText('LOADING CREATIVE ASSETS...');
-    } else if (progress < 75) {
-      setStatusText('ASSEMBLING 3D ENVIRONMENT...');
-    } else if (progress < 100) {
-      setStatusText('OPTIMIZING PERFORMANCE...');
-    } else {
-      setStatusText('WELCOME!');
-      
-      // Start exit animation after reaching 100%
-      const fadeTimeout = setTimeout(() => {
-        setIsFadingOut(true);
-      }, 300);
+    if (progress < 100) return;
 
-      // Call onComplete after exit animation finishes (800ms transition)
-      const completeTimeout = setTimeout(() => {
-        onComplete();
-      }, 1100);
+    // Start exit animation after reaching 100%
+    const fadeTimeout = setTimeout(() => {
+      setIsFadingOut(true);
+    }, 300);
 
-      return () => {
-        clearTimeout(fadeTimeout);
-        clearTimeout(completeTimeout);
-      };
-    }
+    // Call onComplete after exit animation finishes (800ms transition)
+    const completeTimeout = setTimeout(() => {
+      onComplete();
+    }, 1100);
+
+    return () => {
+      clearTimeout(fadeTimeout);
+      clearTimeout(completeTimeout);
+    };
   }, [progress, onComplete]);
 
   return (

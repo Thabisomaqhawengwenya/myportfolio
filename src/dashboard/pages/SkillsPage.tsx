@@ -127,6 +127,7 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({
     }
 
     const newSkill: TechItem = {
+      // eslint-disable-next-line react-hooks/purity
       id: `tech-${Date.now()}`,
       ...preset,
       order: skills.length,
@@ -381,7 +382,7 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({
                     <label>Category</label>
                     <select
                       value={formCategory}
-                      onChange={(e) => setFormCategory(e.target.value as any)}
+                      onChange={(e) => setFormCategory(e.target.value as TechItem['category'])}
                     >
                       <option value="frontend">Frontend</option>
                       <option value="backend">Backend</option>

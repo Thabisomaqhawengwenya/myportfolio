@@ -8,6 +8,9 @@ interface SettingsPageProps {
   profileRole: string;
   onProfileUpdate: (name: string, email: string, role: string) => void;
   onBackToPortfolio?: () => void;
+  testimonialsSectionEnabled?: boolean;
+  onToggleTestimonialsSection?: (enabled: boolean) => void;
+  onExportBackup?: () => void;
 }
 
 export const SettingsPage: React.FC<SettingsPageProps> = ({
@@ -15,7 +18,10 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   profileEmail,
   profileRole,
   onProfileUpdate,
-  onBackToPortfolio
+  onBackToPortfolio,
+  testimonialsSectionEnabled = true,
+  onToggleTestimonialsSection,
+  onExportBackup,
 }) => {
   // Profile settings
   const [name, setName] = useState(profileName);
@@ -172,6 +178,49 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 </div>
               </div>
             </div>
+
+            {/* Section Visibility Controls */}
+            <div className="settings-card">
+              <div className="card-header">
+                <Icon icon="lucide:layout" className="card-icon" />
+                <h3>Portfolio Section Visibility</h3>
+              </div>
+              <div className="card-body">
+                <div className="toggle-option">
+                  <div className="toggle-info">
+                    <h4>Testimonials Section</h4>
+                    <p>
+                      {testimonialsSectionEnabled
+                        ? '🟢 Currently live and visible on public homepage'
+                        : '⚪ Completely hidden from public homepage'}
+                    </p>
+                  </div>
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={testimonialsSectionEnabled}
+                      onChange={(e) => onToggleTestimonialsSection?.(e.target.checked)}
+                    />
+                    <span className="slider round"></span>
+                  </label>
+                </div>
+
+                <div className="toggle-option">
+                  <div className="toggle-info">
+                    <h4>Developer Blog Section</h4>
+                    <p>🟢 Case studies and technical articles live on homepage</p>
+                  </div>
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={true}
+                      readOnly
+                    />
+                    <span className="slider round"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
 
           {/* Column 2: External Links & Social settings */}
@@ -227,6 +276,29 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
               </div>
             </div>
 
+            {/* Data Backup & Export Card */}
+            <div className="settings-card">
+              <div className="card-header">
+                <Icon icon="lucide:database" className="card-icon" />
+                <h3>Data Backup & Snapshot</h3>
+              </div>
+              <div className="card-body">
+                <p className="card-description">
+                  Download a complete JSON snapshot containing all your projects, tech stack, testimonials, and blog articles.
+                </p>
+                {onExportBackup && (
+                  <button
+                    type="button"
+                    className="export-backup-btn"
+                    onClick={onExportBackup}
+                  >
+                    <Icon icon="lucide:download" width={16} height={16} />
+                    <span>Export JSON Backup</span>
+                  </button>
+                )}
+              </div>
+            </div>
+
             <div className="settings-card security-card">
               <div className="card-header">
                 <Icon icon="lucide:shield-check" className="card-icon" />
@@ -239,7 +311,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 </div>
                 <div className="platform-info-row">
                   <span className="info-label">Storage Backend:</span>
-                  <span className="info-badge">Local JSON Database</span>
+                  <span className="info-badge">Cloud Firestore</span>
                 </div>
                 <div className="platform-info-row">
                   <span className="info-label">Framework:</span>
@@ -565,6 +637,28 @@ const StyledSettings = styled.div`
         padding: 0.2rem 0.5rem;
         border-radius: 6px;
       }
+    }
+  }
+
+  .export-backup-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: #f1f5f9;
+    color: #1e293b;
+    border: 1px solid #cbd5e1;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    margin-top: 0.5rem;
+
+    &:hover {
+      background: #e2e8f0;
+      border-color: #94a3b8;
+      transform: translateY(-1px);
     }
   }
 

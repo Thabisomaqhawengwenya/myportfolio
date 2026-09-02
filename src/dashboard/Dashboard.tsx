@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
-import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { collection, getDocs, doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { db, auth } from '../firebase';
 import { DashboardLogin } from './components/DashboardLogin';
 import { OverviewPage } from './pages/OverviewPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { SkillsPage } from './pages/SkillsPage';
 import { TestimonialsPage } from './pages/TestimonialsPage';
+import { BlogPage } from './pages/BlogPage';
 import { MessagesPage, type ContactMessage } from './pages/MessagesPage';
 import { CalendarPage } from './pages/CalendarPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
@@ -16,6 +17,7 @@ import { SettingsPage } from './pages/SettingsPage';
 import { AICompanion } from './components/AICompanion';
 import { defaultTechItems, type TechItem } from '../data/skills';
 import { defaultTestimonials, type Testimonial } from '../data/testimonials';
+import { defaultBlogPosts, type BlogPost } from '../data/blog';
 
 interface Project {
   id: string;
@@ -40,15 +42,17 @@ export const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [skills, setSkills] = useState<TechItem[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [testimonialsSectionEnabled, setTestimonialsSectionEnabled] = useState<boolean>(true);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [cvDownloadsCount, setCvDownloadsCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'skills' | 'testimonials' | 'messages' | 'calendar' | 'analytics' | 'settings'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'skills' | 'testimonials' | 'blog' | 'messages' | 'calendar' | 'analytics' | 'settings'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   // Firebase Auth states
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
   // Theme states with localStorage persistence
@@ -205,6 +209,15 @@ export const Dashboard: React.FC = () => {
 
     const fetchTestimonials = async () => {
       try {
+        // Fetch global section enabled state
+        const configSnap = await getDoc(doc(db, 'settings', 'testimonials'));
+        if (configSnap.exists()) {
+          const data = configSnap.data();
+          if (data.enabled !== undefined) {
+            setTestimonialsSectionEnabled(Boolean(data.enabled));
+          }
+        }
+
         const querySnapshot = await getDocs(collection(db, 'testimonials'));
         const list: Testimonial[] = [];
         querySnapshot.forEach((docSnap) => {
@@ -226,12 +239,78 @@ export const Dashboard: React.FC = () => {
       }
     };
 
+    const fetchPosts = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'blog'));
+        const list: BlogPost[] = [];
+        querySnapshot.forEach((docSnap) => {
+          list.push({ id: docSnap.id, ...docSnap.data() } as BlogPost);
+        });
+        if (list.length > 0) {
+          list.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+          setPosts(list);
+        } else {
+          setPosts(defaultBlogPosts);
+          for (let i = 0; i < defaultBlogPosts.length; i++) {
+            const item = { ...defaultBlogPosts[i], order: i };
+            await setDoc(doc(db, 'blog', item.id), item);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching blog posts from Firestore:', err);
+        setPosts(defaultBlogPosts);
+      }
+    };
+
     fetchProjects();
     fetchSkills();
     fetchTestimonials();
+    fetchPosts();
     fetchMessages();
     fetchEvents();
   }, [user]);
+
+  // Save blog posts to Cloud Firestore
+  const handleSavePosts = async (updatedPosts: BlogPost[]) => {
+    const formatted = updatedPosts.map((p, idx) => ({ ...p, order: p.order ?? idx }));
+    setPosts(formatted);
+    setSaveStatus('saving');
+
+    try {
+      const querySnapshot = await getDocs(collection(db, 'blog'));
+      const existingIds = new Set<string>();
+      querySnapshot.forEach((d) => existingIds.add(d.id));
+
+      for (const item of formatted) {
+        await setDoc(doc(db, 'blog', item.id), item, { merge: true });
+        existingIds.delete(item.id);
+      }
+      for (const idToDelete of existingIds) {
+        await deleteDoc(doc(db, 'blog', idToDelete));
+      }
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    } catch (e) {
+      console.error('Error saving blog posts:', e);
+      setSaveStatus('error');
+      setTimeout(() => setSaveStatus('idle'), 3000);
+    }
+  };
+
+  // Toggle Testimonials section visibility on public portfolio
+  const handleToggleTestimonialsSection = async (enabled: boolean) => {
+    setTestimonialsSectionEnabled(enabled);
+    setSaveStatus('saving');
+    try {
+      await setDoc(doc(db, 'settings', 'testimonials'), { enabled }, { merge: true });
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    } catch (e) {
+      console.error('Error updating testimonials section status:', e);
+      setSaveStatus('error');
+      setTimeout(() => setSaveStatus('idle'), 3000);
+    }
+  };
 
   // Save testimonials to Cloud Firestore
   const handleSaveTestimonials = async (updatedTestimonials: Testimonial[]) => {
@@ -374,6 +453,24 @@ export const Dashboard: React.FC = () => {
     window.dispatchEvent(new Event('popstate'));
   };
 
+  const handleExportBackup = () => {
+    const backupData = {
+      exportedAt: new Date().toISOString(),
+      projects,
+      skills,
+      testimonials,
+      posts,
+      testimonialsSectionEnabled,
+    };
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(backupData, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute('href', dataStr);
+    downloadAnchor.setAttribute('download', `portfolio_backup_${new Date().toISOString().slice(0, 10)}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+  };
+
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -473,6 +570,21 @@ export const Dashboard: React.FC = () => {
             </span>{' '}
             Testimonials
             <span className="count-badge">{testimonials.length}</span>
+          </button>
+          <button
+            className={`menu-item ${activeTab === 'blog' ? 'active' : ''}`}
+            onClick={() => setActiveTab('blog')}
+          >
+            <span className="item-icon">
+              <Icon
+                icon="lucide:book-open"
+                width={20}
+                height={20}
+                style={{ color: activeTab === 'blog' ? '#1A73E8' : '#555555' }}
+              />
+            </span>{' '}
+            Articles & Blog
+            <span className="count-badge">{posts.length}</span>
           </button>
           <button
             className={`menu-item ${activeTab === 'messages' ? 'active' : ''}`}
@@ -666,6 +778,12 @@ export const Dashboard: React.FC = () => {
                 <p>Manage endorsements, feedback quotes, and star ratings from your clients and peers.</p>
               </>
             )}
+            {activeTab === 'blog' && (
+              <>
+                <h1>Developer Blog & Case Studies</h1>
+                <p>Publish technical breakdowns, architectural insights, and engineering stories.</p>
+              </>
+            )}
             {activeTab === 'messages' && (
               <>
                 <h1>Contact Messages Inbox</h1>
@@ -697,6 +815,9 @@ export const Dashboard: React.FC = () => {
               projects={projects}
               messages={messages}
               cvDownloadsCount={cvDownloadsCount}
+              skillsCount={skills.length}
+              testimonialsCount={testimonials.length}
+              postsCount={posts.length}
               onNavigateToTab={setActiveTab}
             />
           )}
@@ -718,6 +839,15 @@ export const Dashboard: React.FC = () => {
             <TestimonialsPage
               testimonials={testimonials}
               onSaveTestimonials={handleSaveTestimonials}
+              searchQuery={searchQuery}
+              sectionEnabled={testimonialsSectionEnabled}
+              onToggleSectionEnabled={handleToggleTestimonialsSection}
+            />
+          )}
+          {activeTab === 'blog' && (
+            <BlogPage
+              posts={posts}
+              onSavePosts={handleSavePosts}
               searchQuery={searchQuery}
             />
           )}
@@ -745,6 +875,9 @@ export const Dashboard: React.FC = () => {
                 setProfileInitials(localStorage.getItem('donezo_profile_initials') || 'MT');
               }}
               onBackToPortfolio={handleBackToPortfolio}
+              testimonialsSectionEnabled={testimonialsSectionEnabled}
+              onToggleTestimonialsSection={handleToggleTestimonialsSection}
+              onExportBackup={handleExportBackup}
             />
           )}
         </main>
@@ -1302,6 +1435,102 @@ const StyledDashboard = styled.div`
       }
     }
 
+    .section-toggle-banner {
+      &.is-enabled {
+        background: #052e16 !important;
+        border-color: #166534 !important;
+        .toggle-icon-wrap {
+          background: #14532d !important;
+          color: #4ade80 !important;
+        }
+      }
+
+      &.is-disabled {
+        background: var(--bg-secondary) !important;
+        border-color: var(--border-color) !important;
+        .toggle-icon-wrap {
+          background: #1e293b !important;
+          color: var(--text-secondary) !important;
+        }
+      }
+
+      .banner-left {
+        .banner-title-row {
+          h4 {
+            color: var(--text-primary) !important;
+          }
+        }
+        .banner-desc {
+          color: var(--text-secondary) !important;
+        }
+      }
+
+      .toggle-switch-btn.btn-active {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: var(--text-primary) !important;
+        &:hover {
+          background: #450a0a !important;
+          border-color: #991b1b !important;
+          color: #f87171 !important;
+        }
+      }
+    }
+
+    /* Blog Page Specific Overrides */
+    .blog-admin-card {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+
+      &:hover {
+        border-color: #334155 !important;
+      }
+
+      &.is-draft-card {
+        background: #090d16 !important;
+      }
+
+      .post-title {
+        color: var(--text-primary) !important;
+      }
+
+      .post-excerpt {
+        color: var(--text-secondary) !important;
+      }
+
+      .tag-pill {
+        background: #1e293b !important;
+        color: var(--text-secondary) !important;
+      }
+
+      .card-footer-actions {
+        border-top-color: var(--border-color) !important;
+      }
+    }
+
+    .modal-dialog-large {
+      background: var(--bg-secondary) !important;
+      border: 1px solid var(--border-color) !important;
+
+      .modal-header {
+        border-bottom-color: var(--border-color) !important;
+        h3 {
+          color: var(--text-primary) !important;
+        }
+      }
+
+      .modal-footer {
+        background: #090d16 !important;
+        border-top-color: var(--border-color) !important;
+
+        .btn-cancel {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+          color: var(--text-primary) !important;
+        }
+      }
+    }
+
     /* Projects Page Specific Overrides */
     .header-subtitle, .reorder-tip {
       color: var(--text-secondary) !important;
@@ -1672,11 +1901,49 @@ const StyledDashboard = styled.div`
 
     /* Settings Page Specific Overrides */
     .settings-card {
-      h3 {
-        color: var(--text-primary) !important;
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+
+      .card-header {
+        border-bottom-color: var(--border-color) !important;
+        h3 {
+          color: var(--text-primary) !important;
+        }
       }
-      .profile-details p {
+
+      .card-description {
         color: var(--text-secondary) !important;
+      }
+
+      .toggle-option {
+        border-bottom-color: var(--border-color) !important;
+        .toggle-info h4 {
+          color: var(--text-primary) !important;
+        }
+        .toggle-info p {
+          color: var(--text-secondary) !important;
+        }
+      }
+
+      .export-backup-btn {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: var(--text-primary) !important;
+
+        &:hover {
+          background: #334155 !important;
+        }
+      }
+
+      .platform-info-row {
+        border-bottom-color: var(--border-color) !important;
+        .info-label {
+          color: var(--text-secondary) !important;
+        }
+        .info-badge {
+          background: #1e293b !important;
+          color: #38bdf8 !important;
+        }
       }
     }
   }
