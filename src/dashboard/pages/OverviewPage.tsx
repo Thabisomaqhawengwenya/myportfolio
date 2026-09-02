@@ -22,7 +22,7 @@ interface OverviewPageProps {
   skillsCount?: number;
   testimonialsCount?: number;
   postsCount?: number;
-  onNavigateToTab?: (tab: 'dashboard' | 'projects' | 'skills' | 'testimonials' | 'blog' | 'messages' | 'calendar' | 'analytics' | 'settings') => void;
+  onNavigateToTab?: (tab: 'dashboard' | 'projects' | 'skills' | 'testimonials' | 'blog' | 'messages' | 'calendar' | 'analytics' | 'cv' | 'settings') => void;
 }
 
 interface PingStatus {
@@ -213,7 +213,11 @@ export const OverviewPage: React.FC<OverviewPageProps> = ({
           </div>
         </div>
 
-        <div className="stat-card">
+        <div
+          className="stat-card clickable"
+          onClick={() => onNavigateToTab?.('cv')}
+          title="Click to manage and upload CV"
+        >
           <div className="stat-header">
             <span>CV Downloads</span>
             <span className="arrow-icon">

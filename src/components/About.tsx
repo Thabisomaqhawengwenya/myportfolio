@@ -1,9 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { collection, addDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 
 export const About: React.FC = () => {
+  const [cvUrl, setCvUrl] = useState('/Maqhawe_CV.pdf');
+  const [cvFileName, setCvFileName] = useState('Maqhawe_CV.pdf');
+  const [isCvEnabled, setIsCvEnabled] = useState(true);
+
+  useEffect(() => {
+    const fetchCvConfig = async () => {
+      try {
+        const docSnap = await getDoc(doc(db, 'settings', 'cv'));
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.url) setCvUrl(data.url);
+          if (data.fileName) setCvFileName(data.fileName);
+          if (data.enabled !== undefined) setIsCvEnabled(Boolean(data.enabled));
+        }
+      } catch (err) {
+        console.warn('Using default CV fallback:', err);
+      }
+    };
+
+    fetchCvConfig();
+  }, []);
+
   const handleDownloadCV = async () => {
     try {
       await addDoc(collection(db, 'events'), {
@@ -47,14 +69,18 @@ export const About: React.FC = () => {
             I also have experience mentoring learners through programming workshops while continuously improving through personal projects and hands-on learning.
           </p>
 
-          <a
-            className="btn btn-primary about-cv-btn"
-            href="/Maqhawe_CV.pdf"
-            download="Maqhawe_CV.pdf"
-            onClick={handleDownloadCV}
-          >
-            Download CV
-          </a>
+          {isCvEnabled && (
+            <a
+              className="btn btn-primary about-cv-btn"
+              href={cvUrl}
+              download={cvFileName}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleDownloadCV}
+            >
+              Download CV
+            </a>
+          )}
         </div>
 
       </div>

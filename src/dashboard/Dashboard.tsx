@@ -13,6 +13,7 @@ import { BlogPage } from './pages/BlogPage';
 import { MessagesPage, type ContactMessage } from './pages/MessagesPage';
 import { CalendarPage } from './pages/CalendarPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
+import { CVPage } from './pages/CVPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { AICompanion } from './components/AICompanion';
 import { defaultTechItems, type TechItem } from '../data/skills';
@@ -47,7 +48,7 @@ export const Dashboard: React.FC = () => {
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [cvDownloadsCount, setCvDownloadsCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'skills' | 'testimonials' | 'blog' | 'messages' | 'calendar' | 'analytics' | 'settings'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'skills' | 'testimonials' | 'blog' | 'messages' | 'calendar' | 'analytics' | 'cv' | 'settings'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
@@ -633,6 +634,20 @@ export const Dashboard: React.FC = () => {
             </span>{' '}
             Analytics
           </button>
+          <button
+            className={`menu-item ${activeTab === 'cv' ? 'active' : ''}`}
+            onClick={() => setActiveTab('cv')}
+          >
+            <span className="item-icon">
+              <Icon
+                icon="lucide:file-text"
+                width={20}
+                height={20}
+                style={{ color: activeTab === 'cv' ? '#1A73E8' : '#555555' }}
+              />
+            </span>{' '}
+            CV & Resume
+          </button>
         </div>
 
         <div className="menu-group">
@@ -796,18 +811,24 @@ export const Dashboard: React.FC = () => {
                 <p>Track project deadlines and schedule task notes.</p>
               </>
             )}
-             {activeTab === 'analytics' && (
-               <>
-                 <h1>Visitor Analytics</h1>
-                 <p>Monitor visitor traffic and portfolio engagement stats.</p>
-               </>
-             )}
-             {activeTab === 'settings' && (
-               <>
-                 <h1>Admin Settings</h1>
-                 <p>Manage your profile, system preferences and external portfolio links.</p>
-               </>
-             )}
+            {activeTab === 'analytics' && (
+              <>
+                <h1>Visitor Analytics</h1>
+                <p>Monitor visitor traffic and portfolio engagement stats.</p>
+              </>
+            )}
+            {activeTab === 'cv' && (
+              <>
+                <h1>CV & Resume Manager</h1>
+                <p>Preview your live curriculum vitae, inspect download telemetry, and upload new PDF versions.</p>
+              </>
+            )}
+            {activeTab === 'settings' && (
+              <>
+                <h1>Admin Settings</h1>
+                <p>Manage your profile, system preferences and external portfolio links.</p>
+              </>
+            )}
           </div>
 
           {activeTab === 'dashboard' && (
@@ -863,6 +884,7 @@ export const Dashboard: React.FC = () => {
           )}
           {activeTab === 'calendar' && <CalendarPage />}
           {activeTab === 'analytics' && <AnalyticsPage />}
+          {activeTab === 'cv' && <CVPage cvDownloadsCount={cvDownloadsCount} />}
           {activeTab === 'settings' && (
             <SettingsPage
               profileName={profileName}
@@ -1943,6 +1965,90 @@ const StyledDashboard = styled.div`
         .info-badge {
           background: #1e293b !important;
           color: #38bdf8 !important;
+        }
+      }
+    }
+
+    /* CV Page Specific Overrides */
+    .cv-top-bar {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+
+      h3 {
+        color: var(--text-primary) !important;
+      }
+      .doc-meta {
+        color: var(--text-secondary) !important;
+      }
+      .btn-secondary {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: var(--text-primary) !important;
+
+        &:hover {
+          background: #334155 !important;
+        }
+      }
+    }
+
+    .viewer-panel {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+
+      .panel-header {
+        border-bottom-color: var(--border-color) !important;
+        h4 {
+          color: var(--text-primary) !important;
+        }
+        .refresh-btn {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+          color: var(--text-primary) !important;
+        }
+      }
+      .iframe-container {
+        background: #090d16 !important;
+      }
+    }
+
+    .upload-sidebar-col {
+      .sidebar-card {
+        background: var(--bg-secondary) !important;
+        border-color: var(--border-color) !important;
+
+        h4 {
+          color: var(--text-primary) !important;
+        }
+        .card-desc {
+          color: var(--text-secondary) !important;
+        }
+      }
+
+      .dropzone {
+        background: #090d16 !important;
+        border-color: #334155 !important;
+
+        &:hover {
+          background: #1e293b !important;
+          border-color: #38bdf8 !important;
+        }
+
+        .primary-text {
+          color: var(--text-primary) !important;
+        }
+        .secondary-text {
+          color: var(--text-secondary) !important;
+        }
+      }
+
+      .telemetry-item {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        .telemetry-time {
+          color: var(--text-secondary) !important;
+        }
+        .telemetry-ua {
+          color: var(--text-primary) !important;
         }
       }
     }
