@@ -7,11 +7,13 @@ import { db, auth } from '../firebase';
 import { DashboardLogin } from './components/DashboardLogin';
 import { OverviewPage } from './pages/OverviewPage';
 import { ProjectsPage } from './pages/ProjectsPage';
+import { SkillsPage } from './pages/SkillsPage';
 import { MessagesPage, type ContactMessage } from './pages/MessagesPage';
 import { CalendarPage } from './pages/CalendarPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { AICompanion } from './components/AICompanion';
+import { defaultTechItems, type TechItem } from '../data/skills';
 
 interface Project {
   id: string;
@@ -34,10 +36,11 @@ interface Project {
 
 export const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [skills, setSkills] = useState<TechItem[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [cvDownloadsCount, setCvDownloadsCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'messages' | 'calendar' | 'analytics' | 'settings'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'skills' | 'messages' | 'calendar' | 'analytics' | 'settings'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
@@ -174,10 +177,61 @@ export const Dashboard: React.FC = () => {
       }
     };
 
+    const fetchSkills = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'skills'));
+        const list: TechItem[] = [];
+        querySnapshot.forEach((docSnap) => {
+          list.push({ id: docSnap.id, ...docSnap.data() } as TechItem);
+        });
+        if (list.length > 0) {
+          list.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+          setSkills(list);
+        } else {
+          setSkills(defaultTechItems);
+          for (let i = 0; i < defaultTechItems.length; i++) {
+            const item = { ...defaultTechItems[i], order: i };
+            await setDoc(doc(db, 'skills', item.id), item);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching skills from Firestore:', err);
+        setSkills(defaultTechItems);
+      }
+    };
+
     fetchProjects();
+    fetchSkills();
     fetchMessages();
     fetchEvents();
   }, [user]);
+
+  // Save skills to Cloud Firestore
+  const handleSaveSkills = async (updatedSkills: TechItem[]) => {
+    const formatted = updatedSkills.map((s, idx) => ({ ...s, order: s.order ?? idx }));
+    setSkills(formatted);
+    setSaveStatus('saving');
+
+    try {
+      const querySnapshot = await getDocs(collection(db, 'skills'));
+      const existingIds = new Set<string>();
+      querySnapshot.forEach((d) => existingIds.add(d.id));
+
+      for (const item of formatted) {
+        await setDoc(doc(db, 'skills', item.id), item, { merge: true });
+        existingIds.delete(item.id);
+      }
+      for (const idToDelete of existingIds) {
+        await deleteDoc(doc(db, 'skills', idToDelete));
+      }
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    } catch (e) {
+      console.error('Error saving skills:', e);
+      setSaveStatus('error');
+      setTimeout(() => setSaveStatus('idle'), 3000);
+    }
+  };
 
   // Save projects to Cloud Firestore
   const handleSaveProjects = async (updatedProjects: Project[]) => {
@@ -335,6 +389,21 @@ export const Dashboard: React.FC = () => {
             </span>{' '}
             Projects
             <span className="count-badge">{projects.length}</span>
+          </button>
+          <button
+            className={`menu-item ${activeTab === 'skills' ? 'active' : ''}`}
+            onClick={() => setActiveTab('skills')}
+          >
+            <span className="item-icon">
+              <Icon
+                icon="lucide:cpu"
+                width={20}
+                height={20}
+                style={{ color: activeTab === 'skills' ? '#1A73E8' : '#555555' }}
+              />
+            </span>{' '}
+            Tech Stack
+            <span className="count-badge">{skills.length}</span>
           </button>
           <button
             className={`menu-item ${activeTab === 'messages' ? 'active' : ''}`}
@@ -516,6 +585,12 @@ export const Dashboard: React.FC = () => {
                 <p>Add, edit, or arrange items in your portfolio.</p>
               </>
             )}
+            {activeTab === 'skills' && (
+              <>
+                <h1>Tech Stack & Skills</h1>
+                <p>Manage the technologies, icons, and interactive marquee rows on your portfolio.</p>
+              </>
+            )}
             {activeTab === 'messages' && (
               <>
                 <h1>Contact Messages Inbox</h1>
@@ -554,6 +629,13 @@ export const Dashboard: React.FC = () => {
             <ProjectsPage
               projects={projects}
               onSaveProjects={handleSaveProjects}
+              searchQuery={searchQuery}
+            />
+          )}
+          {activeTab === 'skills' && (
+            <SkillsPage
+              skills={skills}
+              onSaveSkills={handleSaveSkills}
               searchQuery={searchQuery}
             />
           )}
@@ -949,6 +1031,128 @@ const StyledDashboard = styled.div`
               color: #ffffff !important;
             }
           }
+        }
+      }
+    }
+
+    /* Skills Page Specific Overrides */
+    .skills-subtitle {
+      color: var(--text-secondary) !important;
+    }
+
+    .presets-section {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+
+      .presets-title {
+        color: var(--text-secondary) !important;
+      }
+
+      .preset-pill {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: var(--text-primary) !important;
+
+        &:hover:not(:disabled) {
+          background: #334155 !important;
+          border-color: #38bdf8 !important;
+        }
+
+        &.is-added {
+          background: #090d16 !important;
+          border-color: var(--border-color) !important;
+          color: var(--text-secondary) !important;
+        }
+      }
+    }
+
+    .filter-pill {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+      color: var(--text-secondary) !important;
+
+      &:hover {
+        background: var(--hover-bg) !important;
+        color: var(--text-primary) !important;
+      }
+
+      &.active {
+        background: #1A73E8 !important;
+        color: #ffffff !important;
+      }
+
+      .count-badge {
+        background: var(--input-bg) !important;
+        color: var(--text-secondary) !important;
+      }
+    }
+
+    .skill-card {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+
+      &:hover {
+        border-color: #334155 !important;
+      }
+
+      .order-tag {
+        background: #1e293b !important;
+        color: #38bdf8 !important;
+      }
+
+      .icon-preview-box {
+        background: #090d16 !important;
+        border-color: var(--border-color) !important;
+      }
+
+      .skill-info h4 {
+        color: var(--text-primary) !important;
+      }
+
+      .row-badge {
+        background: #1e293b !important;
+        color: #38bdf8 !important;
+      }
+
+      .category-tag, .icon-code {
+        color: var(--text-secondary) !important;
+      }
+
+      .arrow-btn, .action-icon-btn {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: var(--text-primary) !important;
+
+        &:hover:not(:disabled) {
+          background: #334155 !important;
+        }
+      }
+    }
+
+    .modal-dialog {
+      background: var(--bg-secondary) !important;
+      border: 1px solid var(--border-color) !important;
+
+      .modal-header {
+        border-bottom-color: var(--border-color) !important;
+        h3 {
+          color: var(--text-primary) !important;
+        }
+      }
+
+      .live-preview-box {
+        background: #090d16 !important;
+        border-color: var(--border-color) !important;
+      }
+
+      .modal-footer {
+        background: #090d16 !important;
+        border-top-color: var(--border-color) !important;
+
+        .btn-cancel {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+          color: var(--text-primary) !important;
         }
       }
     }

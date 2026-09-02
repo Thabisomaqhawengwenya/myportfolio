@@ -1,60 +1,50 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Icon } from '@iconify/react';
-
-interface TechItem {
-  name: string;
-  icon: string;
-  color: string;
-}
-
-// Row 1 — core languages & frontend
-const row1: TechItem[] = [
-  { name: 'HTML5',       icon: 'vscode-icons:file-type-html',       color: '#E34F26' },
-  { name: 'CSS3',        icon: 'vscode-icons:file-type-css',        color: '#1572B6' },
-  { name: 'JavaScript',  icon: 'vscode-icons:file-type-js-official',color: '#F7DF1E' },
-  { name: 'React',       icon: 'vscode-icons:file-type-reactjs',    color: '#61DAFB' },
-  { name: 'Vite',        icon: 'vscode-icons:file-type-vite',       color: '#646CFF' },
-  { name: 'TypeScript',  icon: 'vscode-icons:file-type-typescript-official', color: '#3178C6' },
-  { name: 'HTML5',       icon: 'vscode-icons:file-type-html',       color: '#E34F26' },
-  { name: 'CSS3',        icon: 'vscode-icons:file-type-css',        color: '#1572B6' },
-  { name: 'JavaScript',  icon: 'vscode-icons:file-type-js-official',color: '#F7DF1E' },
-  { name: 'React',       icon: 'vscode-icons:file-type-reactjs',    color: '#61DAFB' },
-  { name: 'Vite',        icon: 'vscode-icons:file-type-vite',       color: '#646CFF' },
-  { name: 'TypeScript',  icon: 'vscode-icons:file-type-typescript-official', color: '#3178C6' },
-];
-
-// Row 2 — design & tools (scrolls opposite direction)
-const row2: TechItem[] = [
-  { name: 'Figma',       icon: 'vscode-icons:file-type-figma',      color: '#F24E1E' },
-  { name: 'Git',         icon: 'vscode-icons:file-type-git',        color: '#F05032' },
-  { name: 'GitHub',      icon: 'skill-icons:github-dark',           color: '#ffffff' },
-  { name: 'VS Code',     icon: 'vscode-icons:file-type-vscode',     color: '#007ACC' },
-  { name: 'Node.js',     icon: 'vscode-icons:file-type-node',       color: '#339933' },
-  { name: 'Firebase',    icon: 'vscode-icons:file-type-firebase',   color: '#FFCA28' },
-  { name: 'Figma',       icon: 'vscode-icons:file-type-figma',      color: '#F24E1E' },
-  { name: 'Git',         icon: 'vscode-icons:file-type-git',        color: '#F05032' },
-  { name: 'GitHub',      icon: 'skill-icons:github-dark',           color: '#ffffff' },
-  { name: 'VS Code',     icon: 'vscode-icons:file-type-vscode',     color: '#007ACC' },
-  { name: 'Node.js',     icon: 'vscode-icons:file-type-node',       color: '#339933' },
-  { name: 'Firebase',    icon: 'vscode-icons:file-type-firebase',   color: '#FFCA28' },
-];
-
-// Row 3 — currently learning
-const row3: TechItem[] = [
-  { name: 'Supabase',    icon: 'skill-icons:supabase-dark',         color: '#3ECF8E' },
-  { name: 'Python',      icon: 'vscode-icons:file-type-python',     color: '#3776AB' },
-  { name: 'REST APIs',   icon: 'carbon:api',                        color: '#1A73E8' },
-  { name: 'UI/UX',       icon: 'carbon:pen-fountain',               color: '#FF7262' },
-  { name: 'Responsive',  icon: 'carbon:devices',                    color: '#10B981' },
-  { name: 'Supabase',    icon: 'skill-icons:supabase-dark',         color: '#3ECF8E' },
-  { name: 'Python',      icon: 'vscode-icons:file-type-python',     color: '#3776AB' },
-  { name: 'REST APIs',   icon: 'carbon:api',                        color: '#1A73E8' },
-  { name: 'UI/UX',       icon: 'carbon:pen-fountain',               color: '#FF7262' },
-  { name: 'Responsive',  icon: 'carbon:devices',                    color: '#10B981' },
-];
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
+import { defaultTechItems, type TechItem } from '../data/skills';
 
 export const Skills: React.FC = () => {
+  const [items, setItems] = useState<TechItem[]>(defaultTechItems);
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'skills'));
+        const list: TechItem[] = [];
+        querySnapshot.forEach((docSnap) => {
+          list.push({ id: docSnap.id, ...docSnap.data() } as TechItem);
+        });
+        if (list.length > 0) {
+          list.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+          setItems(list);
+        }
+      } catch (err) {
+        console.warn('Using default tech items fallback:', err);
+      }
+    };
+    fetchSkills();
+  }, []);
+
+  const row1 = items.filter((i) => (i.row ?? 1) === 1);
+  const row2 = items.filter((i) => i.row === 2);
+  const row3 = items.filter((i) => i.row === 3);
+
+  // If a row has only a few items, repeat to ensure a smooth endless marquee
+  const fillRow = (rowItems: TechItem[]) => {
+    if (rowItems.length === 0) return [];
+    let list = [...rowItems];
+    while (list.length < 8) {
+      list = [...list, ...rowItems];
+    }
+    return [...list, ...list];
+  };
+
+  const finalRow1 = fillRow(row1.length > 0 ? row1 : defaultTechItems.filter((i) => i.row === 1));
+  const finalRow2 = fillRow(row2.length > 0 ? row2 : defaultTechItems.filter((i) => i.row === 2));
+  const finalRow3 = fillRow(row3.length > 0 ? row3 : defaultTechItems.filter((i) => i.row === 3));
+
   return (
     <StyledSkills id="skills">
       <div className="container skills-header reveal">
@@ -65,31 +55,37 @@ export const Skills: React.FC = () => {
       {/* ── Marquee rows ── */}
       <div className="marquee-wrapper">
         {/* Row 1 — left to right */}
-        <div className="marquee-track">
-          <div className="marquee-inner marquee-ltr" aria-hidden="true">
-            {[...row1, ...row1].map((item, i) => (
-              <TechPill key={i} item={item} />
-            ))}
+        {finalRow1.length > 0 && (
+          <div className="marquee-track">
+            <div className="marquee-inner marquee-ltr" aria-hidden="true">
+              {finalRow1.map((item, i) => (
+                <TechPill key={`${item.id || item.name}-${i}`} item={item} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Row 2 — right to left */}
-        <div className="marquee-track">
-          <div className="marquee-inner marquee-rtl" aria-hidden="true">
-            {[...row2, ...row2].map((item, i) => (
-              <TechPill key={i} item={item} />
-            ))}
+        {finalRow2.length > 0 && (
+          <div className="marquee-track">
+            <div className="marquee-inner marquee-rtl" aria-hidden="true">
+              {finalRow2.map((item, i) => (
+                <TechPill key={`${item.id || item.name}-${i}`} item={item} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Row 3 — left to right, slower */}
-        <div className="marquee-track">
-          <div className="marquee-inner marquee-ltr marquee-slow" aria-hidden="true">
-            {[...row3, ...row3].map((item, i) => (
-              <TechPill key={i} item={item} />
-            ))}
+        {finalRow3.length > 0 && (
+          <div className="marquee-track">
+            <div className="marquee-inner marquee-ltr marquee-slow" aria-hidden="true">
+              {finalRow3.map((item, i) => (
+                <TechPill key={`${item.id || item.name}-${i}`} item={item} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </StyledSkills>
   );
