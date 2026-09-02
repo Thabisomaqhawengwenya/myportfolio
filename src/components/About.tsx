@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { collection, addDoc, doc, getDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 
 export const About: React.FC = () => {
@@ -9,21 +9,23 @@ export const About: React.FC = () => {
   const [isCvEnabled, setIsCvEnabled] = useState(true);
 
   useEffect(() => {
-    const fetchCvConfig = async () => {
-      try {
-        const docSnap = await getDoc(doc(db, 'settings', 'cv'));
+    // Real-time listener for CV configuration in Firebase Firestore
+    const unsubscribe = onSnapshot(
+      doc(db, 'settings', 'cv'),
+      (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data();
           if (data.url) setCvUrl(data.url);
           if (data.fileName) setCvFileName(data.fileName);
           if (data.enabled !== undefined) setIsCvEnabled(Boolean(data.enabled));
         }
-      } catch (err) {
-        console.warn('Using default CV fallback:', err);
+      },
+      (err) => {
+        console.warn('Using default CV fallback due to snapshot error:', err);
       }
-    };
+    );
 
-    fetchCvConfig();
+    return () => unsubscribe();
   }, []);
 
   const handleDownloadCV = async () => {

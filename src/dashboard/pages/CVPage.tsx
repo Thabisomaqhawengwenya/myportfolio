@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
-import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, onSnapshot, setDoc, collection, getDocs } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../../firebase';
 
@@ -45,9 +45,10 @@ export const CVPage: React.FC<CVPageProps> = ({ cvDownloadsCount = 0 }) => {
 
   // Fetch CV configuration & download events from Firestore
   useEffect(() => {
-    const fetchCVData = async () => {
-      try {
-        const docSnap = await getDoc(doc(db, 'settings', 'cv'));
+    // Real-time listener for CV config in Firestore
+    const unsubCv = onSnapshot(
+      doc(db, 'settings', 'cv'),
+      (docSnap) => {
         if (docSnap.exists()) {
           const data = docSnap.data() as CVConfig;
           setCvConfig({
@@ -59,8 +60,17 @@ export const CVPage: React.FC<CVPageProps> = ({ cvDownloadsCount = 0 }) => {
           });
           setCustomUrlInput(data.url || '');
         }
+        setLoading(false);
+      },
+      (err) => {
+        console.warn('CV config snapshot error:', err);
+        setLoading(false);
+      }
+    );
 
-        // Fetch recent download telemetry events
+    // Fetch recent download telemetry events
+    const fetchTelemetry = async () => {
+      try {
         const eventsSnap = await getDocs(collection(db, 'events'));
         const dlEvents: DownloadEvent[] = [];
         eventsSnap.forEach((snap) => {
@@ -76,13 +86,13 @@ export const CVPage: React.FC<CVPageProps> = ({ cvDownloadsCount = 0 }) => {
         dlEvents.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
         setRecentDownloads(dlEvents.slice(0, 5));
       } catch (err) {
-        console.warn('Using default CV configuration:', err);
-      } finally {
-        setLoading(false);
+        console.warn('Telemetry fetch warning:', err);
       }
     };
 
-    fetchCVData();
+    fetchTelemetry();
+
+    return () => unsubCv();
   }, []);
 
   const showToast = (text: string, type: 'success' | 'error' = 'success') => {
