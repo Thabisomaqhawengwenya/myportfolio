@@ -18,6 +18,7 @@ interface Project {
   };
   liveDemoUrl?: string;
   githubUrl?: string;
+  order?: number;
 }
 
 interface ProjectsPageProps {
@@ -26,10 +27,17 @@ interface ProjectsPageProps {
   searchQuery: string;
 }
 
+type FilterCategory = 'all' | 'business' | 'personal' | 'education' | 'utility' | 'gift';
+
 export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProjects, searchQuery }) => {
   // Editing state
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<FilterCategory>('all');
+
+  // Drag and drop state
+  const [draggedId, setDraggedId] = useState<string | null>(null);
+  const [dragOverId, setDragOverId] = useState<string | null>(null);
 
   // Form inputs
   const [title, setTitle] = useState('');
@@ -49,8 +57,12 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Filter projects by search query
-  const filtered = projects.filter((p) => {
+  // Filter projects by category and search query
+  const displayedProjects = projects.filter((p) => {
+    const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
+    if (!matchesCategory) return false;
+
+    if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
       p.title.toLowerCase().includes(q) ||
@@ -58,6 +70,91 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
       p.tags.some((t) => t.toLowerCase().includes(q))
     );
   });
+
+  const categories: { key: FilterCategory; label: string }[] = [
+    { key: 'all', label: 'All Projects' },
+    { key: 'business', label: 'Business' },
+    { key: 'personal', label: 'Personal' },
+    { key: 'education', label: 'Education' },
+    { key: 'utility', label: 'Utility' },
+    { key: 'gift', label: 'Gift' },
+  ];
+
+  const getCategoryCount = (cat: FilterCategory) => {
+    if (cat === 'all') return projects.length;
+    return projects.filter((p) => p.category === cat).length;
+  };
+
+  // Reordering handlers
+  const handleMove = (projectId: string, direction: 'up' | 'down') => {
+    const viewIndex = displayedProjects.findIndex((p) => p.id === projectId);
+    if (viewIndex === -1) return;
+
+    const targetViewIndex = direction === 'up' ? viewIndex - 1 : viewIndex + 1;
+    if (targetViewIndex < 0 || targetViewIndex >= displayedProjects.length) return;
+
+    const targetProjectId = displayedProjects[targetViewIndex].id;
+
+    const fullIndexA = projects.findIndex((p) => p.id === projectId);
+    const fullIndexB = projects.findIndex((p) => p.id === targetProjectId);
+    if (fullIndexA === -1 || fullIndexB === -1) return;
+
+    const newProjects = [...projects];
+    const itemA = newProjects[fullIndexA];
+    const itemB = newProjects[fullIndexB];
+
+    newProjects[fullIndexA] = itemB;
+    newProjects[fullIndexB] = itemA;
+
+    const updated = newProjects.map((p, i) => ({ ...p, order: i }));
+    onSaveProjects(updated);
+  };
+
+  const handleDragStart = (e: React.DragEvent, id: string) => {
+    setDraggedId(id);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', id);
+  };
+
+  const handleDragOver = (e: React.DragEvent, id: string) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragOverId !== id) {
+      setDragOverId(id);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent, targetId: string) => {
+    e.preventDefault();
+    if (!draggedId || draggedId === targetId) {
+      setDraggedId(null);
+      setDragOverId(null);
+      return;
+    }
+
+    const fromIndex = projects.findIndex((p) => p.id === draggedId);
+    const toIndex = projects.findIndex((p) => p.id === targetId);
+
+    if (fromIndex === -1 || toIndex === -1) {
+      setDraggedId(null);
+      setDragOverId(null);
+      return;
+    }
+
+    const newProjects = [...projects];
+    const [draggedItem] = newProjects.splice(fromIndex, 1);
+    newProjects.splice(toIndex, 0, draggedItem);
+
+    const updated = newProjects.map((p, i) => ({ ...p, order: i }));
+    onSaveProjects(updated);
+    setDraggedId(null);
+    setDragOverId(null);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedId(null);
+    setDragOverId(null);
+  };
 
   const handleEdit = (project: Project) => {
     setEditingId(project.id);
@@ -89,7 +186,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
 
   const handleDelete = (id: string) => {
     if (window.confirm('Are you sure you want to delete this project?')) {
-      const updated = projects.filter((p) => p.id !== id);
+      const updated = projects.filter((p) => p.id !== id).map((p, i) => ({ ...p, order: i }));
       onSaveProjects(updated);
     }
   };
@@ -117,7 +214,6 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
     if (!files || files.length === 0) return;
     const file = files[0];
 
-    // Sanitize filename
     const ext = file.name.split('.').pop() || 'png';
     const cleanName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9]/g, '_')}.${ext}`;
 
@@ -152,6 +248,8 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
       .map((t) => t.trim())
       .filter((t) => t.length > 0);
 
+    const existingProject = editingId ? projects.find((p) => p.id === editingId) : undefined;
+
     const projectData: Project = {
       id: editingId || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
       title: title.trim(),
@@ -160,6 +258,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
       tags,
       liveDemoUrl: liveDemoUrl.trim() || undefined,
       githubUrl: githubUrl.trim() || undefined,
+      order: existingProject?.order ?? projects.length,
     };
 
     projectData.image = imageUrl.trim() || undefined;
@@ -177,14 +276,13 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
     if (editingId) {
       updated = projects.map((p) => (p.id === editingId ? projectData : p));
     } else {
-      // Check for duplicate ID
       if (projects.some((p) => p.id === projectData.id)) {
         projectData.id = `${projectData.id}-${Date.now().toString().slice(-4)}`;
       }
       updated = [...projects, projectData];
     }
 
-    onSaveProjects(updated);
+    onSaveProjects(updated.map((p, i) => ({ ...p, order: i })));
     setShowForm(false);
     setEditingId(null);
   };
@@ -192,7 +290,12 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
   return (
     <StyledProjectsPage>
       <div className="section-header">
-        <h2>Portfolio Projects</h2>
+        <div className="header-titles">
+          <h2>Portfolio Projects</h2>
+          <p className="header-subtitle">
+            Arrange the order of your projects below using the up/down arrows or drag-and-drop.
+          </p>
+        </div>
         {!showForm && (
           <button className="add-btn" onClick={handleAddNew}>
             + Add Project
@@ -388,103 +491,175 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
         </div>
       )}
 
-      {/* Projects Grid List */}
+      {/* Projects Category Filter & Reordering Controls */}
+      <div className="category-filter-bar">
+        {categories.map(({ key, label }) => {
+          const count = getCategoryCount(key);
+          const isActive = selectedCategory === key;
+          return (
+            <button
+              key={key}
+              className={`category-pill ${isActive ? 'active' : ''}`}
+              onClick={() => setSelectedCategory(key)}
+            >
+              <span>{label}</span>
+              <span className="count-tag">{count}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Projects List Panel */}
       <div className="projects-list-panel">
-        <div className="panel-title">
-          <h3>All Portfolio Items ({filtered.length})</h3>
+        <div className="panel-title-row">
+          <div className="panel-title">
+            <h3>Portfolio Items ({displayedProjects.length})</h3>
+            <span className="reorder-tip">
+              <Icon icon="lucide:arrow-up-down" width={14} height={14} />
+              Use the arrows or drag rows to arrange how items appear on your live site
+            </span>
+          </div>
         </div>
 
-        {filtered.length === 0 ? (
-          <div className="empty-state">No projects found matching the query.</div>
+        {displayedProjects.length === 0 ? (
+          <div className="empty-state">No projects found matching the selected filter.</div>
         ) : (
           <div className="projects-table">
             <div className="table-header">
+              <div style={{ textAlign: 'center' }}>Order</div>
               <div>Preview</div>
-              <div>Title & Description</div>
+              <div>Title &amp; Description</div>
               <div>Category</div>
               <div>Languages</div>
               <div style={{ textAlign: 'right' }}>Actions</div>
             </div>
 
-            {filtered.map((project) => (
-              <div key={project.id} className="table-row">
-                <div className="table-preview">
-                  {project.image ? (
-                    <img src={project.image} alt={project.title} />
-                  ) : (
-                    <div className="table-placeholder-box">
-                      {project.placeholder?.badge || 'Txt'}
-                    </div>
-                  )}
-                </div>
+            {displayedProjects.map((project, idx) => {
+              const isFirst = idx === 0;
+              const isLast = idx === displayedProjects.length - 1;
+              const isDragging = draggedId === project.id;
+              const isDragOver = dragOverId === project.id;
 
-                <div className="table-info">
-                  <h4>{project.title}</h4>
-                  <p>{project.description.slice(0, 100)}...</p>
-                  <div className="links">
-                    {project.liveDemoUrl && (
-                      <a href={project.liveDemoUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                        Demo
-                        <Icon
-                          icon="lucide:external-link"
-                          width={14}
-                          height={14}
-                          style={{ color: '#1A73E8' }}
-                        />
-                      </a>
-                    )}
-                    {project.githubUrl && (
-                      <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                        GitHub
-                        <Icon
-                          icon="lucide:github"
-                          width={14}
-                          height={14}
-                          style={{ color: '#1A73E8' }}
-                        />
-                      </a>
+              return (
+                <div
+                  key={project.id}
+                  className={`table-row ${isDragging ? 'is-dragging' : ''} ${isDragOver ? 'is-drag-over' : ''}`}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, project.id)}
+                  onDragOver={(e) => handleDragOver(e, project.id)}
+                  onDrop={(e) => handleDrop(e, project.id)}
+                  onDragEnd={handleDragEnd}
+                >
+                  {/* Order & Reorder Controls */}
+                  <div className="order-cell">
+                    <div className="drag-handle" title="Drag to reorder">
+                      <Icon icon="lucide:grip-vertical" width={16} height={16} />
+                    </div>
+                    <span className="order-number">#{idx + 1}</span>
+                    <div className="reorder-arrows">
+                      <button
+                        type="button"
+                        className="arrow-btn"
+                        onClick={() => handleMove(project.id, 'up')}
+                        disabled={isFirst}
+                        title="Move Up"
+                      >
+                        <Icon icon="lucide:chevron-up" width={15} height={15} />
+                      </button>
+                      <button
+                        type="button"
+                        className="arrow-btn"
+                        onClick={() => handleMove(project.id, 'down')}
+                        disabled={isLast}
+                        title="Move Down"
+                      >
+                        <Icon icon="lucide:chevron-down" width={15} height={15} />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="table-preview">
+                    {project.image ? (
+                      <img src={project.image} alt={project.title} />
+                    ) : (
+                      <div className="table-placeholder-box">
+                        {project.placeholder?.badge || 'Txt'}
+                      </div>
                     )}
                   </div>
-                </div>
 
-                <div className="table-category">
-                  <span className={`category-tag cat-${project.category}`}>
-                    {project.category}
-                  </span>
-                </div>
+                  <div className="table-info">
+                    <h4>{project.title}</h4>
+                    <p>{project.description.slice(0, 100)}...</p>
+                    <div className="links">
+                      {project.liveDemoUrl && (
+                        <a
+                          href={project.liveDemoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                        >
+                          Demo
+                          <Icon icon="lucide:external-link" width={14} height={14} style={{ color: '#1A73E8' }} />
+                        </a>
+                      )}
+                      {project.githubUrl && (
+                        <a
+                          href={project.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                        >
+                          GitHub
+                          <Icon icon="lucide:github" width={14} height={14} style={{ color: '#1A73E8' }} />
+                        </a>
+                      )}
+                    </div>
+                  </div>
 
-                <div className="table-tags">
-                  {project.tags.map((t, i) => (
-                    <span key={i} className="tag-pill">
-                      {t}
+                  <div className="table-category">
+                    <span className={`category-tag cat-${project.category}`}>
+                      {project.category}
                     </span>
-                  ))}
-                </div>
+                  </div>
 
-                <div className="table-actions">
-                  <button className="action-btn edit-action" onClick={() => handleEdit(project)} title="Edit Project">
-                    <Icon
-                      icon="lucide:pencil"
-                      width={18}
-                      height={18}
-                      style={{ color: '#1A73E8' }}
-                    />
-                  </button>
-                  <button
-                    className="action-btn delete-action"
-                    onClick={() => handleDelete(project.id)}
-                    title="Delete Project"
-                  >
-                    <Icon
-                      icon="lucide:trash-2"
-                      width={18}
-                      height={18}
-                      style={{ color: '#b91c1c' }}
-                    />
-                  </button>
+                  <div className="table-tags">
+                    {project.tags.map((t, i) => (
+                      <span key={i} className="tag-pill">
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="table-actions">
+                    <button
+                      className="action-btn edit-action"
+                      onClick={() => handleEdit(project)}
+                      title="Edit Project"
+                    >
+                      <Icon
+                        icon="lucide:pencil"
+                        width={18}
+                        height={18}
+                        style={{ color: '#1A73E8' }}
+                      />
+                    </button>
+                    <button
+                      className="action-btn delete-action"
+                      onClick={() => handleDelete(project.id)}
+                      title="Delete Project"
+                    >
+                      <Icon
+                        icon="lucide:trash-2"
+                        width={18}
+                        height={18}
+                        style={{ color: '#b91c1c' }}
+                      />
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -501,12 +676,22 @@ const StyledProjectsPage = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
 
-    h2 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #0b1e30;
-      margin: 0;
+    .header-titles {
+      h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #0b1e30;
+        margin: 0;
+      }
+
+      .header-subtitle {
+        margin: 0.35rem 0 0;
+        font-size: 0.9rem;
+        color: #64748b;
+      }
     }
 
     .add-btn {
@@ -518,10 +703,65 @@ const StyledProjectsPage = styled.div`
       font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(13, 70, 38, 0.2);
+      box-shadow: 0 4px 12px rgba(26, 115, 232, 0.25);
+      transition: background 180ms ease, transform 180ms ease;
 
       &:hover {
         background: #1557B0;
+        transform: translateY(-1px);
+      }
+    }
+  }
+
+  .category-filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    padding-bottom: 0.25rem;
+
+    .category-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.55rem 1rem;
+      border-radius: 99px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      color: #475569;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 180ms ease;
+
+      &:hover {
+        border-color: #cbd5e1;
+        background: #f8fafc;
+        color: #0f172a;
+      }
+
+      &.active {
+        background: #1A73E8;
+        border-color: #1A73E8;
+        color: #ffffff;
+        box-shadow: 0 2px 8px rgba(26, 115, 232, 0.25);
+
+        .count-tag {
+          background: rgba(255, 255, 255, 0.25);
+          color: #ffffff;
+        }
+      }
+
+      .count-tag {
+        display: inline-grid;
+        place-items: center;
+        min-width: 1.35rem;
+        height: 1.35rem;
+        padding: 0 0.35rem;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: #64748b;
+        font-size: 0.75rem;
+        font-weight: 700;
       }
     }
   }
@@ -713,12 +953,28 @@ const StyledProjectsPage = styled.div`
     border: 1px solid #eaeaea;
     color: #111;
 
-    .panel-title {
+    .panel-title-row {
       margin-bottom: 1.2rem;
+    }
+
+    .panel-title {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+
       h3 {
         margin: 0;
-        font-size: 1.1rem;
-        font-weight: 600;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      .reorder-tip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        font-size: 0.8rem;
+        color: #64748b;
       }
     }
 
@@ -732,25 +988,26 @@ const StyledProjectsPage = styled.div`
     .projects-table {
       display: flex;
       flex-direction: column;
+      gap: 0.35rem;
     }
 
     .table-header,
     .table-row {
       display: grid;
-      grid-template-columns: 80px 2.2fr 1fr 1.5fr 140px;
-      gap: 1.25rem;
+      grid-template-columns: 110px 80px 2.2fr 1fr 1.5fr 110px;
+      gap: 1.15rem;
       align-items: center;
-      padding: 0.85rem 0.5rem;
+      padding: 0.75rem 0.65rem;
       font-size: 0.88rem;
 
-      @media (max-width: 900px) {
-        grid-template-columns: 80px 1.8fr 1fr 100px;
+      @media (max-width: 1024px) {
+        grid-template-columns: 100px 70px 1.8fr 1fr 90px;
         .table-tags {
           display: none;
         }
       }
-      @media (max-width: 600px) {
-        grid-template-columns: 1fr auto;
+      @media (max-width: 640px) {
+        grid-template-columns: 85px 1fr auto;
         .table-preview,
         .table-category {
           display: none;
@@ -761,24 +1018,107 @@ const StyledProjectsPage = styled.div`
     .table-header {
       border-bottom: 2px solid #f0f0f0;
       font-weight: 700;
-      color: #666;
-      font-size: 0.8rem;
+      color: #64748b;
+      font-size: 0.78rem;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
 
     .table-row {
-      border-bottom: 1px solid #f4f4f4;
+      border-radius: 0.75rem;
+      border: 1px solid #f1f5f9;
+      background: #ffffff;
+      transition: all 180ms ease;
 
-      &:last-child {
-        border-bottom: 0;
+      &:hover {
+        background: #f8fafc;
+        border-color: #cbd5e1;
+      }
+
+      &.is-dragging {
+        opacity: 0.45;
+        border-style: dashed;
+        border-color: #1A73E8;
+      }
+
+      &.is-drag-over {
+        border-color: #1A73E8;
+        background: #eff6ff;
+        box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+      }
+    }
+
+    .order-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+
+      .drag-handle {
+        color: #94a3b8;
+        cursor: grab;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.2rem;
+        border-radius: 4px;
+
+        &:hover {
+          color: #475569;
+          background: #f1f5f9;
+        }
+
+        &:active {
+          cursor: grabbing;
+        }
+      }
+
+      .order-number {
+        font-weight: 700;
+        font-size: 0.82rem;
+        color: #1A73E8;
+        background: #eff6ff;
+        padding: 0.15rem 0.45rem;
+        border-radius: 6px;
+        border: 1px solid #dbeafe;
+      }
+
+      .reorder-arrows {
+        display: flex;
+        flex-direction: column;
+        gap: 0.15rem;
+
+        .arrow-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 1.25rem;
+          height: 1.1rem;
+          padding: 0;
+          border: 1px solid #e2e8f0;
+          border-radius: 3px;
+          background: #f8fafc;
+          color: #475569;
+          cursor: pointer;
+          transition: all 140ms ease;
+
+          &:hover:not(:disabled) {
+            background: #1A73E8;
+            border-color: #1A73E8;
+            color: #ffffff;
+          }
+
+          &:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+          }
+        }
       }
     }
 
     .table-preview {
       width: 70px;
       height: 48px;
-      border-radius: 4px;
+      border-radius: 6px;
       overflow: hidden;
       border: 1px solid #eee;
 

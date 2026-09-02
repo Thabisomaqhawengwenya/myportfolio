@@ -28,6 +28,7 @@ interface Project {
   };
   liveDemoUrl?: string;
   githubUrl?: string;
+  order?: number;
 }
 
 export const Dashboard: React.FC = () => {
@@ -109,18 +110,21 @@ export const Dashboard: React.FC = () => {
         });
 
         if (list.length > 0) {
+          list.sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
           setProjects(list);
           setLoading(false);
         } else {
           // Fallback to local JSON if Firestore is empty
           const res = await fetch('/data/projects.json');
           if (res.ok) {
-            const localData = await res.json();
+            const localData: Project[] = await res.json();
+            localData.sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
             setProjects(localData);
             
             // Auto-populate Firestore with local JSON so the database isn't empty
-            for (const project of localData) {
-              await setDoc(doc(db, 'projects', project.id), project);
+            for (let i = 0; i < localData.length; i++) {
+              const proj = { ...localData[i], order: localData[i].order ?? i };
+              await setDoc(doc(db, 'projects', proj.id), proj);
             }
           }
           setLoading(false);
@@ -129,7 +133,8 @@ export const Dashboard: React.FC = () => {
         console.error('Error fetching projects from Firestore, falling back to local JSON:', err);
         const res = await fetch('/data/projects.json');
         if (res.ok) {
-          const localData = await res.json();
+          const localData: Project[] = await res.json();
+          localData.sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
           setProjects(localData);
         }
         setLoading(false);
@@ -141,7 +146,13 @@ export const Dashboard: React.FC = () => {
 
   // Save projects to Cloud Firestore
   const handleSaveProjects = async (updatedProjects: Project[]) => {
-    setProjects(updatedProjects);
+    // Ensure sequential order property
+    const formattedProjects = updatedProjects.map((p, idx) => ({
+      ...p,
+      order: p.order ?? idx,
+    }));
+
+    setProjects(formattedProjects);
     setSaveStatus('saving');
 
     try {
@@ -153,7 +164,7 @@ export const Dashboard: React.FC = () => {
       });
 
       // 2. Save/Upsert all projects in the updated list
-      for (const project of updatedProjects) {
+      for (const project of formattedProjects) {
         const docRef = doc(db, 'projects', project.id);
         await setDoc(docRef, project, { merge: true });
         existingIds.delete(project.id);
@@ -699,11 +710,83 @@ const StyledDashboard = styled.div`
     }
 
     /* Projects Page Specific Overrides */
-    .table-row {
+    .header-subtitle, .reorder-tip {
+      color: var(--text-secondary) !important;
+    }
+
+    .category-pill {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+      color: var(--text-secondary) !important;
+
+      &:hover {
+        background: var(--hover-bg) !important;
+        color: var(--text-primary) !important;
+      }
+
+      &.active {
+        background: #1A73E8 !important;
+        border-color: #1A73E8 !important;
+        color: #ffffff !important;
+      }
+
+      .count-tag {
+        background: var(--input-bg) !important;
+        color: var(--text-secondary) !important;
+      }
+    }
+
+    .table-header {
       border-bottom-color: var(--border-color) !important;
+      color: var(--text-secondary) !important;
+    }
+
+    .table-row {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
       
+      &:hover {
+        background: var(--hover-bg) !important;
+        border-color: #334155 !important;
+      }
+
+      &.is-drag-over {
+        background: #1e293b !important;
+        border-color: #38bdf8 !important;
+        box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.3) !important;
+      }
+
+      .order-number {
+        background: #1e293b !important;
+        color: #38bdf8 !important;
+        border-color: #334155 !important;
+      }
+
+      .drag-handle {
+        color: var(--text-secondary) !important;
+        &:hover {
+          background: var(--hover-bg) !important;
+          color: var(--text-primary) !important;
+        }
+      }
+
+      .arrow-btn {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: var(--text-secondary) !important;
+
+        &:hover:not(:disabled) {
+          background: #1A73E8 !important;
+          border-color: #1A73E8 !important;
+          color: #ffffff !important;
+        }
+      }
+
       .table-info h4 {
         color: var(--text-primary) !important;
+      }
+      .table-info p {
+        color: var(--text-secondary) !important;
       }
       .table-category, .table-tags {
         color: var(--text-secondary) !important;

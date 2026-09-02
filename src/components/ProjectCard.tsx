@@ -17,6 +17,7 @@ interface Project {
   };
   liveDemoUrl?: string;
   githubUrl?: string;
+  order?: number;
 }
 
 interface ProjectCardProps {

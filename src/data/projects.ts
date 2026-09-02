@@ -24,6 +24,7 @@ export interface Project {
   liveDemoUrl?: string;
   githubUrl?: string;
   featured?: boolean;
+  order?: number;
 }
 
 export const projectsData: Project[] = [

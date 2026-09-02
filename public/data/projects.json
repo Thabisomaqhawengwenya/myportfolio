@@ -11,7 +11,8 @@
     ],
     "liveDemoUrl": "https://myfirstwebsite-five-theta.vercel.app/",
     "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/myfirstwebsite.git",
-    "image": "/images/firstwebsite.webp"
+    "image": "/images/firstwebsite.webp",
+    "order": 0
   },
   {
     "id": "brainwave-io",
@@ -26,7 +27,8 @@
     ],
     "image": "/images/brainwave.webp",
     "liveDemoUrl": "https://brainwave-io-six.vercel.app/",
-    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/brainwave.io.git"
+    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/brainwave.io.git",
+    "order": 1
   },
   {
     "id": "shark-web",
@@ -41,7 +43,8 @@
     ],
     "liveDemoUrl": "https://sharks-web.vercel.app/",
     "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/sharks.web.git",
-    "image": "/images/shark.web.webp"
+    "image": "/images/shark.web.webp",
+    "order": 2
   },
   {
     "id": "tutorme",
@@ -54,7 +57,8 @@
       "Education"
     ],
     "image": "/images/tutorme.webp",
-    "liveDemoUrl": "https://static-real-57469152.figma.site"
+    "liveDemoUrl": "https://static-real-57469152.figma.site",
+    "order": 3
   },
   {
     "id": "weather-dashboard",
@@ -68,7 +72,8 @@
     ],
     "image": "/images/weatherapp.webp",
     "liveDemoUrl": "https://thabisomaqhawengwenya-netizen.github.io/Weather-Dashboard-App-/",
-    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/Weather-Dashboard-App-.git"
+    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/Weather-Dashboard-App-.git",
+    "order": 4
   },
   {
     "id": "age-calculator",
@@ -86,7 +91,8 @@
       "copy": "Calculator",
       "mediaClass": "media-six"
     },
-    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/age_calculator.git"
+    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/age_calculator.git",
+    "order": 5
   },
   {
     "id": "pop-up-notification",
@@ -104,7 +110,8 @@
       "copy": "Notification",
       "mediaClass": "media-five"
     },
-    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/project_4-website.git"
+    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/project_4-website.git",
+    "order": 6
   },
   {
     "id": "calculator",
@@ -122,7 +129,8 @@
       "copy": "Calculator",
       "mediaClass": "media-six"
     },
-    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/calculator.git"
+    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/calculator.git",
+    "order": 7
   },
   {
     "id": "student-register",
@@ -136,7 +144,8 @@
     ],
     "image": "/images/student-register.webp",
     "liveDemoUrl": "https://thabisomaqhawengwenya-netizen.github.io/students_register/",
-    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/students_register.git"
+    "githubUrl": "https://github.com/thabisomaqhawengwenya-netizen/students_register.git",
+    "order": 8
   },
   {
     "id": "emganwini-main-sda-church",
@@ -150,7 +159,8 @@
     ],
     "image": "/images/emganwini-main-sda-church.webp",
     "isEmganwiniImage": true,
-    "liveDemoUrl": "https://emg-main.vercel.app/"
+    "liveDemoUrl": "https://emg-main.vercel.app/",
+    "order": 9
   },
   {
     "id": "toyota-zw",
@@ -164,7 +174,8 @@
     ],
     "image": "/images/Toyota-zw.webp",
     "liveDemoUrl": "https://toyota-zw.vercel.app/",
-    "githubUrl": "https://github.com/Thabisomaqhawengwenya/Toyota-zw.git"
+    "githubUrl": "https://github.com/Thabisomaqhawengwenya/Toyota-zw.git",
+    "order": 10
   },
   {
     "id": "elohims-legacy",
@@ -179,7 +190,8 @@
     ],
     "image": "/images/elohims-legacy.webp",
     "liveDemoUrl": "https://el-topaz.vercel.app/",
-    "githubUrl": "https://github.com/Thabisomaqhawengwenya/el.git"
+    "githubUrl": "https://github.com/Thabisomaqhawengwenya/el.git",
+    "order": 11
   },
   {
     "id": "island-child-apparel",
@@ -192,7 +204,8 @@
       "styled-components"
     ],
     "liveDemoUrl": "https://islandchildapparela.vercel.app/",
-    "image": "/images/1786796797438-Screenshot_2026_08_13_122201_png.webp"
+    "image": "/images/1786796797438-Screenshot_2026_08_13_122201_png.webp",
+    "order": 12
   },
   {
     "id": "tnfootwear",
@@ -205,7 +218,8 @@
       "and Styled-components"
     ],
     "liveDemoUrl": "https://tnfootwear.vercel.app",
-    "image": "/images/1786964505605-Screenshot_2026_08_17_125731_png.webp"
+    "image": "/images/1786964505605-Screenshot_2026_08_17_125731_png.webp",
+    "order": 13
   },
   {
     "id": "codefam",
@@ -218,7 +232,8 @@
     ],
     "liveDemoUrl": "https://codefam.dev/",
     "githubUrl": "https://github.com/codefam-dev",
-    "image": "/images/1787750527921-Screenshot_2026_08_26_152143_png.png"
+    "image": "/images/1787750527921-Screenshot_2026_08_26_152143_png.png",
+    "order": 14
   },
   {
     "id": "agrosmart",
@@ -231,7 +246,8 @@
       "styled-components"
     ],
     "liveDemoUrl": "https://agrosmart-one.vercel.app/",
-    "image": "/images/1788022376710-Screenshot_2026_08_06_120658_png.png"
+    "image": "/images/1788022376710-Screenshot_2026_08_06_120658_png.png",
+    "order": 15
   },
   {
     "id": "mehluli-s-portfolio",
@@ -244,6 +260,7 @@
       "Styled-components"
     ],
     "liveDemoUrl": "https://mehluli.vercel.app/",
-    "image": "/images/1788022694489-Screenshot_2026_08_25_094705_png.png"
+    "image": "/images/1788022694489-Screenshot_2026_08_25_094705_png.png",
+    "order": 16
   }
 ]

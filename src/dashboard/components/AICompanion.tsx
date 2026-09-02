@@ -11,6 +11,7 @@ interface Project {
   image?: string;
   liveDemoUrl?: string;
   githubUrl?: string;
+  order?: number;
 }
 
 interface AICompanionProps {

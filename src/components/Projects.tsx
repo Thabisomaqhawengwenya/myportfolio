@@ -21,6 +21,7 @@ interface Project {
   };
   liveDemoUrl?: string;
   githubUrl?: string;
+  order?: number;
 }
 
 type Category = 'personal' | 'business' | 'education' | 'utility' | 'gift';
@@ -41,12 +42,14 @@ export const Projects: React.FC = () => {
         });
 
         if (list.length > 0) {
+          list.sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
           setProjects(list);
         } else {
           // Fallback to local JSON if Firestore is empty
           const res = await fetch('/data/projects.json');
           if (res.ok) {
-            const localData = await res.json();
+            const localData: Project[] = await res.json();
+            localData.sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
             setProjects(localData);
           }
         }
@@ -54,7 +57,8 @@ export const Projects: React.FC = () => {
         console.error('Error fetching projects from Firestore, falling back to local JSON:', err);
         const res = await fetch('/data/projects.json');
         if (res.ok) {
-          const localData = await res.json();
+          const localData: Project[] = await res.json();
+          localData.sort((a, b) => (a.order ?? 9999) - (b.order ?? 9999));
           setProjects(localData);
         }
       }
