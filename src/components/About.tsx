@@ -1,7 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 export const About: React.FC = () => {
+  const handleDownloadCV = async () => {
+    try {
+      await addDoc(collection(db, 'events'), {
+        type: 'cv_download',
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent || 'Unknown',
+      });
+    } catch (err) {
+      // Silently catch so the file download is never blocked
+      console.warn('CV download telemetry error:', err);
+    }
+  };
+
   return (
     <StyledAbout className="section" id="about">
       <div className="container about-grid">
@@ -36,6 +51,7 @@ export const About: React.FC = () => {
             className="btn btn-primary about-cv-btn"
             href="/Maqhawe_CV.pdf"
             download="Maqhawe_CV.pdf"
+            onClick={handleDownloadCV}
           >
             Download CV
           </a>

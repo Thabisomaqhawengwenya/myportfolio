@@ -24,6 +24,14 @@ service cloud.firestore {
                                     (request.auth.token.email == "thabisomaqhawengwenya@gmail.com" || 
                                      request.auth.token.email == "thabisongwenya39@gmail.com");
     }
+
+    // Telemetry and user interaction events (e.g. CV downloads)
+    match /events/{eventId} {
+      allow create: if true;
+      allow read, update, delete: if request.auth != null && 
+                                    (request.auth.token.email == "thabisomaqhawengwenya@gmail.com" || 
+                                     request.auth.token.email == "thabisongwenya39@gmail.com");
+    }
   }
 }
 

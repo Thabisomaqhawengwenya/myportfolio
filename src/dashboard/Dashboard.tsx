@@ -35,6 +35,7 @@ interface Project {
 export const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
+  const [cvDownloadsCount, setCvDownloadsCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'messages' | 'calendar' | 'analytics' | 'settings'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
@@ -157,8 +158,25 @@ export const Dashboard: React.FC = () => {
       }
     };
 
+    const fetchEvents = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'events'));
+        let cvCount = 0;
+        querySnapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          if (data.type === 'cv_download') {
+            cvCount++;
+          }
+        });
+        setCvDownloadsCount(cvCount);
+      } catch (err) {
+        console.error('Error fetching events from Firestore:', err);
+      }
+    };
+
     fetchProjects();
     fetchMessages();
+    fetchEvents();
   }, [user]);
 
   // Save projects to Cloud Firestore
@@ -527,6 +545,8 @@ export const Dashboard: React.FC = () => {
           {activeTab === 'dashboard' && (
             <OverviewPage
               projects={projects}
+              messages={messages}
+              cvDownloadsCount={cvDownloadsCount}
               onNavigateToTab={setActiveTab}
             />
           )}
@@ -820,6 +840,116 @@ const StyledDashboard = styled.div`
       /* Overview card statistics */
       .stat-value {
         color: var(--text-primary) !important;
+      }
+      .arrow-icon {
+        background: #1e293b !important;
+        color: var(--text-primary) !important;
+      }
+    }
+
+    /* Overview Page Specific Overrides */
+    .inquiries-panel {
+      .stream-item {
+        background: #090d16 !important;
+        border-color: var(--border-color) !important;
+
+        &:hover {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+        }
+
+        &.is-unread {
+          background: #0f172a !important;
+          border-color: #38bdf8 !important;
+        }
+
+        .sender-name {
+          color: var(--text-primary) !important;
+        }
+        .stream-time {
+          color: var(--text-secondary) !important;
+        }
+        .stream-snippet {
+          color: var(--text-secondary) !important;
+        }
+      }
+    }
+
+    .overview-summary-panel {
+      .summary-row {
+        background: #090d16 !important;
+        .summary-label {
+          color: var(--text-secondary) !important;
+        }
+        .summary-val {
+          color: var(--text-primary) !important;
+        }
+      }
+    }
+
+    .health-monitor-panel {
+      .health-subtitle {
+        color: var(--text-secondary) !important;
+      }
+
+      .health-card {
+        background: #090d16 !important;
+        border-color: var(--border-color) !important;
+
+        &:hover {
+          border-color: #334155 !important;
+        }
+
+        .project-title-area h4 {
+          color: var(--text-primary) !important;
+        }
+
+        .url-preview {
+          background: #0f172a !important;
+          border-color: var(--border-color) !important;
+          color: #38bdf8 !important;
+        }
+
+        .status-idle {
+          background: #1e293b !important;
+          color: var(--text-secondary) !important;
+        }
+
+        .status-checking {
+          background: #451a03 !important;
+          color: #fbbf24 !important;
+        }
+
+        .status-online {
+          background: #064e3b !important;
+          color: #34d399 !important;
+        }
+
+        .status-offline {
+          background: #450a0a !important;
+          color: #f87171 !important;
+        }
+
+        .health-action-btn {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+          color: var(--text-primary) !important;
+
+          &:hover {
+            background: #334155 !important;
+          }
+
+          &.demo-btn {
+            background: #1e3a8a !important;
+            border-color: #2563eb !important;
+            color: #93c5fd !important;
+
+            &:hover {
+              background: #1d4ed8 !important;
+              color: #ffffff !important;
+            }
+          }
+        }
       }
     }
 
