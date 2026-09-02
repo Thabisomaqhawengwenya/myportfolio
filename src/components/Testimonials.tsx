@@ -7,11 +7,32 @@ import { defaultTestimonials, type Testimonial } from '../data/testimonials';
 
 export const Testimonials: React.FC = () => {
   const [testimonials, setTestimonials] = useState<Testimonial[]>(defaultTestimonials);
-  const [isSectionEnabled, setIsSectionEnabled] = useState<boolean>(true);
+  const [isSectionEnabled, setIsSectionEnabled] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_section_testimonials_enabled');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Real-time listener for Section visibility config
+    // Listen to local window events
+    const handleSettingsChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail?.type === 'testimonials') {
+        setIsSectionEnabled(Boolean(customEvent.detail.enabled));
+      }
+    };
+    window.addEventListener('portfolio_settings_changed', handleSettingsChange);
+    const handleStorage = () => {
+      const saved = localStorage.getItem('portfolio_section_testimonials_enabled');
+      if (saved !== null) setIsSectionEnabled(saved === 'true');
+    };
+    window.addEventListener('storage', handleStorage);
+
+    // Real-time listener for Section visibility config in Firestore
     const unsubSettings = onSnapshot(
       doc(db, 'settings', 'testimonials'),
       (docSnap) => {
@@ -19,6 +40,11 @@ export const Testimonials: React.FC = () => {
           const data = docSnap.data();
           if (data.enabled !== undefined) {
             setIsSectionEnabled(Boolean(data.enabled));
+            try {
+              localStorage.setItem('portfolio_section_testimonials_enabled', String(data.enabled));
+            } catch {
+              // ignore
+            }
           }
         }
       },

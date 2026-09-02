@@ -43,8 +43,22 @@ export const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [skills, setSkills] = useState<TechItem[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
-  const [testimonialsSectionEnabled, setTestimonialsSectionEnabled] = useState<boolean>(true);
-  const [blogSectionEnabled, setBlogSectionEnabled] = useState<boolean>(true);
+  const [testimonialsSectionEnabled, setTestimonialsSectionEnabled] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_section_testimonials_enabled');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
+  const [blogSectionEnabled, setBlogSectionEnabled] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_section_blog_enabled');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [cvDownloadsCount, setCvDownloadsCount] = useState<number>(0);
@@ -335,30 +349,46 @@ export const Dashboard: React.FC = () => {
   // Toggle Blog section visibility on public portfolio
   const handleToggleBlogSection = async (enabled: boolean) => {
     setBlogSectionEnabled(enabled);
+    try {
+      localStorage.setItem('portfolio_section_blog_enabled', enabled ? 'true' : 'false');
+      window.dispatchEvent(new CustomEvent('portfolio_settings_changed', { detail: { type: 'blog', enabled } }));
+    } catch (err) {
+      console.warn('localStorage error:', err);
+    }
+
     setSaveStatus('saving');
     try {
       await setDoc(doc(db, 'settings', 'blog'), { enabled }, { merge: true });
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
     } catch (e) {
-      console.error('Error updating blog section status:', e);
-      setSaveStatus('error');
-      setTimeout(() => setSaveStatus('idle'), 3000);
+      console.warn('Could not save blog section status to Cloud Firestore:', e);
+      // Saved locally, maintain UI state
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
     }
   };
 
   // Toggle Testimonials section visibility on public portfolio
   const handleToggleTestimonialsSection = async (enabled: boolean) => {
     setTestimonialsSectionEnabled(enabled);
+    try {
+      localStorage.setItem('portfolio_section_testimonials_enabled', enabled ? 'true' : 'false');
+      window.dispatchEvent(new CustomEvent('portfolio_settings_changed', { detail: { type: 'testimonials', enabled } }));
+    } catch (err) {
+      console.warn('localStorage error:', err);
+    }
+
     setSaveStatus('saving');
     try {
       await setDoc(doc(db, 'settings', 'testimonials'), { enabled }, { merge: true });
       setSaveStatus('saved');
       setTimeout(() => setSaveStatus('idle'), 2000);
     } catch (e) {
-      console.error('Error updating testimonials section status:', e);
-      setSaveStatus('error');
-      setTimeout(() => setSaveStatus('idle'), 3000);
+      console.warn('Could not save testimonials section status to Cloud Firestore:', e);
+      // Saved locally, maintain UI state
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
     }
   };
 

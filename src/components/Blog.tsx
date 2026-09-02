@@ -8,11 +8,32 @@ import { BlogModal } from './BlogModal';
 
 export const Blog: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>(defaultBlogPosts);
-  const [isSectionEnabled, setIsSectionEnabled] = useState<boolean>(true);
+  const [isSectionEnabled, setIsSectionEnabled] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_section_blog_enabled');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activePost, setActivePost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
+    // Listen to local window events
+    const handleSettingsChange = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      if (customEvent.detail?.type === 'blog') {
+        setIsSectionEnabled(Boolean(customEvent.detail.enabled));
+      }
+    };
+    window.addEventListener('portfolio_settings_changed', handleSettingsChange);
+    const handleStorage = () => {
+      const saved = localStorage.getItem('portfolio_section_blog_enabled');
+      if (saved !== null) setIsSectionEnabled(saved === 'true');
+    };
+    window.addEventListener('storage', handleStorage);
+
     // Real-time listener for Blog section visibility config
     const unsubSettings = onSnapshot(
       doc(db, 'settings', 'blog'),
@@ -21,6 +42,11 @@ export const Blog: React.FC = () => {
           const data = docSnap.data();
           if (data.enabled !== undefined) {
             setIsSectionEnabled(Boolean(data.enabled));
+            try {
+              localStorage.setItem('portfolio_section_blog_enabled', String(data.enabled));
+            } catch {
+              // ignore
+            }
           }
         }
       },
