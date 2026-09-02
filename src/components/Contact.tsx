@@ -227,32 +227,29 @@ const StyledContact = styled.section`
   .contact-panel {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.3rem;
-    padding: 1.25rem;
+    gap: 2rem;
+    padding: 2rem;
     background: var(--panel);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-lg);
-    box-shadow:
-      var(--shadow),
-      0 0 36px rgba(0, 0, 244, 0.08);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
   }
 
   .contact-form {
     display: grid;
-    gap: 0.85rem;
+    gap: 0.95rem;
 
     input,
     textarea {
       width: 100%;
-      padding: 0.9rem 1rem;
-      border: 1px solid rgba(0, 0, 244, 0.8);
-      border-radius: 14px;
+      padding: 0.85rem 1.1rem;
+      border: 1px solid var(--input-border);
+      border-radius: var(--radius-md);
       background: var(--input-bg);
       color: var(--input-text);
+      font-size: 0.94rem;
       resize: vertical;
-      transition:
-        border-color var(--transition),
-        box-shadow var(--transition);
+      transition: all var(--transition);
 
       &::placeholder {
         color: var(--input-placeholder);
@@ -261,7 +258,7 @@ const StyledContact = styled.section`
       &:focus {
         outline: none;
         border-color: var(--input-focus-border);
-        box-shadow: 0 0 0 4px rgba(0, 0, 244, 0.22);
+        box-shadow: 0 0 0 3px var(--input-focus-ring);
       }
     }
   }

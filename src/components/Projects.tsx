@@ -186,49 +186,54 @@ const StyledProjects = styled.section`
   .project-filter {
     display: inline-flex;
     align-items: center;
-    gap: 0.9rem;
-    min-width: 11.25rem;
-    padding: 0.95rem 1.35rem;
-    border: 1px solid transparent;
-    border-radius: 1.35rem;
+    gap: 0.85rem;
+    min-width: 10.5rem;
+    padding: 0.8rem 1.35rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-full);
     background: var(--project-filter-bg);
     color: var(--project-filter-text);
-    font-size: 0.95rem;
+    box-shadow: var(--shadow-sm);
+    font-size: 0.92rem;
     font-weight: 600;
     cursor: pointer;
-    transition:
-      transform var(--transition),
-      background-color var(--transition),
-      border-color var(--transition),
-      color var(--transition),
-      box-shadow var(--transition);
+    transition: all var(--transition);
 
     &:hover,
     &:focus-visible {
       transform: translateY(-2px);
-      border-color: rgba(0, 0, 244, 0.42);
-      box-shadow: 0 0 22px rgba(0, 0, 244, 0.14);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: var(--shadow-md);
     }
 
     &.is-active {
       background: var(--project-filter-active-bg);
+      border-color: var(--project-filter-active-bg);
       color: var(--project-filter-active-text);
+      box-shadow: 0 4px 14px rgba(26, 115, 232, 0.35);
+
+      &:hover {
+        color: #ffffff;
+      }
     }
   }
 
   .project-filter-count {
     display: inline-grid;
     place-items: center;
-    width: 2rem;
-    height: 2rem;
+    width: 1.85rem;
+    height: 1.85rem;
     border-radius: 50%;
     background: var(--project-filter-count-bg);
     color: inherit;
-    font-size: 0.88rem;
+    font-size: 0.82rem;
+    font-weight: 700;
   }
 
   .project-filter.is-active .project-filter-count {
     background: var(--project-filter-active-count-bg);
+    color: #ffffff;
   }
 
   .projects-grid {

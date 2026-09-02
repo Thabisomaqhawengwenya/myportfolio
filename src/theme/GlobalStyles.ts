@@ -163,19 +163,19 @@ export const GlobalStyles = createGlobalStyle`
   :root[data-theme="light"] {
     color-scheme: light;
 
-    --bg:             #FEFCFF;
+    --bg:             #F8FAFC;
     --bg-elevated:    #FFFFFF;
     --surface:        #FFFFFF;
-    --surface-raised: #F5F3F8;
+    --surface-raised: #F1F5F9;
     --panel:          #FFFFFF;
-    --panel-strong:   #F5F3F8;
-    --panel-soft:     #FEFCFF;
+    --panel-strong:   #F8FAFC;
+    --panel-soft:     #F1F5F9;
 
-    --border:         rgba(15,23,42,0.08);
-    --border-strong:  rgba(15,23,42,0.14);
-    --border-accent:  rgba(26,115,232,0.35);
-    --line:           rgba(15,23,42,0.08);
-    --line-strong:    rgba(15,23,42,0.14);
+    --border:         rgba(15, 23, 42, 0.08);
+    --border-strong:  rgba(15, 23, 42, 0.14);
+    --border-accent:  rgba(26, 115, 232, 0.40);
+    --line:           rgba(15, 23, 42, 0.08);
+    --line-strong:    rgba(15, 23, 42, 0.14);
 
     --text:           #0F172A;
     --text-primary:   #0F172A;
@@ -183,107 +183,112 @@ export const GlobalStyles = createGlobalStyle`
     --text-muted:     #64748B;
     --text-disabled:  #94A3B8;
     --heading:        #0F172A;
-    --heading-muted:  #64748B;
+    --heading-muted:  #475569;
     --muted:          #64748B;
 
     --accent:         #1A73E8;
     --accent-hover:   #1557B0;
-    --accent-soft:    rgba(26,115,232,0.08);
-    --accent-subtle:  rgba(26,115,232,0.08);
-    --accent-strong:  rgba(26,115,232,0.70);
-    --accent-ring:    rgba(26,115,232,0.24);
-    --accent-glow-sm: 0 0 16px rgba(26,115,232,0.28);
-    --accent-glow-md: 0 0 32px rgba(26,115,232,0.38);
-    --accent-glow-lg: 0 0 54px rgba(26,115,232,0.48);
+    --accent-soft:    rgba(26, 115, 232, 0.08);
+    --accent-subtle:  rgba(26, 115, 232, 0.06);
+    --accent-strong:  rgba(26, 115, 232, 0.70);
+    --accent-ring:    rgba(26, 115, 232, 0.20);
+    --accent-glow-sm: 0 0 16px rgba(26, 115, 232, 0.20);
+    --accent-glow-md: 0 0 32px rgba(26, 115, 232, 0.28);
+    --accent-glow-lg: 0 0 54px rgba(26, 115, 232, 0.38);
 
     --success:        #059669;
-    --success-subtle: rgba(5,150,105,0.08);
+    --success-subtle: rgba(5, 150, 105, 0.08);
     --warning:        #D97706;
-    --warning-subtle: rgba(217,119,6,0.08);
+    --warning-subtle: rgba(217, 119, 6, 0.08);
     --danger:         #DC2626;
-    --danger-subtle:  rgba(220,38,38,0.08);
+    --danger-subtle:  rgba(220, 38, 38, 0.08);
 
-    --shadow-sm:  0 1px 3px rgba(15,23,42,0.08);
-    --shadow-md:  0 4px 12px rgba(15,23,42,0.10);
-    --shadow-lg:  0 12px 32px rgba(15,23,42,0.12);
-    --shadow:     0 4px 12px rgba(15,23,42,0.10);
+    --shadow-sm:  0 1px 3px rgba(15, 23, 42, 0.06), 0 1px 2px rgba(15, 23, 42, 0.04);
+    --shadow-md:  0 4px 16px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -2px rgba(15, 23, 42, 0.04);
+    --shadow-lg:  0 16px 36px -4px rgba(15, 23, 42, 0.10), 0 6px 16px -4px rgba(15, 23, 42, 0.05);
+    --shadow:     0 4px 20px -2px rgba(15, 23, 42, 0.08);
 
-    --header-bg:        rgba(254,252,255,0.90);
-    --header-mobile-bg: rgba(254,252,255,0.98);
-    --brand-color:      #64748B;
+    --header-bg:        rgba(248, 250, 252, 0.88);
+    --header-mobile-bg: rgba(248, 250, 252, 0.98);
+    --brand-color:      #475569;
     --nav-active:       #0F172A;
-    --nav-link:         #64748B;
+    --nav-link:         #475569;
     --nav-link-active:  #0F172A;
     --nav-toggle-bar:   #0F172A;
 
-    --badge-default-bg:              rgba(15,23,42,0.06);
+    --badge-default-bg:              #F1F5F9;
     --badge-default-text:            #334155;
-    --badge-accent-bg:               rgba(26,115,232,0.08);
-    --badge-accent-text:             #1557B0;
-    --badge-success-bg:              rgba(5,150,105,0.08);
+    --badge-accent-bg:               rgba(26, 115, 232, 0.08);
+    --badge-accent-text:             #1A73E8;
+    --badge-success-bg:              rgba(5, 150, 105, 0.08);
     --badge-success-text:            #047857;
-    --badge-warning-bg:              rgba(217,119,6,0.08);
+    --badge-warning-bg:              rgba(217, 119, 6, 0.08);
     --badge-warning-text:            #92400E;
 
     --input-bg:           #FFFFFF;
-    --input-border:       rgba(15,23,42,0.14);
+    --input-border:       rgba(15, 23, 42, 0.15);
     --input-text:         #0F172A;
     --input-placeholder:  #94A3B8;
     --input-focus-border: #1A73E8;
-    --input-focus-ring:   rgba(26,115,232,0.24);
+    --input-focus-ring:   rgba(26, 115, 232, 0.18);
 
     --card-heading:                  #0F172A;
     --pill-text:                     #334155;
-    --project-media-bg:              #E2E8F0;
+    --project-media-bg:              #F1F5F9;
     --project-tag-text:              #334155;
-    --project-link-color:            #0F172A;
-    --project-filter-bg:             #F1F5F9;
-    --project-filter-text:           #0F172A;
+    --project-link-color:            #1A73E8;
+    --project-filter-bg:             #FFFFFF;
+    --project-filter-text:           #475569;
     --project-filter-active-bg:      #1A73E8;
-    --project-filter-active-text:    #ffffff;
-    --project-filter-count-bg:       rgba(15,23,42,0.08);
-    --project-filter-active-count-bg:rgba(255,255,255,0.20);
+    --project-filter-active-text:    #FFFFFF;
+    --project-filter-count-bg:       #F1F5F9;
+    --project-filter-active-count-bg:rgba(255, 255, 255, 0.25);
     --form-status-success:           #1A73E8;
-    --form-status-error:             #B91C1C;
+    --form-status-error:             #DC2626;
     --contact-list-text:             #334155;
-    --footer-link-text:              #334155;
-    --modal-backdrop:                rgba(15,23,42,0.70);
+    --footer-link-text:              #475569;
+    --modal-backdrop:                rgba(15, 23, 42, 0.60);
     --modal-kicker:                  #64748B;
     --modal-media-bg:                #F1F5F9;
     --modal-list-text:               #334155;
     --modal-action-text:             #0F172A;
-    --back-to-top-bg:                rgba(255,255,255,0.94);
+    --back-to-top-bg:                rgba(255, 255, 255, 0.95);
     --back-to-top-text:              #0F172A;
     --button-secondary-text:         #334155;
-    --timeline-line:                 rgba(15,23,42,0.12);
+    --timeline-line:                 rgba(15, 23, 42, 0.10);
     --focus-outline:                 #1A73E8;
 
     --hero-accent:      #1A73E8;
-    --hero-accent-glow: rgba(26,115,232,0.22);
-    --page-glow-one:    rgba(26,115,232,0.08);
-    --page-glow-two:    rgba(26,115,232,0.04);
-    --frame-glow:       rgba(26,115,232,0.10);
+    --hero-accent-glow: rgba(26, 115, 232, 0.20);
+    --page-glow-one:    rgba(26, 115, 232, 0.05);
+    --page-glow-two:    rgba(26, 115, 232, 0.03);
+    --frame-glow:       rgba(26, 115, 232, 0.06);
 
-    --background-video-opacity: 0.18;
-    --background-video-filter:  brightness(1.1) saturate(0.7) contrast(0.9);
+    --background-video-opacity: 0.06;
+    --background-video-filter:  brightness(1.1) saturate(0.5) contrast(0.9);
     --background-video-overlay:
-      radial-gradient(circle at top left,  rgba(26,115,232,0.06), transparent 28rem),
-      radial-gradient(circle at bottom right, rgba(26,115,232,0.04), transparent 26rem),
-      rgba(254,252,255,0.84);
+      radial-gradient(circle at top left,  rgba(26, 115, 232, 0.04), transparent 28rem),
+      radial-gradient(circle at bottom right, rgba(26, 115, 232, 0.03), transparent 26rem),
+      rgba(248, 250, 252, 0.94);
 
-    --toggle-track-bg:      rgba(26,115,232,0.85);
+    --toggle-track-bg:      rgba(26, 115, 232, 0.88);
     --toggle-track-shadow:
-      inset 0 0 0 1px rgba(255,255,255,0.2),
-      0 4px 12px rgba(26,115,232,0.2);
-    --toggle-thumb-bg:      #ffffff;
-    --toggle-thumb-shadow:  0 2px 8px rgba(15,23,42,0.18);
-    --toggle-dot-bg:        rgba(255,255,255,0.92);
+      inset 0 0 0 1px rgba(255, 255, 255, 0.25),
+      0 4px 12px rgba(26, 115, 232, 0.15);
+    --toggle-thumb-bg:      #FFFFFF;
+    --toggle-thumb-shadow:  0 2px 8px rgba(15, 23, 42, 0.15);
+    --toggle-dot-bg:        rgba(255, 255, 255, 0.92);
     --toggle-label-active:  #0F172A;
     --toggle-label-inactive: #94A3B8;
   }
 
   /* ── Reset ────────────────────────────────────────────────────── */
   *, *::before, *::after { box-sizing: border-box; }
+
+  ::selection {
+    background: #1A73E8;
+    color: #FFFFFF;
+  }
 
   html {
     scroll-behavior: smooth;

@@ -77,21 +77,16 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({ project, onOpenDetails
 const StyledCard = styled.article`
   overflow: hidden;
   background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 1.7rem;
-  box-shadow: var(--shadow);
-  transition:
-    transform var(--transition),
-    border-color var(--transition),
-    box-shadow var(--transition);
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition);
 
   &:hover,
   &:focus-within {
     transform: translateY(-5px);
-    border-color: rgba(0, 0, 244, 0.8);
-    box-shadow:
-      0 26px 50px rgba(0, 0, 0, 0.52),
-      0 0 32px rgba(0, 0, 244, 0.22);
+    border-color: var(--accent);
+    box-shadow: var(--shadow-lg);
   }
 
   .project-media {
@@ -312,16 +307,17 @@ const StyledCard = styled.article`
     }
 
     li {
-      padding: 0.42rem 0.62rem;
-      border-radius: 999px;
-      background: rgba(0, 0, 244, 0.18);
-      border: 1px solid rgba(0, 0, 244, 0.55);
-      color: var(--project-tag-text);
+      padding: 0.32rem 0.65rem;
+      border-radius: var(--radius-full);
+      background: var(--badge-default-bg);
+      border: 1px solid var(--border);
+      color: var(--badge-default-text);
       font-size: 0.76rem;
+      font-weight: 500;
 
       @media (max-width: 768px) {
-        padding: 0.18rem 0.4rem;
-        font-size: 0.62rem;
+        padding: 0.18rem 0.45rem;
+        font-size: 0.65rem;
       }
     }
   }
@@ -333,14 +329,19 @@ const StyledCard = styled.article`
     padding: 0;
     border: 0;
     background: transparent;
-    color: var(--project-link-color);
-    font-size: 0.84rem;
+    color: var(--accent);
+    font-size: 0.86rem;
     font-weight: 600;
     cursor: pointer;
+    transition: color var(--transition);
+
+    &:hover {
+      color: var(--accent-hover);
+    }
 
     @media (max-width: 768px) {
       margin-top: 0.6rem;
-      font-size: 0.76rem;
+      font-size: 0.78rem;
     }
 
     &::after {

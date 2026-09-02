@@ -126,9 +126,6 @@ const StyledHero = styled.section`
     font-size: clamp(2.5rem, 4.8vw, 4.4rem);
     font-weight: 800;
     line-height: 1.05;
-    text-shadow:
-      0 0 10px rgba(255, 255, 255, 0.05),
-      0 0 26px rgba(0, 0, 244, 0.28);
     
     .hero-title-muted {
       color: var(--heading-muted);
@@ -155,15 +152,12 @@ const StyledHero = styled.section`
     color: var(--heading);
     display: flex;
     align-items: center;
-    text-shadow:
-      0 0 10px rgba(255, 255, 255, 0.05),
-      0 0 26px rgba(0, 0, 244, 0.28);
 
     .char {
       display: inline-block;
       opacity: 0;
       animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-      background: linear-gradient(135deg, #ffffff 40%, var(--accent) 100%);
+      background: linear-gradient(135deg, var(--heading) 35%, var(--accent) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -173,7 +167,7 @@ const StyledHero = styled.section`
     margin: 1rem 0 0;
     font-size: clamp(1.45rem, 3.2vw, 2.2rem);
     font-weight: 700;
-    text-shadow: 0 0 18px rgba(0, 0, 244, 0.24);
+    color: var(--heading);
     opacity: 0;
     animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     animation-delay: 900ms;

@@ -26,10 +26,25 @@ const App: React.FC = () => {
   });
 
   useEffect(() => {
+    // Ensure every refresh or enter starts cleanly at the top of the portfolio
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+
+    const handleBeforeUnload = () => {
+      window.scrollTo(0, 0);
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, []);
+
+  useEffect(() => {
     if (isLoading) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
     return () => {
       document.body.style.overflow = '';
@@ -39,6 +54,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const handleLocationChange = () => {
       setCurrentPath(window.location.pathname);
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     };
     window.addEventListener('popstate', handleLocationChange);
     return () => window.removeEventListener('popstate', handleLocationChange);

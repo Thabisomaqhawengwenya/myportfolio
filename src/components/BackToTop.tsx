@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { Icon } from '@iconify/react';
 
 export const BackToTop: React.FC = () => {
   const [visible, setVisible] = useState(false);
@@ -30,8 +31,9 @@ export const BackToTop: React.FC = () => {
       type="button"
       aria-label="Back to top"
       onClick={scrollToTop}
+      title="Back to top"
     >
-      Top
+      <Icon icon="lucide:arrow-up" width={20} height={20} />
     </StyledButton>
   );
 };
@@ -39,28 +41,32 @@ export const BackToTop: React.FC = () => {
 const StyledButton = styled.button`
   position: fixed;
   z-index: 30;
-  right: 1.25rem;
-  bottom: 1.25rem;
+  right: 1.5rem;
+  bottom: 1.5rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  border: 1px solid rgba(0, 0, 244, 0.85);
+  width: 2.85rem;
+  height: 2.85rem;
+  border: 1px solid var(--border-strong);
   border-radius: 50%;
   background: var(--back-to-top-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: var(--back-to-top-text);
-  box-shadow:
-    0 0 18px rgba(0, 0, 244, 0.22),
-    0 0 36px rgba(0, 0, 244, 0.14);
+  box-shadow: var(--shadow-md);
   cursor: pointer;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(10px);
-  transition:
-    opacity var(--transition),
-    visibility var(--transition),
-    transform var(--transition);
+  transform: translateY(12px);
+  transition: all var(--transition);
+
+  &:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: var(--shadow-lg);
+  }
 
   &.is-visible {
     opacity: 1;

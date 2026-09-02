@@ -93,8 +93,8 @@ export const Skills: React.FC = () => {
 
 const TechPill: React.FC<{ item: TechItem }> = ({ item }) => (
   <span className="tech-pill">
-    <Icon icon={item.icon} width={22} height={22} style={{ color: item.color, flexShrink: 0 }} />
-    <span className="tech-name" style={{ color: item.color }}>{item.name}</span>
+    <Icon icon={item.icon} width={20} height={20} style={{ flexShrink: 0 }} />
+    <span className="tech-name">{item.name}</span>
   </span>
 );
 
@@ -192,27 +192,29 @@ const StyledSkills = styled.section`
   .tech-pill {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background: var(--surface-raised);
-    border: 1px solid var(--border);
+    gap: 0.55rem;
+    padding: 0.45rem 0.95rem;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
     border-radius: var(--radius-full);
     white-space: nowrap;
+    box-shadow: var(--shadow-sm);
     cursor: default;
-    transition:
-      border-color var(--transition),
-      background-color var(--transition);
+    transition: all var(--transition);
 
     &:hover {
-      background: var(--surface);
-      border-color: var(--border-strong);
+      background: var(--surface-raised);
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
     }
   }
 
   .tech-name {
-    font-size: 0.85rem;
+    font-size: 0.86rem;
     font-weight: 600;
     font-family: var(--font-body);
+    color: var(--text-primary);
   }
 
   /* ── Reduced motion ──────────────────────────────── */
