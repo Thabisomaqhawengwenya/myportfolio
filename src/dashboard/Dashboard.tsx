@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
-import { collection, getDocs, doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, setDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
 import { onAuthStateChanged, signOut, type User } from 'firebase/auth';
 import { db, auth } from '../firebase';
 import { DashboardLogin } from './components/DashboardLogin';
@@ -44,6 +44,7 @@ export const Dashboard: React.FC = () => {
   const [skills, setSkills] = useState<TechItem[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [testimonialsSectionEnabled, setTestimonialsSectionEnabled] = useState<boolean>(true);
+  const [blogSectionEnabled, setBlogSectionEnabled] = useState<boolean>(true);
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [cvDownloadsCount, setCvDownloadsCount] = useState<number>(0);
@@ -263,12 +264,45 @@ export const Dashboard: React.FC = () => {
       }
     };
 
+    // Real-time listener for Testimonials settings
+    const unsubTestimonialsSettings = onSnapshot(
+      doc(db, 'settings', 'testimonials'),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.enabled !== undefined) {
+            setTestimonialsSectionEnabled(Boolean(data.enabled));
+          }
+        }
+      },
+      (err) => console.warn('Testimonials settings snapshot warning:', err)
+    );
+
+    // Real-time listener for Blog settings
+    const unsubBlogSettings = onSnapshot(
+      doc(db, 'settings', 'blog'),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.enabled !== undefined) {
+            setBlogSectionEnabled(Boolean(data.enabled));
+          }
+        }
+      },
+      (err) => console.warn('Blog settings snapshot warning:', err)
+    );
+
     fetchProjects();
     fetchSkills();
     fetchTestimonials();
     fetchPosts();
     fetchMessages();
     fetchEvents();
+
+    return () => {
+      unsubTestimonialsSettings();
+      unsubBlogSettings();
+    };
   }, [user]);
 
   // Save blog posts to Cloud Firestore
@@ -293,6 +327,21 @@ export const Dashboard: React.FC = () => {
       setTimeout(() => setSaveStatus('idle'), 2000);
     } catch (e) {
       console.error('Error saving blog posts:', e);
+      setSaveStatus('error');
+      setTimeout(() => setSaveStatus('idle'), 3000);
+    }
+  };
+
+  // Toggle Blog section visibility on public portfolio
+  const handleToggleBlogSection = async (enabled: boolean) => {
+    setBlogSectionEnabled(enabled);
+    setSaveStatus('saving');
+    try {
+      await setDoc(doc(db, 'settings', 'blog'), { enabled }, { merge: true });
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    } catch (e) {
+      console.error('Error updating blog section status:', e);
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 3000);
     }
@@ -462,6 +511,7 @@ export const Dashboard: React.FC = () => {
       testimonials,
       posts,
       testimonialsSectionEnabled,
+      blogSectionEnabled,
     };
     const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(backupData, null, 2));
     const downloadAnchor = document.createElement('a');
@@ -870,6 +920,8 @@ export const Dashboard: React.FC = () => {
               posts={posts}
               onSavePosts={handleSavePosts}
               searchQuery={searchQuery}
+              sectionEnabled={blogSectionEnabled}
+              onToggleSectionEnabled={handleToggleBlogSection}
             />
           )}
           {activeTab === 'messages' && (
@@ -899,6 +951,8 @@ export const Dashboard: React.FC = () => {
               onBackToPortfolio={handleBackToPortfolio}
               testimonialsSectionEnabled={testimonialsSectionEnabled}
               onToggleTestimonialsSection={handleToggleTestimonialsSection}
+              blogSectionEnabled={blogSectionEnabled}
+              onToggleBlogSection={handleToggleBlogSection}
               onExportBackup={handleExportBackup}
             />
           )}
@@ -1919,6 +1973,39 @@ const StyledDashboard = styled.div`
     }
     .device-legend {
       color: var(--text-secondary) !important;
+    }
+
+    /* Global Section Toggle Banner Overrides (Blog & Testimonials) */
+    .section-toggle-banner {
+      &.is-enabled {
+        background: rgba(22, 163, 74, 0.12) !important;
+        border-color: rgba(34, 197, 94, 0.3) !important;
+        .toggle-icon-wrap {
+          background: rgba(22, 163, 74, 0.25) !important;
+          color: #4ade80 !important;
+        }
+        h4 {
+          color: var(--text-primary) !important;
+        }
+        .banner-desc {
+          color: var(--text-secondary) !important;
+        }
+      }
+
+      &.is-disabled {
+        background: #090d16 !important;
+        border-color: var(--border-color) !important;
+        .toggle-icon-wrap {
+          background: #1e293b !important;
+          color: var(--text-secondary) !important;
+        }
+        h4 {
+          color: var(--text-primary) !important;
+        }
+        .banner-desc {
+          color: var(--text-secondary) !important;
+        }
+      }
     }
 
     /* Settings Page Specific Overrides */

@@ -1,20 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { defaultBlogPosts, type BlogPost } from '../data/blog';
 import { BlogModal } from './BlogModal';
 
 export const Blog: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>(defaultBlogPosts);
+  const [isSectionEnabled, setIsSectionEnabled] = useState<boolean>(true);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activePost, setActivePost] = useState<BlogPost | null>(null);
 
   useEffect(() => {
-    const fetchBlogPosts = async () => {
-      try {
-        const querySnapshot = await getDocs(collection(db, 'blog'));
+    // Real-time listener for Blog section visibility config
+    const unsubSettings = onSnapshot(
+      doc(db, 'settings', 'blog'),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.enabled !== undefined) {
+            setIsSectionEnabled(Boolean(data.enabled));
+          }
+        }
+      },
+      (err) => {
+        console.warn('Blog settings snapshot warning:', err);
+      }
+    );
+
+    // Real-time listener for Blog articles collection
+    const unsubBlog = onSnapshot(
+      collection(db, 'blog'),
+      (querySnapshot) => {
         const list: BlogPost[] = [];
         querySnapshot.forEach((docSnap) => {
           list.push({ id: docSnap.id, ...docSnap.data() } as BlogPost);
@@ -23,12 +41,19 @@ export const Blog: React.FC = () => {
           list.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
           setPosts(list);
         }
-      } catch (err) {
-        console.warn('Using default blog posts fallback:', err);
+      },
+      (err) => {
+        console.warn('Blog collection snapshot warning:', err);
       }
+    );
+
+    return () => {
+      unsubSettings();
+      unsubBlog();
     };
-    fetchBlogPosts();
   }, []);
+
+  if (!isSectionEnabled) return null;
 
   const publishedPosts = posts.filter((p) => p.published !== false);
   if (publishedPosts.length === 0) return null;

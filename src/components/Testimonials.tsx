@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { defaultTestimonials, type Testimonial } from '../data/testimonials';
 
@@ -11,19 +11,26 @@ export const Testimonials: React.FC = () => {
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch Section visibility config
-        const configSnap = await getDoc(doc(db, 'settings', 'testimonials'));
-        if (configSnap.exists()) {
-          const data = configSnap.data();
+    // Real-time listener for Section visibility config
+    const unsubSettings = onSnapshot(
+      doc(db, 'settings', 'testimonials'),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
           if (data.enabled !== undefined) {
             setIsSectionEnabled(Boolean(data.enabled));
           }
         }
+      },
+      (err) => {
+        console.warn('Testimonials settings snapshot warning:', err);
+      }
+    );
 
-        // Fetch testimonials
-        const querySnapshot = await getDocs(collection(db, 'testimonials'));
+    // Real-time listener for testimonials list
+    const unsubTestimonials = onSnapshot(
+      collection(db, 'testimonials'),
+      (querySnapshot) => {
         const list: Testimonial[] = [];
         querySnapshot.forEach((docSnap) => {
           list.push({ id: docSnap.id, ...docSnap.data() } as Testimonial);
@@ -32,11 +39,16 @@ export const Testimonials: React.FC = () => {
           list.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
           setTestimonials(list);
         }
-      } catch (err) {
-        console.warn('Using default testimonials fallback:', err);
+      },
+      (err) => {
+        console.warn('Testimonials collection snapshot warning:', err);
       }
+    );
+
+    return () => {
+      unsubSettings();
+      unsubTestimonials();
     };
-    fetchData();
   }, []);
 
   if (!isSectionEnabled) return null;

@@ -7,12 +7,16 @@ interface BlogPageProps {
   posts: BlogPost[];
   onSavePosts: (posts: BlogPost[]) => void;
   searchQuery?: string;
+  sectionEnabled?: boolean;
+  onToggleSectionEnabled?: (enabled: boolean) => void;
 }
 
 export const BlogPage: React.FC<BlogPageProps> = ({
   posts,
   onSavePosts,
   searchQuery = '',
+  sectionEnabled = true,
+  onToggleSectionEnabled,
 }) => {
   const [activeFilter, setActiveFilter] = useState<'all' | 'published' | 'drafts' | 'featured'>('all');
   const [modalMode, setModalMode] = useState<'create' | 'edit' | null>(null);
@@ -203,6 +207,37 @@ export const BlogPage: React.FC<BlogPageProps> = ({
           <Icon icon="lucide:pen-tool" width={18} height={18} />
           Write Article
         </button>
+      </div>
+
+      {/* Global Section Visibility Switch Banner */}
+      <div className={`section-toggle-banner ${sectionEnabled ? 'is-enabled' : 'is-disabled'}`}>
+        <div className="banner-left">
+          <div className="toggle-icon-wrap">
+            <Icon icon={sectionEnabled ? 'lucide:book-open' : 'lucide:book-x'} width={22} height={22} />
+          </div>
+          <div>
+            <div className="banner-title-row">
+              <h4>Public Portfolio Articles & Case Studies Section</h4>
+              <span className={`status-pill ${sectionEnabled ? 'status-active' : 'status-paused'}`}>
+                {sectionEnabled ? '● Live on Portfolio' : '○ Section Hidden / Disabled'}
+              </span>
+            </div>
+            <p className="banner-desc">
+              {sectionEnabled
+                ? 'The Articles & Blog section is currently live and readable on your public homepage.'
+                : 'The Articles & Blog section is completely hidden from your public portfolio.'}
+            </p>
+          </div>
+        </div>
+        {onToggleSectionEnabled && (
+          <button
+            className={`toggle-switch-btn ${sectionEnabled ? 'btn-active' : 'btn-paused'}`}
+            onClick={() => onToggleSectionEnabled(!sectionEnabled)}
+          >
+            <Icon icon={sectionEnabled ? 'lucide:eye' : 'lucide:eye-off'} width={16} height={16} />
+            {sectionEnabled ? 'Hide Section on Portfolio' : 'Enable Section on Portfolio'}
+          </button>
+        )}
       </div>
 
       {/* Filter Tabs */}
@@ -525,6 +560,126 @@ const StyledBlogPage = styled.div`
 
       &:hover {
         background: #1557b0;
+      }
+    }
+  }
+
+  .section-toggle-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    border: 1px solid;
+    transition: all 0.2s ease;
+    gap: 1rem;
+
+    @media (max-width: 640px) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    &.is-enabled {
+      background: #f0fdf4;
+      border-color: #bbf7d0;
+      .toggle-icon-wrap {
+        background: #dcfce7;
+        color: #16a34a;
+      }
+    }
+
+    &.is-disabled {
+      background: #f8fafc;
+      border-color: #e2e8f0;
+      .toggle-icon-wrap {
+        background: #e2e8f0;
+        color: #64748b;
+      }
+    }
+
+    .banner-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      .toggle-icon-wrap {
+        width: 2.75rem;
+        height: 2.75rem;
+        border-radius: 10px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+
+      .banner-title-row {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        margin-bottom: 0.2rem;
+
+        h4 {
+          margin: 0;
+          font-size: 0.96rem;
+          font-weight: 700;
+          color: #0f172a;
+        }
+
+        .status-pill {
+          font-size: 0.72rem;
+          font-weight: 700;
+          padding: 0.15rem 0.5rem;
+          border-radius: 99px;
+
+          &.status-active {
+            background: #dcfce7;
+            color: #15803d;
+          }
+
+          &.status-paused {
+            background: #f1f5f9;
+            color: #64748b;
+          }
+        }
+      }
+
+      .banner-desc {
+        margin: 0;
+        font-size: 0.82rem;
+        color: #64748b;
+      }
+    }
+
+    .toggle-switch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 1.1rem;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+
+      &.btn-active {
+        background: #fff;
+        border: 1px solid #cbd5e1;
+        color: #b91c1c;
+
+        &:hover {
+          background: #fee2e2;
+          border-color: #fca5a5;
+        }
+      }
+
+      &.btn-paused {
+        background: #16a34a;
+        border: 1px solid #16a34a;
+        color: #fff;
+
+        &:hover {
+          background: #15803d;
+        }
       }
     }
   }

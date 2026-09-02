@@ -6,10 +6,12 @@ interface SettingsPageProps {
   profileName: string;
   profileEmail: string;
   profileRole: string;
-  onProfileUpdate: (name: string, email: string, role: string) => void;
+  onProfileUpdate?: (name: string, email: string, role: string) => void;
   onBackToPortfolio?: () => void;
   testimonialsSectionEnabled?: boolean;
   onToggleTestimonialsSection?: (enabled: boolean) => void;
+  blogSectionEnabled?: boolean;
+  onToggleBlogSection?: (enabled: boolean) => void;
   onExportBackup?: () => void;
 }
 
@@ -21,6 +23,8 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   onBackToPortfolio,
   testimonialsSectionEnabled = true,
   onToggleTestimonialsSection,
+  blogSectionEnabled = true,
+  onToggleBlogSection,
   onExportBackup,
 }) => {
   // Profile settings
@@ -62,7 +66,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       localStorage.setItem('donezo_system_alerts', trackerAlerts ? 'true' : 'false');
 
       // Update parent component state for header
-      onProfileUpdate(name, email, role);
+      onProfileUpdate?.(name, email, role);
 
       setSaving(false);
       setSuccess(true);
@@ -208,13 +212,17 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
                 <div className="toggle-option">
                   <div className="toggle-info">
                     <h4>Developer Blog Section</h4>
-                    <p>🟢 Case studies and technical articles live on homepage</p>
+                    <p>
+                      {blogSectionEnabled
+                        ? '🟢 Currently live and visible on public homepage'
+                        : '⚪ Completely hidden from public homepage'}
+                    </p>
                   </div>
                   <label className="switch">
                     <input
                       type="checkbox"
-                      checked={true}
-                      readOnly
+                      checked={blogSectionEnabled}
+                      onChange={(e) => onToggleBlogSection?.(e.target.checked)}
                     />
                     <span className="slider round"></span>
                   </label>
