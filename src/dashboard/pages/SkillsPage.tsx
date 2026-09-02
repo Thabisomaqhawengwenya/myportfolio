@@ -117,14 +117,30 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({
     onSaveSkills(updated);
   };
 
+  const [presetPageIndex, setPresetPageIndex] = useState(0);
+
+  // Filter out any skills that are already added to the user's tech stack
+  const unaddedPresets = popularPresets.filter(
+    (preset) => !skills.some((s) => s.name.trim().toLowerCase() === preset.name.trim().toLowerCase())
+  );
+
+  const PRESETS_PER_PAGE = 10;
+  const totalPresetPages = Math.ceil(unaddedPresets.length / PRESETS_PER_PAGE) || 1;
+  const safePageIndex = totalPresetPages > 0 ? presetPageIndex % totalPresetPages : 0;
+  const currentRecommendations = unaddedPresets.slice(
+    safePageIndex * PRESETS_PER_PAGE,
+    (safePageIndex + 1) * PRESETS_PER_PAGE
+  );
+
+  const handleNextPresets = () => {
+    setPresetPageIndex((prev) => (prev + 1) % totalPresetPages);
+  };
+
   const handleAddPreset = (preset: (typeof popularPresets)[0]) => {
     const existing = skills.find(
-      (s) => s.name.toLowerCase() === preset.name.toLowerCase()
+      (s) => s.name.trim().toLowerCase() === preset.name.trim().toLowerCase()
     );
-    if (existing) {
-      alert(`${preset.name} is already in your tech stack!`);
-      return;
-    }
+    if (existing) return;
 
     const newSkill: TechItem = {
       // eslint-disable-next-line react-hooks/purity
@@ -172,38 +188,45 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({
         </button>
       </div>
 
-      {/* Popular Presets Shelf */}
-      <div className="presets-section">
-        <div className="presets-title">
-          <Icon icon="lucide:sparkles" width={16} height={16} style={{ color: '#f59e0b' }} />
-          <span>Quick Add Popular Tech:</span>
-        </div>
-        <div className="presets-pills-list">
-          {popularPresets.map((preset) => {
-            const isAlreadyAdded = skills.some(
-              (s) => s.name.toLowerCase() === preset.name.toLowerCase()
-            );
-
-            return (
+      {/* Dynamic Popular Presets Shelf */}
+      {unaddedPresets.length > 0 && (
+        <div className="presets-section">
+          <div className="presets-header-row">
+            <div className="presets-title">
+              <Icon icon="lucide:sparkles" width={16} height={16} style={{ color: '#f59e0b' }} />
+              <span>Recommended Tech ({unaddedPresets.length} available to add):</span>
+            </div>
+            {unaddedPresets.length > PRESETS_PER_PAGE && (
+              <button
+                type="button"
+                className="refresh-presets-btn"
+                onClick={handleNextPresets}
+                title="Browse more tech recommendations"
+              >
+                <Icon icon="lucide:rotate-cw" width={13} height={13} />
+                <span>Next Suggestions ({safePageIndex + 1}/{totalPresetPages})</span>
+              </button>
+            )}
+          </div>
+          <div className="presets-pills-list">
+            {currentRecommendations.map((preset) => (
               <button
                 key={preset.name}
-                className={`preset-pill ${isAlreadyAdded ? 'is-added' : ''}`}
-                onClick={() => !isAlreadyAdded && handleAddPreset(preset)}
-                disabled={isAlreadyAdded}
-                title={isAlreadyAdded ? 'Already added' : `Click to add ${preset.name}`}
+                type="button"
+                className="preset-pill"
+                onClick={() => handleAddPreset(preset)}
+                title={`Click to instantly add ${preset.name} to Row ${preset.row}`}
               >
                 <Icon icon={preset.icon} width={16} height={16} style={{ color: preset.color }} />
                 <span>{preset.name}</span>
-                {isAlreadyAdded ? (
-                  <Icon icon="lucide:check" width={12} height={12} style={{ color: '#10b981' }} />
-                ) : (
-                  <Icon icon="lucide:plus" width={12} height={12} style={{ opacity: 0.6 }} />
-                )}
+                <span className="add-icon-plus">
+                  <Icon icon="lucide:plus" width={12} height={12} />
+                </span>
               </button>
-            );
-          })}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Filter Tabs */}
       <div className="filter-tabs-row">
@@ -492,17 +515,45 @@ const StyledSkillsPage = styled.div`
     padding: 1rem 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 0.6rem;
+    gap: 0.75rem;
 
-    .presets-title {
+    .presets-header-row {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #475569;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      gap: 1rem;
+      flex-wrap: wrap;
+
+      .presets-title {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .refresh-presets-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        padding: 0.3rem 0.65rem;
+        border-radius: 6px;
+        font-size: 0.76rem;
+        font-weight: 600;
+        color: #1e293b;
+        cursor: pointer;
+        transition: all 0.15s ease;
+
+        &:hover {
+          background: #e2e8f0;
+          color: #0f172a;
+        }
+      }
     }
 
     .presets-pills-list {
@@ -514,10 +565,10 @@ const StyledSkillsPage = styled.div`
     .preset-pill {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.45rem;
       background: #f8fafc;
       border: 1px solid #e2e8f0;
-      padding: 0.35rem 0.75rem;
+      padding: 0.35rem 0.8rem;
       border-radius: 99px;
       font-size: 0.78rem;
       font-weight: 600;
@@ -525,16 +576,27 @@ const StyledSkillsPage = styled.div`
       cursor: pointer;
       transition: all 0.15s ease;
 
-      &:hover:not(:disabled) {
-        background: #eff6ff;
-        border-color: #bfdbfe;
-        color: #1d4ed8;
+      .add-icon-plus {
+        display: grid;
+        place-items: center;
+        width: 1rem;
+        height: 1rem;
+        border-radius: 50%;
+        background: #e2e8f0;
+        color: #64748b;
+        transition: all 0.15s ease;
       }
 
-      &.is-added {
-        opacity: 0.6;
-        cursor: not-allowed;
-        background: #f1f5f9;
+      &:hover {
+        background: #eff6ff;
+        border-color: #38bdf8;
+        color: #0369a1;
+        transform: translateY(-1px);
+
+        .add-icon-plus {
+          background: #38bdf8;
+          color: #ffffff;
+        }
       }
     }
   }

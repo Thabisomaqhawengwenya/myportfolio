@@ -1664,6 +1664,47 @@ const StyledDashboard = styled.div`
       }
     }
 
+    .presets-section {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+
+      .presets-title {
+        color: var(--text-secondary) !important;
+      }
+
+      .refresh-presets-btn {
+        background: #1e293b !important;
+        border-color: #334155 !important;
+        color: var(--text-primary) !important;
+
+        &:hover {
+          background: #334155 !important;
+        }
+      }
+
+      .preset-pill {
+        background: #090d16 !important;
+        border-color: var(--border-color) !important;
+        color: var(--text-primary) !important;
+
+        .add-icon-plus {
+          background: #1e293b !important;
+          color: var(--text-secondary) !important;
+        }
+
+        &:hover {
+          background: #1e293b !important;
+          border-color: #38bdf8 !important;
+          color: #38bdf8 !important;
+
+          .add-icon-plus {
+            background: #38bdf8 !important;
+            color: #000000 !important;
+          }
+        }
+      }
+    }
+
     .table-header {
       border-bottom-color: var(--border-color) !important;
       color: var(--text-secondary) !important;

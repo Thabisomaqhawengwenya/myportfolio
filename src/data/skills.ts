@@ -45,17 +45,60 @@ export const defaultTechItems: TechItem[] = [
 ];
 
 export const popularPresets: Omit<TechItem, 'id' | 'order'>[] = [
+  // Modern Frontend & Frameworks
   { name: 'Next.js', icon: 'skill-icons:nextjs-dark', color: '#ffffff', row: 1, category: 'frontend' },
   { name: 'Tailwind CSS', icon: 'vscode-icons:file-type-tailwind', color: '#38BDF8', row: 1, category: 'frontend' },
   { name: 'Three.js', icon: 'skill-icons:threejs-dark', color: '#ffffff', row: 1, category: 'frontend' },
+  { name: 'Vue.js', icon: 'vscode-icons:file-type-vue', color: '#4FC08D', row: 1, category: 'frontend' },
+  { name: 'Redux', icon: 'vscode-icons:file-type-redux', color: '#764ABC', row: 1, category: 'frontend' },
+  { name: 'Sass / SCSS', icon: 'vscode-icons:file-type-sass', color: '#CC6699', row: 1, category: 'frontend' },
+  { name: 'Astro', icon: 'vscode-icons:file-type-astro', color: '#FF5D01', row: 1, category: 'frontend' },
+  { name: 'Svelte', icon: 'vscode-icons:file-type-svelte', color: '#FF3E00', row: 1, category: 'frontend' },
+  { name: 'Bootstrap', icon: 'skill-icons:bootstrap', color: '#7952B3', row: 1, category: 'frontend' },
+  { name: 'Angular', icon: 'vscode-icons:file-type-angular', color: '#DD0031', row: 1, category: 'frontend' },
+  { name: 'Remix', icon: 'skill-icons:remix-dark', color: '#ffffff', row: 1, category: 'frontend' },
+  { name: 'Zustand', icon: 'carbon:chip', color: '#764ABC', row: 1, category: 'frontend' },
+
+  // Backend, Databases & APIs
   { name: 'PostgreSQL', icon: 'vscode-icons:file-type-pgsql', color: '#336791', row: 2, category: 'backend' },
   { name: 'MongoDB', icon: 'vscode-icons:file-type-mongo', color: '#47A248', row: 2, category: 'backend' },
   { name: 'GraphQL', icon: 'vscode-icons:file-type-graphql', color: '#E10098', row: 3, category: 'backend' },
+  { name: 'Prisma', icon: 'vscode-icons:file-type-prisma', color: '#2D3748', row: 2, category: 'backend' },
+  { name: 'Redis', icon: 'vscode-icons:file-type-redis', color: '#DC382D', row: 2, category: 'backend' },
+  { name: 'Express.js', icon: 'skill-icons:expressjs-dark', color: '#ffffff', row: 2, category: 'backend' },
+  { name: 'NestJS', icon: 'vscode-icons:file-type-nestjs', color: '#E0234E', row: 2, category: 'backend' },
+  { name: 'FastAPI', icon: 'skill-icons:fastapi', color: '#009688', row: 3, category: 'backend' },
+  { name: 'Django', icon: 'vscode-icons:file-type-django', color: '#092E20', row: 2, category: 'backend' },
+  { name: 'Go (Golang)', icon: 'vscode-icons:file-type-go', color: '#00ADD8', row: 3, category: 'backend' },
+  { name: 'Rust', icon: 'vscode-icons:file-type-rust', color: '#DEA584', row: 3, category: 'backend' },
+  { name: 'MySQL', icon: 'vscode-icons:file-type-mysql', color: '#4479A1', row: 2, category: 'backend' },
+  { name: 'SQLite', icon: 'vscode-icons:file-type-sqlite', color: '#003B57', row: 2, category: 'backend' },
+  { name: 'Flask', icon: 'skill-icons:flask-dark', color: '#ffffff', row: 3, category: 'backend' },
+
+  // Cloud, DevOps & Tools
   { name: 'Docker', icon: 'vscode-icons:file-type-docker2', color: '#2496ED', row: 2, category: 'tools' },
   { name: 'AWS', icon: 'skill-icons:aws-dark', color: '#FF9900', row: 2, category: 'tools' },
-  { name: 'Redux', icon: 'vscode-icons:file-type-redux', color: '#764ABC', row: 1, category: 'frontend' },
-  { name: 'Vue.js', icon: 'vscode-icons:file-type-vue', color: '#4FC08D', row: 1, category: 'frontend' },
+  { name: 'Kubernetes', icon: 'vscode-icons:file-type-k8s', color: '#326CE5', row: 2, category: 'tools' },
+  { name: 'Linux', icon: 'skill-icons:linux-dark', color: '#FCC624', row: 2, category: 'tools' },
+  { name: 'Nginx', icon: 'vscode-icons:file-type-nginx', color: '#009639', row: 2, category: 'tools' },
+  { name: 'Postman', icon: 'vscode-icons:file-type-postman', color: '#FF6C37', row: 2, category: 'tools' },
+  { name: 'Vercel', icon: 'skill-icons:vercel-dark', color: '#ffffff', row: 2, category: 'tools' },
+  { name: 'Google Cloud', icon: 'skill-icons:gcp-dark', color: '#4285F4', row: 2, category: 'tools' },
+  { name: 'Cloudflare', icon: 'skill-icons:cloudflare-dark', color: '#F38020', row: 2, category: 'tools' },
+  { name: 'Jest', icon: 'vscode-icons:file-type-jest', color: '#C21325', row: 2, category: 'tools' },
+  { name: 'Cypress', icon: 'skill-icons:cypress-dark', color: '#69D3A7', row: 2, category: 'tools' },
+
+  // Mobile & Cross-Platform
   { name: 'Flutter', icon: 'vscode-icons:file-type-flutter', color: '#02569B', row: 3, category: 'learning' },
+  { name: 'React Native', icon: 'vscode-icons:file-type-reactjs', color: '#61DAFB', row: 3, category: 'learning' },
+  { name: 'Swift', icon: 'vscode-icons:file-type-swift', color: '#FA7343', row: 3, category: 'learning' },
+  { name: 'Kotlin', icon: 'vscode-icons:file-type-kotlin', color: '#7F52FF', row: 3, category: 'learning' },
+  { name: 'Electron', icon: 'vscode-icons:file-type-electron', color: '#47848F', row: 3, category: 'learning' },
+
+  // Design & Product
+  { name: 'Adobe XD', icon: 'vscode-icons:file-type-adobe-xd', color: '#FF61F6', row: 3, category: 'design' },
+  { name: 'Canva', icon: 'skill-icons:canva-dark', color: '#00C4CC', row: 3, category: 'design' },
+  { name: 'Storybook', icon: 'vscode-icons:file-type-storybook', color: '#FF4785', row: 3, category: 'design' },
 ];
 
 export const skillsData: SkillCategory[] = [
