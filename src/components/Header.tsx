@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { ThemeSwitch } from './ThemeSwitch';
 
 interface HeaderProps {
   theme: 'dark' | 'light';
@@ -54,10 +55,6 @@ export const Header: React.FC<HeaderProps> = ({ theme, setTheme }) => {
       };
     }
   }, []);
-
-  const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
-  };
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
@@ -125,22 +122,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, setTheme }) => {
             Contact
           </a>
 
-          <button
-            className="theme-toggle"
-            id="theme-toggle"
-            type="button"
-            aria-label={theme === 'light' ? 'Switch to dark theme' : 'Switch to light theme'}
-            aria-pressed={theme === 'light'}
-            onClick={toggleTheme}
-          >
-            <span className="theme-toggle-label theme-toggle-label-light">Light</span>
-            <span className="theme-toggle-track" aria-hidden="true">
-              <span className="theme-toggle-thumb" />
-              <span className="theme-toggle-dot theme-toggle-dot-one" />
-              <span className="theme-toggle-dot theme-toggle-dot-two" />
-            </span>
-            <span className="theme-toggle-label theme-toggle-label-dark">Dark</span>
-          </button>
+          <ThemeSwitch theme={theme} setTheme={setTheme} />
         </nav>
       </div>
 
@@ -214,85 +196,10 @@ const StyledHeader = styled.header`
     }
   }
 
-  .theme-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-left: 0.25rem;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--muted);
-    cursor: pointer;
-    flex-shrink: 0;
-  }
-
-  .theme-toggle-label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    transition: color var(--transition), opacity var(--transition);
-  }
-
-  .theme-toggle-track {
-    position: relative;
-    width: 3.7rem;
-    height: 2rem;
-    border-radius: 999px;
-    background: var(--toggle-track-bg);
-    box-shadow: var(--toggle-track-shadow);
-  }
-
-  .theme-toggle-thumb {
-    position: absolute;
-    top: 0.22rem;
-    left: 0.22rem;
-    width: 1.56rem;
-    height: 1.56rem;
-    border-radius: 50%;
-    background: var(--toggle-thumb-bg);
-    box-shadow: var(--toggle-thumb-shadow);
-    transition:
-      transform 260ms ease,
-      background-color var(--transition);
-  }
-
-  .theme-toggle-dot {
-    position: absolute;
-    right: 0.92rem;
-    border-radius: 50%;
-    background: var(--toggle-dot-bg);
-    transition: transform 260ms ease, opacity var(--transition);
-  }
-
-  .theme-toggle-dot-one {
-    top: 0.45rem;
-    width: 0.34rem;
-    height: 0.34rem;
-  }
-
-  .theme-toggle-dot-two {
-    top: 0.9rem;
-    right: 1.34rem;
-    width: 0.16rem;
-    height: 0.16rem;
-  }
-
-  .theme-toggle[aria-pressed="true"] .theme-toggle-label-light,
-  .theme-toggle[aria-pressed="false"] .theme-toggle-label-dark {
-    color: var(--toggle-label-active);
-  }
-
-  .theme-toggle[aria-pressed="true"] .theme-toggle-label-dark,
-  .theme-toggle[aria-pressed="false"] .theme-toggle-label-light {
-    color: var(--toggle-label-inactive);
-  }
-
-  .theme-toggle[aria-pressed="false"] .theme-toggle-thumb {
-    transform: translateX(1.7rem);
-  }
-
-  .theme-toggle[aria-pressed="false"] .theme-toggle-dot {
-    transform: translateX(-1.56rem);
+    .theme-switch-wrapper {
+      margin-left: 0.35rem;
+      flex-shrink: 0;
+    }
   }
 
   .nav-toggle {
@@ -335,8 +242,8 @@ const StyledHeader = styled.header`
       right: 1rem;
       left: 1rem;
       display: grid;
-      gap: 0.2rem;
-      padding: 0.6rem;
+      gap: 0.4rem;
+      padding: 0.8rem;
       background: var(--header-mobile-bg);
       border: 1px solid var(--line);
       border-radius: 18px;
@@ -356,12 +263,10 @@ const StyledHeader = styled.header`
         transform: translateY(0);
         pointer-events: auto;
       }
-    }
 
-    .theme-toggle {
-      justify-content: center;
-      margin: 0.35rem 0 0;
-      padding-top: 0.35rem;
+      .theme-switch-wrapper {
+        margin: 0.5rem auto 0.2rem;
+      }
     }
   }
 
