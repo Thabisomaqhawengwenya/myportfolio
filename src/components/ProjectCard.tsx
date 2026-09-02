@@ -1,24 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-
-interface Project {
-  id: string;
-  category: 'personal' | 'business' | 'education' | 'utility' | 'gift';
-  title: string;
-  description: string;
-  tags: string[];
-  image?: string;
-  isEmganwiniImage?: boolean;
-  placeholder?: {
-    badge: string;
-    title: string;
-    copy: string;
-    mediaClass: 'media-five' | 'media-six';
-  };
-  liveDemoUrl?: string;
-  githubUrl?: string;
-  order?: number;
-}
+import type { Project } from '../data/projectCategories';
 
 interface ProjectCardProps {
   project: Project;

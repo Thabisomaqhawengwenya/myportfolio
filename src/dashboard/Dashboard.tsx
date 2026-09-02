@@ -19,28 +19,18 @@ import { AICompanion } from './components/AICompanion';
 import { defaultTechItems, type TechItem } from '../data/skills';
 import { defaultTestimonials, type Testimonial } from '../data/testimonials';
 import { defaultBlogPosts, type BlogPost } from '../data/blog';
-
-interface Project {
-  id: string;
-  category: 'personal' | 'business' | 'education' | 'utility' | 'gift';
-  title: string;
-  description: string;
-  tags: string[];
-  image?: string;
-  isEmganwiniImage?: boolean;
-  placeholder?: {
-    badge: string;
-    title: string;
-    copy: string;
-    mediaClass: 'media-five' | 'media-six';
-  };
-  liveDemoUrl?: string;
-  githubUrl?: string;
-  order?: number;
-}
+import { defaultProjectCategories, type ProjectCategory, type Project } from '../data/projectCategories';
 
 export const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
+  const [projectCategories, setProjectCategories] = useState<ProjectCategory[]>(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_project_categories');
+      return saved ? JSON.parse(saved) : defaultProjectCategories;
+    } catch {
+      return defaultProjectCategories;
+    }
+  });
   const [skills, setSkills] = useState<TechItem[]>([]);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [testimonialsSectionEnabled, setTestimonialsSectionEnabled] = useState<boolean>(() => {
@@ -306,6 +296,44 @@ export const Dashboard: React.FC = () => {
       (err) => console.warn('Blog settings snapshot warning:', err)
     );
 
+    // Real-time listener for Project Categories
+    const unsubProjectCategories = onSnapshot(
+      doc(db, 'settings', 'project_categories'),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.categories && Array.isArray(data.categories)) {
+            setProjectCategories(data.categories);
+            try {
+              localStorage.setItem('portfolio_project_categories', JSON.stringify(data.categories));
+            } catch (err) {
+              console.warn('localStorage project_categories write warning:', err);
+            }
+          }
+        }
+      },
+      (err) => console.warn('Project categories snapshot warning:', err)
+    );
+
+    const fetchProjectCategories = async () => {
+      try {
+        const catSnap = await getDoc(doc(db, 'settings', 'project_categories'));
+        if (catSnap.exists()) {
+          const data = catSnap.data();
+          if (data.categories && Array.isArray(data.categories)) {
+            setProjectCategories(data.categories);
+            localStorage.setItem('portfolio_project_categories', JSON.stringify(data.categories));
+          }
+        } else {
+          // Initialize in Firestore with defaults
+          await setDoc(doc(db, 'settings', 'project_categories'), { categories: defaultProjectCategories });
+        }
+      } catch (err) {
+        console.warn('Error fetching project categories from Firestore:', err);
+      }
+    };
+
+    fetchProjectCategories();
     fetchProjects();
     fetchSkills();
     fetchTestimonials();
@@ -316,6 +344,7 @@ export const Dashboard: React.FC = () => {
     return () => {
       unsubTestimonialsSettings();
       unsubBlogSettings();
+      unsubProjectCategories();
     };
   }, [user]);
 
@@ -481,6 +510,29 @@ export const Dashboard: React.FC = () => {
       console.error('Error saving projects to Firestore:', err);
       setSaveStatus('error');
       setTimeout(() => setSaveStatus('idle'), 3000);
+    }
+  };
+
+  // Save project categories to Cloud Firestore & localStorage
+  const handleSaveCategories = async (updatedCategories: ProjectCategory[]) => {
+    const formatted = updatedCategories.map((c, idx) => ({ ...c, order: c.order ?? idx }));
+    setProjectCategories(formatted);
+    try {
+      localStorage.setItem('portfolio_project_categories', JSON.stringify(formatted));
+      window.dispatchEvent(new CustomEvent('portfolio_categories_changed', { detail: formatted }));
+    } catch (err) {
+      console.warn('localStorage project_categories write error:', err);
+    }
+
+    setSaveStatus('saving');
+    try {
+      await setDoc(doc(db, 'settings', 'project_categories'), { categories: formatted }, { merge: true });
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    } catch (e) {
+      console.warn('Firestore settings/project_categories write error:', e);
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
     }
   };
 
@@ -926,6 +978,8 @@ export const Dashboard: React.FC = () => {
             <ProjectsPage
               projects={projects}
               onSaveProjects={handleSaveProjects}
+              categories={projectCategories}
+              onSaveCategories={handleSaveCategories}
               searchQuery={searchQuery}
             />
           )}

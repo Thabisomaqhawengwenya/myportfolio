@@ -1,34 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { ProjectCard } from './ProjectCard';
 import { ProjectModal } from './ProjectModal';
-
-interface Project {
-  id: string;
-  category: 'personal' | 'business' | 'education' | 'utility' | 'gift';
-  title: string;
-  description: string;
-  tags: string[];
-  image?: string;
-  isEmganwiniImage?: boolean;
-  placeholder?: {
-    badge: string;
-    title: string;
-    copy: string;
-    mediaClass: 'media-five' | 'media-six';
-  };
-  liveDemoUrl?: string;
-  githubUrl?: string;
-  order?: number;
-}
-
-type Category = 'personal' | 'business' | 'education' | 'utility' | 'gift';
+import { defaultProjectCategories, type ProjectCategory, type Project } from '../data/projectCategories';
 
 export const Projects: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
-  const [activeCategory, setActiveCategory] = useState<Category>('business');
+  const [categories, setCategories] = useState<ProjectCategory[]>(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_project_categories');
+      return saved ? JSON.parse(saved) : defaultProjectCategories;
+    } catch {
+      return defaultProjectCategories;
+    }
+  });
+  const [activeCategory, setActiveCategory] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem('portfolio_project_categories');
+      const list = saved ? JSON.parse(saved) : defaultProjectCategories;
+      return list[0]?.id || 'business';
+    } catch {
+      return 'business';
+    }
+  });
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -64,22 +60,63 @@ export const Projects: React.FC = () => {
       }
     };
 
+    const loadCategories = async () => {
+      try {
+        const catSnap = await getDoc(doc(db, 'settings', 'project_categories'));
+        if (catSnap.exists()) {
+          const data = catSnap.data();
+          if (data.categories && Array.isArray(data.categories) && data.categories.length > 0) {
+            setCategories(data.categories);
+            localStorage.setItem('portfolio_project_categories', JSON.stringify(data.categories));
+          }
+        }
+      } catch (err) {
+        console.warn('Error loading categories from Firestore:', err);
+      }
+    };
+
     loadProjects();
+    loadCategories();
+
+    // Listen to real-time changes from Firestore
+    const unsubCategories = onSnapshot(
+      doc(db, 'settings', 'project_categories'),
+      (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.categories && Array.isArray(data.categories) && data.categories.length > 0) {
+            setCategories(data.categories);
+            localStorage.setItem('portfolio_project_categories', JSON.stringify(data.categories));
+          }
+        }
+      },
+      (err) => console.warn('Categories snapshot warning:', err)
+    );
+
+    // Listen to window event for instant local dashboard sync
+    const handleCategoriesChanged = (e: CustomEvent<ProjectCategory[]>) => {
+      if (e.detail && Array.isArray(e.detail) && e.detail.length > 0) {
+        setCategories(e.detail);
+      }
+    };
+    window.addEventListener('portfolio_categories_changed', handleCategoriesChanged as EventListener);
+
+    return () => {
+      unsubCategories();
+      window.removeEventListener('portfolio_categories_changed', handleCategoriesChanged as EventListener);
+    };
   }, []);
 
-  const categories: { key: Category; label: string }[] = [
-    { key: 'business', label: 'Business' },
-    { key: 'personal', label: 'Personal' },
-    { key: 'education', label: 'Education' },
-    { key: 'utility', label: 'Utility' },
-    { key: 'gift', label: 'Gift' },
-  ];
+  // Compute active category with fallback
+  const currentCategory = categories.some((c) => c.id === activeCategory)
+    ? activeCategory
+    : (categories[0]?.id || 'business');
 
-  const getCategoryCount = (cat: Category) => {
-    return projects.filter((p) => p.category === cat).length;
+  const getCategoryCount = (catId: string) => {
+    return projects.filter((p) => p.category === catId).length;
   };
 
-  const filteredProjects = projects.filter((p) => p.category === activeCategory);
+  const filteredProjects = projects.filter((p) => p.category === currentCategory);
 
   const handleOpenDetails = (project: Project) => {
     setSelectedProject(project);
@@ -97,18 +134,18 @@ export const Projects: React.FC = () => {
       </div>
 
       <div className="container projects-filter-bar reveal" aria-label="Project categories">
-        {categories.map(({ key, label }) => {
-          const count = getCategoryCount(key);
-          const isActive = activeCategory === key;
+        {categories.map((cat) => {
+          const count = getCategoryCount(cat.id);
+          const isActive = currentCategory === cat.id;
           return (
             <button
-              key={key}
+              key={cat.id}
               className={`project-filter ${isActive ? 'is-active' : ''}`}
               type="button"
               aria-pressed={isActive}
-              onClick={() => setActiveCategory(key)}
+              onClick={() => setActiveCategory(cat.id)}
             >
-              <span>{label}</span>
+              <span>{cat.label}</span>
               <span className="project-filter-count">{count}</span>
             </button>
           );

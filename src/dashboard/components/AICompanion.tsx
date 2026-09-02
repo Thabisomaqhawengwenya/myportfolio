@@ -1,18 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { Icon } from '@iconify/react';
-
-interface Project {
-  id: string;
-  category: 'personal' | 'business' | 'education' | 'utility' | 'gift';
-  title: string;
-  description: string;
-  tags: string[];
-  image?: string;
-  liveDemoUrl?: string;
-  githubUrl?: string;
-  order?: number;
-}
+import type { Project } from '../../data/projectCategories';
 
 interface CalendarEventItem {
   id: string;

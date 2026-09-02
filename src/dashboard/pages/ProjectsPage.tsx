@@ -1,39 +1,35 @@
 import React, { useState, useRef } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
-
-interface Project {
-  id: string;
-  category: 'personal' | 'business' | 'education' | 'utility' | 'gift';
-  title: string;
-  description: string;
-  tags: string[];
-  image?: string;
-  isEmganwiniImage?: boolean;
-  placeholder?: {
-    badge: string;
-    title: string;
-    copy: string;
-    mediaClass: 'media-five' | 'media-six';
-  };
-  liveDemoUrl?: string;
-  githubUrl?: string;
-  order?: number;
-}
+import { defaultProjectCategories, type ProjectCategory, type Project } from '../../data/projectCategories';
 
 interface ProjectsPageProps {
   projects: Project[];
   onSaveProjects: (updatedProjects: Project[]) => void;
+  categories?: ProjectCategory[];
+  onSaveCategories?: (categories: ProjectCategory[]) => void;
   searchQuery: string;
 }
 
-type FilterCategory = 'all' | 'business' | 'personal' | 'education' | 'utility' | 'gift';
+export const ProjectsPage: React.FC<ProjectsPageProps> = ({
+  projects,
+  onSaveProjects,
+  categories = defaultProjectCategories,
+  onSaveCategories,
+  searchQuery,
+}) => {
+  const activeCategories = categories && categories.length > 0 ? categories : defaultProjectCategories;
 
-export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProjects, searchQuery }) => {
   // Editing state
   const [editingId, setEditingId] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState<FilterCategory>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+
+  // Category Manager Modal state
+  const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
+  const [editingCatId, setEditingCatId] = useState<string | null>(null);
+  const [editingCatLabel, setEditingCatLabel] = useState('');
 
   // Drag and drop state
   const [draggedId, setDraggedId] = useState<string | null>(null);
@@ -41,7 +37,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
 
   // Form inputs
   const [title, setTitle] = useState('');
-  const [category, setCategory] = useState<'personal' | 'business' | 'education' | 'utility' | 'gift'>('business');
+  const [category, setCategory] = useState<string>(activeCategories[0]?.id || 'business');
   const [description, setDescription] = useState('');
   const [tagsInput, setTagsInput] = useState('');
   const [liveDemoUrl, setLiveDemoUrl] = useState('');
@@ -57,6 +53,99 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Category CRUD Handlers
+  const handleAddCategory = (e: React.FormEvent) => {
+    e.preventDefault();
+    const name = newCategoryName.trim();
+    if (!name) return;
+
+    const baseSlug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || `cat-${Date.now()}`;
+    let finalId = baseSlug;
+    let counter = 1;
+    while (activeCategories.some((c) => c.id === finalId)) {
+      finalId = `${baseSlug}-${counter++}`;
+    }
+
+    const newCat: ProjectCategory = {
+      id: finalId,
+      label: name,
+      order: activeCategories.length,
+    };
+
+    const updated = [...activeCategories, newCat];
+    if (onSaveCategories) {
+      onSaveCategories(updated);
+    }
+    setNewCategoryName('');
+  };
+
+  const handleStartEditCategory = (cat: ProjectCategory) => {
+    setEditingCatId(cat.id);
+    setEditingCatLabel(cat.label);
+  };
+
+  const handleSaveEditCategory = (catId: string) => {
+    const newLabel = editingCatLabel.trim();
+    if (!newLabel) {
+      setEditingCatId(null);
+      return;
+    }
+
+    const updated = activeCategories.map((c) => (c.id === catId ? { ...c, label: newLabel } : c));
+    if (onSaveCategories) {
+      onSaveCategories(updated);
+    }
+    setEditingCatId(null);
+    setEditingCatLabel('');
+  };
+
+  const handleDeleteCategory = (catId: string) => {
+    if (activeCategories.length <= 1) {
+      alert('You must have at least one category.');
+      return;
+    }
+
+    const catToDelete = activeCategories.find((c) => c.id === catId);
+    const affectedProjects = projects.filter((p) => p.category === catId);
+    const fallbackCat = activeCategories.find((c) => c.id !== catId)!;
+
+    if (affectedProjects.length > 0) {
+      const confirmMsg = `There are ${affectedProjects.length} project(s) currently assigned to "${catToDelete?.label || catId}".\n\nDeleting this category will reassign these projects to "${fallbackCat.label}". Are you sure you want to proceed?`;
+      if (!window.confirm(confirmMsg)) return;
+
+      const updatedProjects = projects.map((p) => (p.category === catId ? { ...p, category: fallbackCat.id } : p));
+      onSaveProjects(updatedProjects);
+    } else {
+      if (!window.confirm(`Are you sure you want to delete the category "${catToDelete?.label || catId}"?`)) return;
+    }
+
+    const updatedCategories = activeCategories.filter((c) => c.id !== catId).map((c, i) => ({ ...c, order: i }));
+    if (onSaveCategories) {
+      onSaveCategories(updatedCategories);
+    }
+    if (selectedCategory === catId) {
+      setSelectedCategory('all');
+    }
+  };
+
+  const handleMoveCategory = (catId: string, direction: 'up' | 'down') => {
+    const index = activeCategories.findIndex((c) => c.id === catId);
+    if (index === -1) return;
+
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= activeCategories.length) return;
+
+    const list = [...activeCategories];
+    const temp = list[index];
+    list[index] = list[targetIndex];
+    list[targetIndex] = temp;
+
+    const updated = list.map((c, i) => ({ ...c, order: i }));
+    if (onSaveCategories) {
+      onSaveCategories(updated);
+    }
+  };
+
   // Filter projects by category and search query
   const displayedProjects = projects.filter((p) => {
     const matchesCategory = selectedCategory === 'all' || p.category === selectedCategory;
@@ -71,18 +160,14 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
     );
   });
 
-  const categories: { key: FilterCategory; label: string }[] = [
+  const filterCategoryList: { key: string; label: string }[] = [
     { key: 'all', label: 'All Projects' },
-    { key: 'business', label: 'Business' },
-    { key: 'personal', label: 'Personal' },
-    { key: 'education', label: 'Education' },
-    { key: 'utility', label: 'Utility' },
-    { key: 'gift', label: 'Gift' },
+    ...activeCategories.map((c) => ({ key: c.id, label: c.label })),
   ];
 
-  const getCategoryCount = (cat: FilterCategory) => {
-    if (cat === 'all') return projects.length;
-    return projects.filter((p) => p.category === cat).length;
+  const getCategoryCount = (catKey: string) => {
+    if (catKey === 'all') return projects.length;
+    return projects.filter((p) => p.category === catKey).length;
   };
 
   // Reordering handlers
@@ -194,7 +279,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
   const handleAddNew = () => {
     setEditingId(null);
     setTitle('');
-    setCategory('business');
+    setCategory(activeCategories[0]?.id || 'business');
     setDescription('');
     setTagsInput('');
     setLiveDemoUrl('');
@@ -293,14 +378,24 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
         <div className="header-titles">
           <h2>Portfolio Projects</h2>
           <p className="header-subtitle">
-            Arrange the order of your projects below using the up/down arrows or drag-and-drop.
+            Manage your project categories, arrange items with arrows or drag-and-drop, and edit details.
           </p>
         </div>
-        {!showForm && (
-          <button className="add-btn" onClick={handleAddNew}>
-            + Add Project
+        <div className="header-actions">
+          <button
+            type="button"
+            className="manage-cat-header-btn"
+            onClick={() => setShowCategoryModal(true)}
+          >
+            <Icon icon="lucide:tags" width={16} height={16} />
+            Manage Categories ({activeCategories.length})
           </button>
-        )}
+          {!showForm && (
+            <button className="add-btn" onClick={handleAddNew}>
+              + Add Project
+            </button>
+          )}
+        </div>
       </div>
 
       {showForm && (
@@ -320,16 +415,33 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
               </div>
 
               <div className="form-group">
-                <label>Category *</label>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <label>Category *</label>
+                  <button
+                    type="button"
+                    onClick={() => setShowCategoryModal(true)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: '#1A73E8',
+                      fontSize: '0.8rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      padding: 0,
+                    }}
+                  >
+                    + Manage Categories
+                  </button>
+                </div>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value as 'personal' | 'business' | 'education' | 'utility' | 'gift')}
+                  onChange={(e) => setCategory(e.target.value)}
                 >
-                  <option value="business">Business</option>
-                  <option value="personal">Personal</option>
-                  <option value="education">Education</option>
-                  <option value="utility">Utility</option>
-                  <option value="gift">Gift</option>
+                  {activeCategories.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.label}
+                    </option>
+                  ))}
                 </select>
               </div>
 
@@ -345,7 +457,7 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
               </div>
 
               <div className="form-group">
-                <label>Languages & Frameworks Used (comma separated) *</label>
+                <label>Languages &amp; Frameworks Used (comma separated) *</label>
                 <input
                   type="text"
                   placeholder="e.g. React.js, Vite, styled-components"
@@ -491,9 +603,9 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
         </div>
       )}
 
-      {/* Projects Category Filter & Reordering Controls */}
+      {/* Projects Category Filter & Management Bar */}
       <div className="category-filter-bar">
-        {categories.map(({ key, label }) => {
+        {filterCategoryList.map(({ key, label }) => {
           const count = getCategoryCount(key);
           const isActive = selectedCategory === key;
           return (
@@ -507,9 +619,161 @@ export const ProjectsPage: React.FC<ProjectsPageProps> = ({ projects, onSaveProj
             </button>
           );
         })}
+        <button
+          type="button"
+          className="manage-categories-pill-btn"
+          onClick={() => setShowCategoryModal(true)}
+          title="Add, edit, rename, reorder, or delete categories"
+        >
+          <Icon icon="lucide:settings-2" width={15} height={15} />
+          <span>Edit Categories</span>
+        </button>
       </div>
 
-      {/* Projects List Panel */}
+      {/* Category Management Modal */}
+      {showCategoryModal && (
+        <div className="cat-modal-overlay" onClick={() => setShowCategoryModal(false)}>
+          <div className="cat-modal-dialog" onClick={(e) => e.stopPropagation()}>
+            <div className="cat-modal-header">
+              <div className="cat-modal-title">
+                <Icon icon="lucide:tags" width={22} height={22} style={{ color: '#1A73E8' }} />
+                <div>
+                  <h3>Project Categories</h3>
+                  <p>Add, edit labels, reorder, or delete categories for your portfolio.</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="cat-modal-close"
+                onClick={() => setShowCategoryModal(false)}
+                aria-label="Close modal"
+              >
+                &times;
+              </button>
+            </div>
+
+            {/* Add New Category Form */}
+            <form className="cat-add-form" onSubmit={handleAddCategory}>
+              <input
+                type="text"
+                placeholder="New Category Name (e.g. Mobile Apps, Freelance, AI)"
+                value={newCategoryName}
+                onChange={(e) => setNewCategoryName(e.target.value)}
+              />
+              <button type="submit" disabled={!newCategoryName.trim()}>
+                <Icon icon="lucide:plus" width={16} height={16} />
+                Add Category
+              </button>
+            </form>
+
+            {/* Existing Categories List */}
+            <div className="cat-list">
+              {activeCategories.map((cat, idx) => {
+                const isFirst = idx === 0;
+                const isLast = idx === activeCategories.length - 1;
+                const projCount = getCategoryCount(cat.id);
+                const isEditing = editingCatId === cat.id;
+
+                return (
+                  <div key={cat.id} className="cat-item-row">
+                    <div className="cat-reorder-arrows">
+                      <button
+                        type="button"
+                        disabled={isFirst}
+                        onClick={() => handleMoveCategory(cat.id, 'up')}
+                        title="Move Up"
+                      >
+                        <Icon icon="lucide:chevron-up" width={14} height={14} />
+                      </button>
+                      <button
+                        type="button"
+                        disabled={isLast}
+                        onClick={() => handleMoveCategory(cat.id, 'down')}
+                        title="Move Down"
+                      >
+                        <Icon icon="lucide:chevron-down" width={14} height={14} />
+                      </button>
+                    </div>
+
+                    <div className="cat-info">
+                      {isEditing ? (
+                        <div className="cat-inline-edit">
+                          <input
+                            type="text"
+                            value={editingCatLabel}
+                            onChange={(e) => setEditingCatLabel(e.target.value)}
+                            autoFocus
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') handleSaveEditCategory(cat.id);
+                              if (e.key === 'Escape') setEditingCatId(null);
+                            }}
+                          />
+                          <button
+                            type="button"
+                            className="cat-save-btn"
+                            onClick={() => handleSaveEditCategory(cat.id)}
+                            title="Save Rename"
+                          >
+                            <Icon icon="lucide:check" width={15} height={15} />
+                          </button>
+                          <button
+                            type="button"
+                            className="cat-cancel-btn"
+                            onClick={() => setEditingCatId(null)}
+                            title="Cancel"
+                          >
+                            <Icon icon="lucide:x" width={15} height={15} />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="cat-label-display">
+                          <span className="cat-label">{cat.label}</span>
+                          <span className="cat-slug-badge">{cat.id}</span>
+                          <span className="cat-count-badge">{projCount} {projCount === 1 ? 'project' : 'projects'}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="cat-actions">
+                      {!isEditing && (
+                        <button
+                          type="button"
+                          className="cat-edit-btn"
+                          onClick={() => handleStartEditCategory(cat)}
+                          title="Rename Category"
+                        >
+                          <Icon icon="lucide:pencil" width={15} height={15} />
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        className="cat-delete-btn"
+                        onClick={() => handleDeleteCategory(cat.id)}
+                        disabled={activeCategories.length <= 1}
+                        title={activeCategories.length <= 1 ? 'Cannot delete only category' : 'Delete Category'}
+                      >
+                        <Icon icon="lucide:trash-2" width={15} height={15} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="cat-modal-footer">
+              <button
+                type="button"
+                className="cat-modal-done-btn"
+                onClick={() => setShowCategoryModal(false)}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+              {/* Projects List Panel */}
       <div className="projects-list-panel">
         <div className="panel-title-row">
           <div className="panel-title">
@@ -694,6 +958,34 @@ const StyledProjectsPage = styled.div`
       }
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .manage-cat-header-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      padding: 0.65rem 1.15rem;
+      border-radius: 99px;
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 180ms ease;
+
+      &:hover {
+        background: #e2e8f0;
+        color: #0f172a;
+        border-color: #94a3b8;
+      }
+    }
+
     .add-btn {
       background: #1A73E8;
       color: #fff;
@@ -716,6 +1008,7 @@ const StyledProjectsPage = styled.div`
   .category-filter-bar {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.6rem;
     padding-bottom: 0.25rem;
 
@@ -762,6 +1055,353 @@ const StyledProjectsPage = styled.div`
         color: #64748b;
         font-size: 0.75rem;
         font-weight: 700;
+      }
+    }
+
+    .manage-categories-pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.52rem 0.95rem;
+      border-radius: 99px;
+      border: 1px dashed #cbd5e1;
+      background: #f8fafc;
+      color: #1A73E8;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 180ms ease;
+
+      &:hover {
+        background: #eff6ff;
+        border-color: #1A73E8;
+      }
+    }
+  }
+
+  /* Category Management Modal Styling */
+  .cat-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+  }
+
+  .cat-modal-dialog {
+    background: #ffffff;
+    border-radius: 1.25rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 620px;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: modalPop 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes modalPop {
+    from {
+      opacity: 0;
+      transform: scale(0.96) translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
+
+  .cat-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+
+    .cat-modal-title {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+
+      h3 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #0f172a;
+      }
+
+      p {
+        margin: 0.15rem 0 0;
+        font-size: 0.82rem;
+        color: #64748b;
+      }
+    }
+
+    .cat-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+
+      &:hover {
+        background: #f1f5f9;
+        color: #0f172a;
+      }
+    }
+  }
+
+  .cat-add-form {
+    display: flex;
+    gap: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+
+    input {
+      flex: 1;
+      padding: 0.65rem 0.95rem;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.5rem;
+      font-size: 0.88rem;
+      background: #ffffff;
+      color: #0f172a;
+
+      &:focus {
+        outline: none;
+        border-color: #1A73E8;
+        box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
+      }
+    }
+
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.65rem 1.15rem;
+      background: #1A73E8;
+      color: #ffffff;
+      border: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.86rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 180ms ease;
+
+      &:hover:not(:disabled) {
+        background: #1557b0;
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .cat-list {
+    padding: 1rem 1.5rem;
+    overflow-y: auto;
+    max-height: 44vh;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .cat-item-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.85rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.65rem;
+    transition: all 180ms ease;
+
+    &:hover {
+      border-color: #cbd5e1;
+      background: #f8fafc;
+    }
+  }
+
+  .cat-reorder-arrows {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+
+    button {
+      display: inline-grid;
+      place-items: center;
+      width: 1.35rem;
+      height: 1.15rem;
+      padding: 0;
+      border: 1px solid #e2e8f0;
+      border-radius: 3px;
+      background: #ffffff;
+      color: #475569;
+      cursor: pointer;
+
+      &:hover:not(:disabled) {
+        background: #f1f5f9;
+        color: #1A73E8;
+      }
+
+      &:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .cat-info {
+    flex: 1;
+    min-width: 0;
+
+    .cat-label-display {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+
+      .cat-label {
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: #0f172a;
+      }
+
+      .cat-slug-badge {
+        font-size: 0.72rem;
+        font-family: monospace;
+        padding: 0.15rem 0.4rem;
+        background: #f1f5f9;
+        color: #64748b;
+        border-radius: 4px;
+        border: 1px solid #e2e8f0;
+      }
+
+      .cat-count-badge {
+        font-size: 0.76rem;
+        padding: 0.15rem 0.5rem;
+        background: #eff6ff;
+        color: #1A73E8;
+        border-radius: 99px;
+        font-weight: 600;
+      }
+    }
+
+    .cat-inline-edit {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+
+      input {
+        flex: 1;
+        padding: 0.45rem 0.75rem;
+        border: 1px solid #1A73E8;
+        border-radius: 0.4rem;
+        font-size: 0.88rem;
+        background: #ffffff;
+      }
+
+      .cat-save-btn {
+        display: inline-grid;
+        place-items: center;
+        width: 1.85rem;
+        height: 1.85rem;
+        background: #16a34a;
+        color: #ffffff;
+        border: none;
+        border-radius: 0.4rem;
+        cursor: pointer;
+      }
+
+      .cat-cancel-btn {
+        display: inline-grid;
+        place-items: center;
+        width: 1.85rem;
+        height: 1.85rem;
+        background: #f1f5f9;
+        color: #64748b;
+        border: 1px solid #cbd5e1;
+        border-radius: 0.4rem;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .cat-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+
+    button {
+      display: inline-grid;
+      place-items: center;
+      width: 1.95rem;
+      height: 1.95rem;
+      border-radius: 0.4rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 180ms ease;
+    }
+
+    .cat-edit-btn {
+      background: #eff6ff;
+      color: #1A73E8;
+      border-color: #bfdbfe;
+
+      &:hover {
+        background: #dbeafe;
+      }
+    }
+
+    .cat-delete-btn {
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #fecaca;
+
+      &:hover:not(:disabled) {
+        background: #fca5a5;
+      }
+
+      &:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .cat-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    background: #f8fafc;
+
+    .cat-modal-done-btn {
+      padding: 0.6rem 1.5rem;
+      background: #1A73E8;
+      color: #ffffff;
+      border: none;
+      border-radius: 99px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+
+      &:hover {
+        background: #1557b0;
       }
     }
   }

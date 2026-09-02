@@ -2,18 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Icon } from '@iconify/react';
 import type { ContactMessage } from './MessagesPage';
-
-interface Project {
-  id: string;
-  category: 'personal' | 'business' | 'education' | 'utility' | 'gift';
-  title: string;
-  description: string;
-  tags: string[];
-  image?: string;
-  liveDemoUrl?: string;
-  githubUrl?: string;
-  order?: number;
-}
+import type { Project } from '../../data/projectCategories';
 
 interface OverviewPageProps {
   projects: Project[];
