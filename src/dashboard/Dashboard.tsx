@@ -8,12 +8,14 @@ import { DashboardLogin } from './components/DashboardLogin';
 import { OverviewPage } from './pages/OverviewPage';
 import { ProjectsPage } from './pages/ProjectsPage';
 import { SkillsPage } from './pages/SkillsPage';
+import { TestimonialsPage } from './pages/TestimonialsPage';
 import { MessagesPage, type ContactMessage } from './pages/MessagesPage';
 import { CalendarPage } from './pages/CalendarPage';
 import { AnalyticsPage } from './pages/AnalyticsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { AICompanion } from './components/AICompanion';
 import { defaultTechItems, type TechItem } from '../data/skills';
+import { defaultTestimonials, type Testimonial } from '../data/testimonials';
 
 interface Project {
   id: string;
@@ -37,10 +39,11 @@ interface Project {
 export const Dashboard: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [skills, setSkills] = useState<TechItem[]>([]);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [messages, setMessages] = useState<ContactMessage[]>([]);
   const [cvDownloadsCount, setCvDownloadsCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'skills' | 'messages' | 'calendar' | 'analytics' | 'settings'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'projects' | 'skills' | 'testimonials' | 'messages' | 'calendar' | 'analytics' | 'settings'>('dashboard');
   const [searchQuery, setSearchQuery] = useState('');
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
@@ -200,11 +203,62 @@ export const Dashboard: React.FC = () => {
       }
     };
 
+    const fetchTestimonials = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'testimonials'));
+        const list: Testimonial[] = [];
+        querySnapshot.forEach((docSnap) => {
+          list.push({ id: docSnap.id, ...docSnap.data() } as Testimonial);
+        });
+        if (list.length > 0) {
+          list.sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
+          setTestimonials(list);
+        } else {
+          setTestimonials(defaultTestimonials);
+          for (let i = 0; i < defaultTestimonials.length; i++) {
+            const item = { ...defaultTestimonials[i], order: i };
+            await setDoc(doc(db, 'testimonials', item.id), item);
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching testimonials from Firestore:', err);
+        setTestimonials(defaultTestimonials);
+      }
+    };
+
     fetchProjects();
     fetchSkills();
+    fetchTestimonials();
     fetchMessages();
     fetchEvents();
   }, [user]);
+
+  // Save testimonials to Cloud Firestore
+  const handleSaveTestimonials = async (updatedTestimonials: Testimonial[]) => {
+    const formatted = updatedTestimonials.map((t, idx) => ({ ...t, order: t.order ?? idx }));
+    setTestimonials(formatted);
+    setSaveStatus('saving');
+
+    try {
+      const querySnapshot = await getDocs(collection(db, 'testimonials'));
+      const existingIds = new Set<string>();
+      querySnapshot.forEach((d) => existingIds.add(d.id));
+
+      for (const item of formatted) {
+        await setDoc(doc(db, 'testimonials', item.id), item, { merge: true });
+        existingIds.delete(item.id);
+      }
+      for (const idToDelete of existingIds) {
+        await deleteDoc(doc(db, 'testimonials', idToDelete));
+      }
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    } catch (e) {
+      console.error('Error saving testimonials:', e);
+      setSaveStatus('error');
+      setTimeout(() => setSaveStatus('idle'), 3000);
+    }
+  };
 
   // Save skills to Cloud Firestore
   const handleSaveSkills = async (updatedSkills: TechItem[]) => {
@@ -406,6 +460,21 @@ export const Dashboard: React.FC = () => {
             <span className="count-badge">{skills.length}</span>
           </button>
           <button
+            className={`menu-item ${activeTab === 'testimonials' ? 'active' : ''}`}
+            onClick={() => setActiveTab('testimonials')}
+          >
+            <span className="item-icon">
+              <Icon
+                icon="lucide:message-square-quote"
+                width={20}
+                height={20}
+                style={{ color: activeTab === 'testimonials' ? '#1A73E8' : '#555555' }}
+              />
+            </span>{' '}
+            Testimonials
+            <span className="count-badge">{testimonials.length}</span>
+          </button>
+          <button
             className={`menu-item ${activeTab === 'messages' ? 'active' : ''}`}
             onClick={() => setActiveTab('messages')}
           >
@@ -591,6 +660,12 @@ export const Dashboard: React.FC = () => {
                 <p>Manage the technologies, icons, and interactive marquee rows on your portfolio.</p>
               </>
             )}
+            {activeTab === 'testimonials' && (
+              <>
+                <h1>Client Testimonials</h1>
+                <p>Manage endorsements, feedback quotes, and star ratings from your clients and peers.</p>
+              </>
+            )}
             {activeTab === 'messages' && (
               <>
                 <h1>Contact Messages Inbox</h1>
@@ -636,6 +711,13 @@ export const Dashboard: React.FC = () => {
             <SkillsPage
               skills={skills}
               onSaveSkills={handleSaveSkills}
+              searchQuery={searchQuery}
+            />
+          )}
+          {activeTab === 'testimonials' && (
+            <TestimonialsPage
+              testimonials={testimonials}
+              onSaveTestimonials={handleSaveTestimonials}
               searchQuery={searchQuery}
             />
           )}
@@ -1153,6 +1235,69 @@ const StyledDashboard = styled.div`
           background: #1e293b !important;
           border-color: #334155 !important;
           color: var(--text-primary) !important;
+        }
+      }
+    }
+
+    /* Testimonials Page Specific Overrides */
+    .testimonial-admin-card {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+
+      &:hover {
+        border-color: #334155 !important;
+      }
+
+      &.is-hidden-card {
+        background: #090d16 !important;
+      }
+
+      .order-badge {
+        background: #1e293b !important;
+        color: #38bdf8 !important;
+      }
+
+      .card-quote {
+        color: var(--text-primary) !important;
+      }
+
+      .client-footer {
+        border-top-color: var(--border-color) !important;
+
+        .client-avatar-fallback {
+          background: #1e293b !important;
+          color: #38bdf8 !important;
+          border: 1px solid var(--border-color) !important;
+        }
+
+        .client-meta h4 {
+          color: var(--text-primary) !important;
+        }
+
+        .client-meta p, .client-date {
+          color: var(--text-secondary) !important;
+        }
+
+        .action-btn {
+          background: #1e293b !important;
+          border-color: #334155 !important;
+          color: var(--text-primary) !important;
+
+          &:hover {
+            background: #334155 !important;
+          }
+
+          &.active-vis {
+            background: #1e3a8a !important;
+            border-color: #2563eb !important;
+            color: #93c5fd !important;
+          }
+
+          &.active-star {
+            background: #451a03 !important;
+            border-color: #d97706 !important;
+            color: #f59e0b !important;
+          }
         }
       }
     }
